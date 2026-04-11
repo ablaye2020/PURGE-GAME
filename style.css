@@ -917,3 +917,31 @@ input, select {
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+/* ========== CONTRÔLE MUSIQUE ========== */
+.music-control {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1000;
+}
+
+.music-btn {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: #1a1a2e;
+  border: 2px solid #ff4757;
+  color: #ff4757;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.music-btn:hover {
+  background: #ff4757;
+  color: white;
+  transform: scale(1.05);
+}
