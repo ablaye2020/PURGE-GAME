@@ -1,5 +1,5 @@
 /****************************************************
- * PURGE GAME - Version simplifiée
+ * PURGE GAME - Version complète et corrigée
  ****************************************************/
 
 // État
@@ -13,6 +13,28 @@ const state = {
 
 const OWNER_PHONE = "+24160248210";
 let ADMIN_LIST = ["+221708137251","+221769426236","+22897173547","+2250777315113","+50946801238"];
+
+// BroadcastChannel pour synchronisation
+const channel = new BroadcastChannel('purge_team');
+
+channel.onmessage = (e) => {
+  const { type, data } = e.data;
+  if (type === 'TEAM_UPDATE' && data.code === state.currentTeam.code) {
+    console.log("Mise à jour de l'équipe reçue");
+    state.currentTeam.players = data.players;
+    if (document.getElementById('screen-lobby')?.classList.contains('active')) {
+      updateLobbyUI();
+    }
+    saveTeam();
+  }
+};
+
+function broadcastTeam() { 
+  channel.postMessage({ 
+    type: 'TEAM_UPDATE', 
+    data: { code: state.currentTeam.code, players: state.currentTeam.players } 
+  }); 
+}
 
 // Helpers
 function saveUsers() { localStorage.setItem('purge_users', JSON.stringify(state.users)); }
@@ -33,11 +55,20 @@ function generateTeamCode() {
   return code;
 }
 
-// AFFICHAGE ÉCRAN - VERSION SIMPLIFIÉE
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/[&<>]/g, function(m) {
+    if (m === '&') return '&amp;';
+    if (m === '<') return '&lt;';
+    if (m === '>') return '&gt;';
+    return m;
+  });
+}
+
+// AFFICHAGE ÉCRAN
 function showScreen(screenId) {
   console.log("=== AFFICHAGE ÉCRAN:", screenId);
   
-  // Cacher tous les écrans
   const screens = ['screen-subscribe', 'screen-auth', 'screen-team-choice', 'screen-lobby', 
                    'screen-game1', 'screen-game2', 'screen-game3', 'screen-results'];
   
@@ -46,7 +77,6 @@ function showScreen(screenId) {
     if (el) el.classList.remove('active');
   });
   
-  // Afficher l'écran demandé
   const targetScreen = document.getElementById(screenId);
   if (targetScreen) {
     targetScreen.classList.add('active');
@@ -71,25 +101,32 @@ function updateLobbyUI() {
   const t = state.currentTeam;
   if (!t || !t.players) return;
   
+  console.log("Mise à jour lobby - Nombre de joueurs:", t.players.length);
+  
   const onlineCount = document.getElementById('online-count');
   const inviteCode = document.getElementById('invite-code');
   const startGame = document.getElementById('start-game');
   
-  if (onlineCount) onlineCount.innerHTML = `(${t.players.length}/4)`;
+  if (onlineCount) onlineCount.innerHTML = `(${t.players.length}/4) ${t.players.length === 4 ? '✅ Complet !' : '⏳ En attente...'}`;
   if (inviteCode) inviteCode.textContent = t.code;
   if (startGame) startGame.disabled = t.players.length !== 4;
   
   const membersDiv = document.getElementById('members-list');
   if (membersDiv) {
-    membersDiv.innerHTML = t.players.map(p => `
-      <div class="member-card">
-        <div class="member-avatar">
-          <img src="${p.avatar || 'https://i.pravatar.cc/150?img=7'}" style="width:60px;height:60px;border-radius:50%;">
-          ${p.phone === state.user?.phone ? '<span class="owner-badge">👑</span>' : ''}
+    if (t.players.length === 0) {
+      membersDiv.innerHTML = '<div class="empty-members">👻 Aucun membre pour le moment.<br>Invitez vos amis avec le code !</div>';
+    } else {
+      membersDiv.innerHTML = t.players.map(p => `
+        <div class="member-card">
+          <div class="member-avatar">
+            <img src="${p.avatar || 'https://i.pravatar.cc/150?img=7'}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;">
+            ${p.phone === state.user?.phone ? '<span class="owner-badge">👑</span>' : ''}
+          </div>
+          <span class="member-name">${escapeHtml(p.pseudo)}</span>
+          <span class="member-phone">${p.phone ? p.phone.substring(0, 10) + '...' : ''}</span>
         </div>
-        <span class="member-name">${p.pseudo}</span>
-      </div>
-    `).join('');
+      `).join('');
+    }
   }
 }
 
@@ -181,7 +218,6 @@ document.addEventListener('DOMContentLoaded', () => {
       state.user = user;
       console.log("Utilisateur créé:", user);
       
-      // Afficher l'écran de choix d'équipe
       showScreen('screen-team-choice');
       updateChoiceUI();
     };
@@ -204,7 +240,6 @@ document.addEventListener('DOMContentLoaded', () => {
       state.user = user;
       console.log("Utilisateur connecté:", user);
       
-      // Afficher l'écran de choix d'équipe
       showScreen('screen-team-choice');
       updateChoiceUI();
     };
@@ -219,6 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
       state.currentTeam = { code: newCode, players: [state.user] };
       saveTeam();
       localStorage.setItem(`team_${newCode}`, JSON.stringify(state.currentTeam));
+      broadcastTeam();
       showScreen('screen-lobby');
       updateLobbyUI();
     };
@@ -239,9 +275,13 @@ document.addEventListener('DOMContentLoaded', () => {
     choiceJoinBtn.onclick = () => {
       console.log("REJOINDRE ÉQUIPE");
       const code = document.getElementById('choice-join-code').value.toUpperCase().trim();
-      if (!code) return;
+      if (!code) {
+        alert("Entrez un code d'invitation");
+        return;
+      }
       
-      const existingTeam = localStorage.getItem(`team_${code}`);
+      let existingTeam = localStorage.getItem(`team_${code}`);
+      
       if (existingTeam) {
         state.currentTeam = JSON.parse(existingTeam);
       } else {
@@ -249,14 +289,18 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       
       if (state.currentTeam.players.length >= 4) {
-        alert("Cette équipe est déjà complète !");
+        alert("❌ Cette équipe est déjà complète (4/4) !");
         return;
       }
       
       if (!state.currentTeam.players.find(p => p.phone === state.user.phone)) {
         state.currentTeam.players.push(state.user);
+        console.log("Joueur ajouté:", state.user.pseudo);
+        console.log("Nombre de joueurs:", state.currentTeam.players.length);
+        
         saveTeam();
         localStorage.setItem(`team_${state.currentTeam.code}`, JSON.stringify(state.currentTeam));
+        broadcastTeam();
       }
       
       showScreen('screen-lobby');
@@ -287,6 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           saveTeam();
           localStorage.setItem(`team_${state.currentTeam.code}`, JSON.stringify(state.currentTeam));
+          broadcastTeam();
           updateLobbyUI();
         }
       }
@@ -309,18 +354,326 @@ document.addEventListener('DOMContentLoaded', () => {
     copyBtn.onclick = () => {
       if (state.currentTeam.code) {
         navigator.clipboard.writeText(state.currentTeam.code);
-        alert("Code copié !");
+        alert("✅ Code copié !");
       }
     };
   }
   
-  // LANCER LE JEU (à compléter plus tard)
+  // LANCER LE JEU 1
   const startGame = document.getElementById('start-game');
   if (startGame) {
     startGame.onclick = () => {
-      alert("Jeu en cours de développement...");
+      if (state.currentTeam.players.length === 4) {
+        startGame1();
+      } else {
+        alert("Il faut 4 joueurs pour commencer !");
+      }
     };
+  }
+  
+  // ADMIN
+  const showAdminBtn = document.getElementById('show-admin-btn');
+  const closeAdmin = document.getElementById('close-admin');
+  const adminLoginBtn = document.getElementById('admin-login-btn');
+  const addAdminBtn = document.getElementById('add-admin-btn');
+  const addQuestionBtn = document.getElementById('add-question-btn');
+  const newQuestionType = document.getElementById('new-question-type');
+  
+  if (showAdminBtn) {
+    showAdminBtn.onclick = () => {
+      const panel = document.getElementById('admin-panel');
+      if (panel) panel.classList.toggle('hidden');
+    };
+  }
+  
+  if (closeAdmin) {
+    closeAdmin.onclick = () => {
+      const panel = document.getElementById('admin-panel');
+      if (panel) panel.classList.add('hidden');
+    };
+  }
+  
+  if (adminLoginBtn) {
+    adminLoginBtn.onclick = () => {
+      const phone = document.getElementById('admin-phone-input').value.trim();
+      const ownerSection = document.getElementById('owner-section');
+      const adminSection = document.getElementById('admin-section');
+      
+      if (phone === OWNER_PHONE) {
+        if (ownerSection) ownerSection.classList.remove('hidden');
+        if (adminSection) adminSection.classList.remove('hidden');
+        displayAdminList();
+      } else if (ADMIN_LIST.includes(phone)) {
+        if (adminSection) adminSection.classList.remove('hidden');
+      } else {
+        alert("Accès refusé");
+      }
+    };
+  }
+  
+  if (addAdminBtn) {
+    addAdminBtn.onclick = () => {
+      const newAdmin = document.getElementById('new-admin-phone').value.trim();
+      if (newAdmin && !ADMIN_LIST.includes(newAdmin)) {
+        ADMIN_LIST.push(newAdmin);
+        localStorage.setItem('purge_admin_list', JSON.stringify(ADMIN_LIST));
+        displayAdminList();
+        alert("Admin ajouté !");
+      }
+    };
+  }
+  
+  if (addQuestionBtn) {
+    addQuestionBtn.onclick = () => {
+      const type = newQuestionType ? newQuestionType.value : 'game1';
+      const question = document.getElementById('new-question-text').value;
+      const answer = document.getElementById('new-question-answer').value;
+      
+      if (type === 'game1' && question && answer) {
+        if (typeof GAME1_QUESTIONS !== 'undefined') {
+          GAME1_QUESTIONS.push({ question: question, reponse: answer.toLowerCase() });
+          localStorage.setItem('purge_game1_questions', JSON.stringify(GAME1_QUESTIONS));
+          alert("✅ Question ajoutée !");
+        }
+      } else if (type === 'game2') {
+        const img = document.getElementById('new-question-image').value;
+        const pers = document.getElementById('new-question-personnage').value;
+        const desc = document.getElementById('new-question-description').value;
+        if (img && pers && desc && typeof GAME2_IMAGES !== 'undefined') {
+          GAME2_IMAGES.push({ img: img, personnage: pers, description: desc });
+          localStorage.setItem('purge_game2_images', JSON.stringify(GAME2_IMAGES));
+          alert("✅ Image ajoutée !");
+        }
+      }
+    };
+  }
+  
+  if (newQuestionType) {
+    newQuestionType.onchange = (e) => {
+      const field = document.getElementById('game2-image-field');
+      if (field) field.classList.toggle('hidden', e.target.value !== 'game2');
+    };
+  }
+  
+  function displayAdminList() {
+    const list = document.getElementById('admin-list');
+    if (list) {
+      list.innerHTML = ADMIN_LIST.map((p, i) => `<li>${p} <button onclick="window.removeAdmin(${i})">❌</button></li>`).join('');
+    }
+  }
+  
+  window.removeAdmin = (i) => {
+    ADMIN_LIST.splice(i, 1);
+    localStorage.setItem('purge_admin_list', JSON.stringify(ADMIN_LIST));
+    displayAdminList();
+  };
+  
+  // Charger les données sauvegardées
+  if (localStorage.getItem('purge_admin_list')) {
+    ADMIN_LIST = JSON.parse(localStorage.getItem('purge_admin_list'));
   }
   
   console.log("=== INITIALISATION TERMINÉE ===");
 });
+
+// ========== FONCTIONS DU JEU ==========
+
+function startGame1() {
+  state.game1.round = 1;
+  state.game1.playerDebts = {};
+  state.currentTeam.players.forEach(p => state.game1.playerDebts[p.phone] = 0);
+  showScreen('screen-game1');
+  loadQuestion();
+}
+
+function loadQuestion() {
+  if (typeof GAME1_QUESTIONS === 'undefined') return;
+  const q = GAME1_QUESTIONS[(state.game1.round - 1) % GAME1_QUESTIONS.length];
+  
+  const questionText = document.getElementById('question-text');
+  const roundCurrent = document.getElementById('round-current');
+  const playersAnswers = document.getElementById('players-answers');
+  const validateRound = document.getElementById('validate-round');
+  
+  if (questionText) questionText.textContent = q.question;
+  if (roundCurrent) roundCurrent.textContent = state.game1.round;
+  
+  if (playersAnswers) {
+    playersAnswers.innerHTML = '';
+    state.currentTeam.players.forEach((p, i) => {
+      playersAnswers.innerHTML += `
+        <div class="answer-box">
+          <img src="${p.avatar}" style="width:45px;height:45px;border-radius:50%;">
+          <div><strong>${escapeHtml(p.pseudo)}</strong></div>
+          <input type="text" id="answer-${i}" placeholder="Réponse...">
+        </div>
+      `;
+    });
+  }
+  
+  if (validateRound) validateRound.disabled = false;
+  startTimer(60);
+}
+
+function startTimer(seconds) {
+  let timeLeft = seconds;
+  const timerEl = document.getElementById('timer');
+  
+  const interval = setInterval(() => {
+    timeLeft--;
+    const sec = timeLeft < 10 ? '0' + timeLeft : timeLeft;
+    if (timerEl) timerEl.textContent = `00:${sec}`;
+    
+    if (timeLeft <= 0) {
+      clearInterval(interval);
+      validateGame1Round();
+    }
+  }, 1000);
+}
+
+function validateGame1Round() {
+  const answers = [];
+  
+  state.currentTeam.players.forEach((p, i) => {
+    const input = document.getElementById(`answer-${i}`);
+    const answer = input ? input.value.trim().toLowerCase() : '';
+    answers.push({ player: p, answer: answer });
+  });
+  
+  const count = {};
+  answers.forEach(a => {
+    if (a.answer.length > 0) {
+      count[a.answer] = (count[a.answer] || 0) + 1;
+    }
+  });
+  
+  let minoritaire = null;
+  let minCount = Infinity;
+  
+  for (let [rep, c] of Object.entries(count)) {
+    if (c < minCount && c >= 1) {
+      minCount = c;
+      minoritaire = rep;
+    }
+  }
+  
+  if (minoritaire) {
+    const loser = answers.find(a => a.answer === minoritaire);
+    if (loser) {
+      state.game1.playerDebts[loser.player.phone] = (state.game1.playerDebts[loser.player.phone] || 0) + 500;
+      alert(`⚠️ ${loser.player.pseudo} a donné une réponse minoritaire ! +500 dettes`);
+    }
+  } else {
+    alert("🤝 Tout le monde a répondu la même chose !");
+  }
+  
+  state.game1.round++;
+  
+  if (state.game1.round <= 5) {
+    loadQuestion();
+  } else {
+    const phones = Object.keys(state.game1.playerDebts);
+    if (phones.length > 0) {
+      const max = phones.reduce((a, b) => state.game1.playerDebts[a] > state.game1.playerDebts[b] ? a : b);
+      const total = Object.values(state.game1.playerDebts).reduce((s, x) => s + x, 0);
+      const loser = state.currentTeam.players.find(p => p.phone === max);
+      alert(`💀 ${loser?.pseudo} est le GRAND PERDANT avec ${total} dettes ! 💀`);
+    }
+    showScreen('screen-game2');
+    initGame2();
+  }
+}
+
+function initGame2() {
+  state.game2.currentImgIndex = 0;
+  state.game2.positions = {};
+  state.currentTeam.players.forEach(p => state.game2.positions[p.phone] = 0);
+  loadDevineImage();
+}
+
+function loadDevineImage() {
+  if (typeof GAME2_IMAGES === 'undefined') return;
+  const img = GAME2_IMAGES[state.game2.currentImgIndex % GAME2_IMAGES.length];
+  
+  const devineImg = document.getElementById('devine-img');
+  const devineQuestion = document.getElementById('devine-question');
+  
+  if (devineImg) devineImg.src = img.img;
+  if (devineQuestion) devineQuestion.textContent = img.description;
+}
+
+function submitDevine() {
+  const answer = document.getElementById('devine-input')?.value.trim().toLowerCase() || '';
+  if (typeof GAME2_IMAGES === 'undefined') return;
+  
+  const current = GAME2_IMAGES[state.game2.currentImgIndex % GAME2_IMAGES.length];
+  const correct = answer === current.personnage.toLowerCase();
+  
+  state.currentTeam.players.forEach(p => {
+    state.game2.positions[p.phone] = (state.game2.positions[p.phone] || 0) + (correct ? 2 : 1);
+  });
+  
+  alert(correct ? "✅ Bonne réponse ! +2 positions" : "❌ Mauvaise réponse ! +1 position");
+  nextDevine();
+}
+
+function voteBlanc() {
+  state.currentTeam.players.forEach(p => {
+    state.game2.positions[p.phone] = (state.game2.positions[p.phone] || 0) + 1;
+  });
+  alert("⚪ Bulletin blanc ! +1 position pour tout le monde");
+  nextDevine();
+}
+
+function nextDevine() {
+  state.game2.currentImgIndex++;
+  
+  if (state.game2.currentImgIndex < 3) {
+    const input = document.getElementById('devine-input');
+    if (input) input.value = '';
+    loadDevineImage();
+  } else {
+    const positions = Object.entries(state.game2.positions).sort((a, b) => b[1] - a[1]);
+    const loser = state.currentTeam.players.find(p => p.phone === positions[0][0]);
+    alert(`💀 ${loser?.pseudo} a perdu le jeu 2 avec ${positions[0][1]} points ! 💀`);
+    
+    const nextBtn = document.getElementById('next-game2');
+    if (nextBtn) nextBtn.classList.remove('hidden');
+  }
+}
+
+// Boutons du jeu
+document.addEventListener('click', (e) => {
+  if (e.target.id === 'validate-round') validateGame1Round();
+  if (e.target.id === 'submit-devine') submitDevine();
+  if (e.target.id === 'vote-blanc') voteBlanc();
+  if (e.target.id === 'next-game2') showScreen('screen-game3');
+  if (e.target.id === 'finish-game3') finishGame();
+  if (e.target.id === 'play-again') { localStorage.clear(); location.reload(); }
+  if (e.target.id === 'g1-back') showScreen('screen-lobby');
+  if (e.target.id === 'g2-back') showScreen('screen-lobby');
+});
+
+function finishGame() {
+  const score = 1200;
+  const win = score >= 1000;
+  
+  const finalScore = document.getElementById('final-score');
+  const winReward = document.getElementById('win-reward');
+  const loseBan = document.getElementById('lose-ban');
+  const groupSize = document.getElementById('group-size');
+  
+  if (finalScore) finalScore.textContent = `Score: ${score}`;
+  
+  if (win) {
+    if (winReward) winReward.classList.remove('hidden');
+    if (loseBan) loseBan.classList.add('hidden');
+    if (groupSize) groupSize.textContent = "300";
+  } else {
+    if (winReward) winReward.classList.add('hidden');
+    if (loseBan) loseBan.classList.remove('hidden');
+    localStorage.setItem('purge_ban', new Date(Date.now() + 7 * 86400000).toISOString());
+  }
+  
+  showScreen('screen-results');
+}
