@@ -59,14 +59,25 @@ function getFullPhoneNumber(formType) {
 }
 
 // Écrans
+// Écrans
 const screens = {
-  subscribe: document.getElementById('screen-subscribe'), auth: document.getElementById('screen-auth'),
-  teamChoice: document.getElementById('screen-team-choice'), lobby: document.getElementById('screen-lobby'),
-  game1: document.getElementById('screen-game1'), game2: document.getElementById('screen-game2'),
-  game3: document.getElementById('screen-game3'), results: document.getElementById('screen-results')
+  subscribe: document.getElementById('screen-subscribe'),
+  auth: document.getElementById('screen-auth'),
+  teamChoice: document.getElementById('screen-team-choice'),
+  lobby: document.getElementById('screen-lobby'),
+  game1: document.getElementById('screen-game1'),
+  game2: document.getElementById('screen-game2'),
+  game3: document.getElementById('screen-game3'),
+  results: document.getElementById('screen-results')
 };
-function showScreen(id) { Object.values(screens).forEach(s => s.classList.remove('active')); screens[id].classList.add('active'); }
 
+function showScreen(id) { 
+  console.log("Affichage écran:", id); // Pour déboguer
+  Object.values(screens).forEach(s => {
+    if (s) s.classList.remove('active');
+  }); 
+  if (screens[id]) screens[id].classList.add('active');
+}
 // Mise à jour UI choix équipe
 function updateChoiceUI() {
   if (state.user) {
