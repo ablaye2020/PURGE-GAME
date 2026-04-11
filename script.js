@@ -152,41 +152,43 @@ document.addEventListener('DOMContentLoaded', ()=>{
     document.getElementById('register-form').classList.toggle('active', tab.dataset.tab==='register');
   });
 
-  // Register
-  document.getElementById('reg-verify-phone').onclick = ()=>{
-    const phoneFull = getFullPhoneNumber('reg');
-    if(isValidPhone(phoneFull)){ 
-      document.getElementById('phone-status').innerHTML='✅ Vérifié'; 
-      document.getElementById('register-btn').disabled=false; 
-    } else {
-      document.getElementById('phone-status').innerHTML='❌ Numéro invalide - Utilisez le format +241XXXXXXXX';
-      document.getElementById('register-btn').disabled=true;
-    }
-  };
-  
-  document.getElementById('reg-avatar-file').onchange = (e)=>{
-    const f=e.target.files[0]; if(f){ const r=new FileReader(); r.onload=ev=>document.getElementById('reg-avatar-preview').src=ev.target.result; r.readAsDataURL(f); }
-  };
-  
-  document.getElementById('register-btn').onclick = ()=>{
-    const phone = getFullPhoneNumber('reg');
-    const pseudo = document.getElementById('reg-pseudo').value.trim();
-    const avatar = document.getElementById('reg-avatar-preview').src;
-    if(!phone || !pseudo || !isValidPhone(phone)){ 
-      document.getElementById('reg-error').textContent='Numéro invalide (ex: +241612345678) ou pseudo manquant'; 
-      return; 
-    }
-    if(state.users.find(u=>u.phone===phone)){ 
-      document.getElementById('reg-error').textContent='Numéro déjà utilisé'; 
-      return; 
-    }
-    const user={phone,pseudo,avatar,score:0}; 
-    state.users.push(user); 
-    saveUsers(); 
-    state.user=user; 
-    showScreen('team-choice');
-    updateChoiceUI();
-  };
+  // // Inscription
+document.getElementById('register-btn').onclick = ()=>{
+  const phone = getFullPhoneNumber('reg');
+  const pseudo = document.getElementById('reg-pseudo').value.trim();
+  const avatar = document.getElementById('reg-avatar-preview').src;
+  if(!phone || !pseudo || !isValidPhone(phone)){ 
+    document.getElementById('reg-error').textContent='Numéro invalide (ex: +241612345678) ou pseudo manquant'; 
+    return; 
+  }
+  if(state.users.find(u=>u.phone===phone)){ 
+    document.getElementById('reg-error').textContent='Numéro déjà utilisé'; 
+    return; 
+  }
+  const user={phone,pseudo,avatar,score:0}; 
+  state.users.push(user); 
+  saveUsers(); 
+  state.user=user; 
+  console.log("Utilisateur créé:", state.user); // Déboguer
+  console.log("Affichage team-choice...");
+  showScreen('teamChoice');  // Changé : 'teamChoice' au lieu de 'team-choice'
+  updateChoiceUI();
+};
+
+// Connexion
+document.getElementById('login-btn').onclick = ()=>{
+  const phone = getFullPhoneNumber('login');
+  const pseudo = document.getElementById('login-pseudo').value.trim();
+  const user = state.users.find(u=>u.phone===phone && u.pseudo.toLowerCase()===pseudo.toLowerCase());
+  if(!user){ 
+    document.getElementById('login-error').textContent='Identifiants incorrects'; 
+    return; 
+  }
+  state.user=user; 
+  console.log("Utilisateur connecté:", state.user);
+  showScreen('teamChoice');  // Changé : 'teamChoice'
+  updateChoiceUI();
+};
 
   // Login
   document.getElementById('login-btn').onclick = ()=>{
