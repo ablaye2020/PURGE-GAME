@@ -1,3 +1,4 @@
+PURGE GAME ....
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -24,7 +25,7 @@
       </div>
     </div>
 
-    <!-- ÉCRAN 2 : AUTHENTIFICATION (Connexion / Inscription) -->
+    <!-- ÉCRAN 2 : AUTHENTIFICATION -->
     <div id="screen-auth" class="screen">
       <div class="auth-header">
         <h1>⚔️ Purge Game ⚔️</h1>
@@ -38,34 +39,9 @@
       <!-- FORMULAIRE CONNEXION -->
       <div id="login-form" class="form active">
         <div class="input-group">
-          <label>📞 Numéro de téléphone</label>
-          <div class="phone-input-wrapper">
-            <span class="country-code" id="login-country-code">+241</span>
-            <input type="tel" id="login-phone" placeholder="Numéro">
-          </div>
-          <select id="login-country-select" class="country-select-hidden" style="display:none;">
-            <option value="+1">+1 (USA/Canada)</option><option value="+33">+33 (France)</option>
-            <option value="+221">+221 (Sénégal)</option><option value="+225">+225 (Côte d'Ivoire)</option>
-            <option value="+228">+228 (Togo)</option><option value="+241" selected>+241 (Gabon)</option>
-            <option value="+509">+509 (Haïti)</option><option value="+44">+44 (UK)</option>
-            <option value="+49">+49 (Allemagne)</option><option value="+34">+34 (Espagne)</option>
-            <option value="+39">+39 (Italie)</option><option value="+55">+55 (Brésil)</option>
-            <option value="+54">+54 (Argentine)</option><option value="+52">+52 (Mexique)</option>
-            <option value="+86">+86 (Chine)</option><option value="+81">+81 (Japon)</option>
-            <option value="+82">+82 (Corée)</option><option value="+91">+91 (Inde)</option>
-            <option value="+7">+7 (Russie)</option><option value="+61">+61 (Australie)</option>
-            <option value="+27">+27 (Afrique du Sud)</option><option value="+212">+212 (Maroc)</option>
-            <option value="+216">+216 (Tunisie)</option><option value="+213">+213 (Algérie)</option>
-            <option value="+20">+20 (Égypte)</option><option value="+966">+966 (Arabie Saoudite)</option>
-            <option value="+971">+971 (UAE)</option><option value="+64">+64 (Nouvelle-Zélande)</option>
-            <option value="+46">+46 (Suède)</option><option value="+47">+47 (Norvège)</option>
-            <option value="+45">+45 (Danemark)</option><option value="+31">+31 (Pays-Bas)</option>
-            <option value="+32">+32 (Belgique)</option><option value="+41">+41 (Suisse)</option>
-            <option value="+43">+43 (Autriche)</option><option value="+48">+48 (Pologne)</option>
-            <option value="+420">+420 (Rép. Tchèque)</option><option value="+36">+36 (Hongrie)</option>
-            <option value="+40">+40 (Roumanie)</option><option value="+359">+359 (Bulgarie)</option>
-            <option value="+30">+30 (Grèce)</option><option value="+90">+90 (Turquie)</option>
-          </select>
+          <label>📞 Numéro de téléphone (avec indicatif)</label>
+          <input type="tel" id="login-phone" placeholder="Ex: +241612345678">
+          <p class="input-hint">Entrez votre numéro complet avec l'indicatif de votre pays</p>
         </div>
         <div class="input-group">
           <label>🎮 Pseudo</label>
@@ -78,36 +54,11 @@
       <!-- FORMULAIRE INSCRIPTION -->
       <div id="register-form" class="form">
         <div class="input-group">
-          <label>📞 Numéro de téléphone</label>
-          <div class="phone-input-wrapper">
-            <span class="country-code" id="reg-country-code">+241</span>
-            <input type="tel" id="reg-phone" placeholder="Numéro">
-          </div>
-          <select id="reg-country-select" class="country-select-hidden" style="display:none;">
-            <option value="+1">+1 (USA/Canada)</option><option value="+33">+33 (France)</option>
-            <option value="+221">+221 (Sénégal)</option><option value="+225">+225 (Côte d'Ivoire)</option>
-            <option value="+228">+228 (Togo)</option><option value="+241" selected>+241 (Gabon)</option>
-            <option value="+509">+509 (Haïti)</option><option value="+44">+44 (UK)</option>
-            <option value="+49">+49 (Allemagne)</option><option value="+34">+34 (Espagne)</option>
-            <option value="+39">+39 (Italie)</option><option value="+55">+55 (Brésil)</option>
-            <option value="+54">+54 (Argentine)</option><option value="+52">+52 (Mexique)</option>
-            <option value="+86">+86 (Chine)</option><option value="+81">+81 (Japon)</option>
-            <option value="+82">+82 (Corée)</option><option value="+91">+91 (Inde)</option>
-            <option value="+7">+7 (Russie)</option><option value="+61">+61 (Australie)</option>
-            <option value="+27">+27 (Afrique du Sud)</option><option value="+212">+212 (Maroc)</option>
-            <option value="+216">+216 (Tunisie)</option><option value="+213">+213 (Algérie)</option>
-            <option value="+20">+20 (Égypte)</option><option value="+966">+966 (Arabie Saoudite)</option>
-            <option value="+971">+971 (UAE)</option><option value="+64">+64 (Nouvelle-Zélande)</option>
-            <option value="+46">+46 (Suède)</option><option value="+47">+47 (Norvège)</option>
-            <option value="+45">+45 (Danemark)</option><option value="+31">+31 (Pays-Bas)</option>
-            <option value="+32">+32 (Belgique)</option><option value="+41">+41 (Suisse)</option>
-            <option value="+43">+43 (Autriche)</option><option value="+48">+48 (Pologne)</option>
-            <option value="+420">+420 (Rép. Tchèque)</option><option value="+36">+36 (Hongrie)</option>
-            <option value="+40">+40 (Roumanie)</option><option value="+359">+359 (Bulgarie)</option>
-            <option value="+30">+30 (Grèce)</option><option value="+90">+90 (Turquie)</option>
-          </select>
+          <label>📞 Numéro de téléphone (avec indicatif)</label>
+          <input type="tel" id="reg-phone" placeholder="Ex: +241612345678">
           <button id="reg-verify-phone" class="btn-secondary verify-btn">Vérifier</button>
           <span id="phone-status" class="status">⛔ Non vérifié</span>
+          <p class="input-hint">Exemples: +241XXXXXX (Gabon), +221XXXXXX (Sénégal), +33XXXXXX (France)</p>
         </div>
         <div class="input-group">
           <label>🎮 Pseudo</label>
@@ -125,7 +76,7 @@
       </div>
     </div>
 
-    <!-- ÉCRAN 3 : CRÉER OU REJOINDRE UNE ÉQUIPE (NOUVEAU) -->
+    <!-- ÉCRAN 3 : CRÉER OU REJOINDRE UNE ÉQUIPE -->
     <div id="screen-team-choice" class="screen">
       <div class="choice-container">
         <div class="choice-header">
@@ -159,14 +110,13 @@
       </div>
     </div>
 
-    <!-- ÉCRAN 4 : LOBBY (ÉQUIPE) -->
+    <!-- ÉCRAN 4 : LOBBY -->
     <div id="screen-lobby" class="screen">
       <div class="lobby-header">
         <h2>🏠 Votre équipe</h2>
         <button id="lobby-logout-btn" class="icon-btn logout">🚪 Déconnexion</button>
       </div>
 
-      <!-- Code d'invitation -->
       <div class="code-section">
         <p class="code-label">🔑 Code d'invitation</p>
         <div class="code-display">
@@ -176,13 +126,11 @@
         <p class="code-hint">Partagez ce code avec vos amis (max 4 joueurs)</p>
       </div>
 
-      <!-- Membres de l'équipe -->
       <div class="members-section">
         <h3>👥 Membres <span id="online-count">(0/4)</span></h3>
         <div id="members-list" class="members-grid"></div>
       </div>
 
-      <!-- Actions -->
       <div class="lobby-actions">
         <button id="leave-team" class="btn-outline">🚪 Quitter l'équipe</button>
         <button id="start-game" class="btn-primary" disabled>⚔️ Lancer le game (4/4)</button>
@@ -251,7 +199,7 @@
       </div>
     </div>
 
-    <!-- PANNEAU ADMIN (flottant) -->
+    <!-- ADMIN -->
     <div id="admin-floating">
       <button id="show-admin-btn" class="admin-toggle">👑</button>
       <div id="admin-panel" class="hidden">
@@ -289,3 +237,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+NO NAME x JOY BOY 
