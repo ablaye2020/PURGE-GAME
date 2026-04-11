@@ -1,5 +1,5 @@
 /****************************************************
- * PURGE GAME - Version finale qui fonctionne
+ * PURGE GAME - Version avec équipe persistante
  ****************************************************/
 
 // État
@@ -14,35 +14,28 @@ const state = {
 const OWNER_PHONE = "+24160248210";
 let ADMIN_LIST = ["+221708137251","+221769426236","+22897173547","+2250777315113","+50946801238"];
 
-// BroadcastChannel pour synchronisation
-const channel = new BroadcastChannel('purge_team');
-
-channel.onmessage = (e) => {
-  const { type, data } = e.data;
-  if (type === 'TEAM_UPDATE' && data.code === state.currentTeam.code) {
-    console.log("Mise à jour reçue - Nouveaux joueurs:", data.players.length);
-    state.currentTeam.players = data.players;
-    saveTeam();
-    if (document.getElementById('screen-lobby')?.classList.contains('active')) {
-      updateLobbyUI();
-    }
-  }
-};
-
-function broadcastTeam() { 
-  channel.postMessage({ 
-    type: 'TEAM_UPDATE', 
-    data: { code: state.currentTeam.code, players: state.currentTeam.players } 
-  }); 
-}
-
 // Helpers
 function saveUsers() { localStorage.setItem('purge_users', JSON.stringify(state.users)); }
+
 function saveTeam() { 
   if (state.currentTeam.code) {
     localStorage.setItem('purge_team', JSON.stringify(state.currentTeam));
+    // Sauvegarder aussi dans une équipe séparée pour que les autres puissent la trouver
     localStorage.setItem(`team_${state.currentTeam.code}`, JSON.stringify(state.currentTeam));
+    console.log("💾 Équipe sauvegardée:", state.currentTeam.code, state.currentTeam.players.length, "joueurs");
   }
+}
+
+function loadTeamFromCode(code) {
+  const saved = localStorage.getItem(`team_${code}`);
+  if (saved) {
+    try {
+      const team = JSON.parse(saved);
+      console.log("📂 Équipe chargée depuis code:", code, team.players.length, "joueurs");
+      return team;
+    } catch(e) {}
+  }
+  return null;
 }
 
 function isValidPhone(phone) {
@@ -104,6 +97,7 @@ function updateLobbyUI() {
   if (!t || !t.players) return;
   
   console.log("🔄 Mise à jour lobby - Joueurs:", t.players.length);
+  console.log("👥 Liste:", t.players.map(p => p.pseudo).join(", "));
   
   const onlineCount = document.getElementById('online-count');
   const inviteCode = document.getElementById('invite-code');
@@ -135,17 +129,6 @@ function updateLobbyUI() {
 // Initialisation
 document.addEventListener('DOMContentLoaded', () => {
   console.log("=== PAGE CHARGÉE ===");
-  
-  // Vérifier si une équipe existe déjà pour l'utilisateur
-  const savedTeam = localStorage.getItem('purge_team');
-  if (savedTeam) {
-    try {
-      const team = JSON.parse(savedTeam);
-      if (team.players && team.players.length > 0) {
-        state.currentTeam = team;
-      }
-    } catch(e) {}
-  }
   
   // ÉTAPE 1: Abonnement
   const verifyBtn = document.getElementById('verify-subscription');
@@ -250,14 +233,23 @@ document.addEventListener('DOMContentLoaded', () => {
       
       state.user = user;
       
-      // Vérifier si l'utilisateur était dans une équipe
-      if (state.currentTeam.players && state.currentTeam.players.find(p => p.phone === user.phone)) {
-        showScreen('screen-lobby');
-        updateLobbyUI();
-      } else {
-        showScreen('screen-team-choice');
-        updateChoiceUI();
+      // Chercher si l'utilisateur était dans une équipe sauvegardée
+      const savedTeam = localStorage.getItem('purge_team');
+      if (savedTeam) {
+        try {
+          const team = JSON.parse(savedTeam);
+          if (team.players && team.players.find(p => p.phone === user.phone)) {
+            state.currentTeam = team;
+            console.log("📂 Équipe chargée depuis sauvegarde:", team.code, team.players.length, "joueurs");
+            showScreen('screen-lobby');
+            updateLobbyUI();
+            return;
+          }
+        } catch(e) {}
       }
+      
+      showScreen('screen-team-choice');
+      updateChoiceUI();
     };
   }
   
@@ -269,7 +261,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const newCode = generateTeamCode();
       state.currentTeam = { code: newCode, players: [state.user] };
       saveTeam();
-      broadcastTeam();
       showScreen('screen-lobby');
       updateLobbyUI();
     };
@@ -284,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
   
-  // REJOINDRE UNE ÉQUIPE
+  // REJOINDRE UNE ÉQUIPE - VERSION CORRIGÉE
   const choiceJoinBtn = document.getElementById('choice-join-btn');
   if (choiceJoinBtn) {
     choiceJoinBtn.onclick = () => {
@@ -295,16 +286,16 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
       
-      // Chercher l'équipe dans localStorage
-      let existingTeam = localStorage.getItem(`team_${code}`);
+      // Chercher l'équipe dans localStorage avec le code
+      let existingTeam = loadTeamFromCode(code);
       
       if (existingTeam) {
-        state.currentTeam = JSON.parse(existingTeam);
-        console.log("Équipe trouvée avec", state.currentTeam.players.length, "joueurs");
+        state.currentTeam = existingTeam;
+        console.log("📂 Équipe trouvée:", code, state.currentTeam.players.length, "joueurs");
       } else {
         // Si l'équipe n'existe pas, la créer
         state.currentTeam = { code: code, players: [] };
-        console.log("Nouvelle équipe créée avec code:", code);
+        console.log("🆕 Nouvelle équipe créée avec code:", code);
       }
       
       // Vérifier si l'équipe est pleine
@@ -320,7 +311,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("👥 Nombre total de joueurs:", state.currentTeam.players.length);
         
         saveTeam();
-        broadcastTeam();
+      } else {
+        console.log("ℹ️ Joueur déjà dans l'équipe");
       }
       
       showScreen('screen-lobby');
@@ -332,8 +324,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const choiceLogout = document.getElementById('choice-logout');
   if (choiceLogout) {
     choiceLogout.onclick = () => {
+      // Ne pas supprimer l'équipe, juste déconnecter l'utilisateur
       state.user = null;
-      state.currentTeam = { code: null, players: [] };
       showScreen('screen-auth');
     };
   }
@@ -345,12 +337,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (confirm("Quitter l'équipe ?")) {
         state.currentTeam.players = state.currentTeam.players.filter(p => p.phone !== state.user.phone);
         if (state.currentTeam.players.length === 0) {
+          // Supprimer l'équipe si plus personne
           localStorage.removeItem(`team_${state.currentTeam.code}`);
           state.currentTeam = { code: null, players: [] };
           showScreen('screen-team-choice');
         } else {
           saveTeam();
-          broadcastTeam();
           updateLobbyUI();
         }
       }
@@ -361,17 +353,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const lobbyLogout = document.getElementById('lobby-logout-btn');
   if (lobbyLogout) {
     lobbyLogout.onclick = () => {
-      // Enlever le joueur de l'équipe
-      if (state.currentTeam.players) {
-        state.currentTeam.players = state.currentTeam.players.filter(p => p.phone !== state.user?.phone);
-        if (state.currentTeam.players.length === 0) {
-          localStorage.removeItem(`team_${state.currentTeam.code}`);
-          state.currentTeam = { code: null, players: [] };
-        } else {
-          saveTeam();
-          broadcastTeam();
-        }
-      }
       state.user = null;
       showScreen('screen-auth');
     };
@@ -527,7 +508,6 @@ function validateGame1Round() {
   if (state.game1.round <= 5) {
     loadQuestion();
   } else {
-    // Fin du jeu 1 - déterminer le perdant
     const phones = Object.keys(state.game1.playerDebts);
     if (phones.length > 0) {
       const max = phones.reduce((a, b) => state.game1.playerDebts[a] > state.game1.playerDebts[b] ? a : b);
