@@ -1,5 +1,5 @@
 /****************************************************
- * PURGE GAME - Version complète et corrigée
+ * PURGE GAME - Version finale qui fonctionne
  ****************************************************/
 
 // État
@@ -20,12 +20,12 @@ const channel = new BroadcastChannel('purge_team');
 channel.onmessage = (e) => {
   const { type, data } = e.data;
   if (type === 'TEAM_UPDATE' && data.code === state.currentTeam.code) {
-    console.log("Mise à jour de l'équipe reçue");
+    console.log("Mise à jour reçue - Nouveaux joueurs:", data.players.length);
     state.currentTeam.players = data.players;
+    saveTeam();
     if (document.getElementById('screen-lobby')?.classList.contains('active')) {
       updateLobbyUI();
     }
-    saveTeam();
   }
 };
 
@@ -39,7 +39,10 @@ function broadcastTeam() {
 // Helpers
 function saveUsers() { localStorage.setItem('purge_users', JSON.stringify(state.users)); }
 function saveTeam() { 
-  if (state.currentTeam.code) localStorage.setItem('purge_team', JSON.stringify(state.currentTeam));
+  if (state.currentTeam.code) {
+    localStorage.setItem('purge_team', JSON.stringify(state.currentTeam));
+    localStorage.setItem(`team_${state.currentTeam.code}`, JSON.stringify(state.currentTeam));
+  }
 }
 
 function isValidPhone(phone) {
@@ -80,7 +83,6 @@ function showScreen(screenId) {
   const targetScreen = document.getElementById(screenId);
   if (targetScreen) {
     targetScreen.classList.add('active');
-    console.log("✅ Écran affiché:", screenId);
   } else {
     console.error("❌ Écran introuvable:", screenId);
   }
@@ -101,7 +103,7 @@ function updateLobbyUI() {
   const t = state.currentTeam;
   if (!t || !t.players) return;
   
-  console.log("Mise à jour lobby - Nombre de joueurs:", t.players.length);
+  console.log("🔄 Mise à jour lobby - Joueurs:", t.players.length);
   
   const onlineCount = document.getElementById('online-count');
   const inviteCode = document.getElementById('invite-code');
@@ -134,11 +136,21 @@ function updateLobbyUI() {
 document.addEventListener('DOMContentLoaded', () => {
   console.log("=== PAGE CHARGÉE ===");
   
+  // Vérifier si une équipe existe déjà pour l'utilisateur
+  const savedTeam = localStorage.getItem('purge_team');
+  if (savedTeam) {
+    try {
+      const team = JSON.parse(savedTeam);
+      if (team.players && team.players.length > 0) {
+        state.currentTeam = team;
+      }
+    } catch(e) {}
+  }
+  
   // ÉTAPE 1: Abonnement
   const verifyBtn = document.getElementById('verify-subscription');
   if (verifyBtn) {
     verifyBtn.onclick = () => {
-      console.log("Bouton CONTINUER cliqué");
       showScreen('screen-auth');
     };
   }
@@ -198,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const registerBtn = document.getElementById('register-btn');
   if (registerBtn) {
     registerBtn.onclick = () => {
-      console.log("INSCRIPTION");
+      console.log("📝 INSCRIPTION");
       const phone = document.getElementById('reg-phone').value.trim();
       const pseudo = document.getElementById('reg-pseudo').value.trim();
       const avatar = document.getElementById('reg-avatar-preview').src;
@@ -216,7 +228,6 @@ document.addEventListener('DOMContentLoaded', () => {
       state.users.push(user);
       saveUsers();
       state.user = user;
-      console.log("Utilisateur créé:", user);
       
       showScreen('screen-team-choice');
       updateChoiceUI();
@@ -227,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginBtn = document.getElementById('login-btn');
   if (loginBtn) {
     loginBtn.onclick = () => {
-      console.log("CONNEXION");
+      console.log("🔐 CONNEXION");
       const phone = document.getElementById('login-phone').value.trim();
       const pseudo = document.getElementById('login-pseudo').value.trim();
       const user = state.users.find(u => u.phone === phone && u.pseudo.toLowerCase() === pseudo.toLowerCase());
@@ -238,10 +249,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       
       state.user = user;
-      console.log("Utilisateur connecté:", user);
       
-      showScreen('screen-team-choice');
-      updateChoiceUI();
+      // Vérifier si l'utilisateur était dans une équipe
+      if (state.currentTeam.players && state.currentTeam.players.find(p => p.phone === user.phone)) {
+        showScreen('screen-lobby');
+        updateLobbyUI();
+      } else {
+        showScreen('screen-team-choice');
+        updateChoiceUI();
+      }
     };
   }
   
@@ -249,11 +265,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const createTeamBtn = document.getElementById('create-team-btn');
   if (createTeamBtn) {
     createTeamBtn.onclick = () => {
-      console.log("CRÉER ÉQUIPE");
+      console.log("✨ CRÉER ÉQUIPE");
       const newCode = generateTeamCode();
       state.currentTeam = { code: newCode, players: [state.user] };
       saveTeam();
-      localStorage.setItem(`team_${newCode}`, JSON.stringify(state.currentTeam));
       broadcastTeam();
       showScreen('screen-lobby');
       updateLobbyUI();
@@ -273,33 +288,38 @@ document.addEventListener('DOMContentLoaded', () => {
   const choiceJoinBtn = document.getElementById('choice-join-btn');
   if (choiceJoinBtn) {
     choiceJoinBtn.onclick = () => {
-      console.log("REJOINDRE ÉQUIPE");
+      console.log("🔗 REJOINDRE ÉQUIPE");
       const code = document.getElementById('choice-join-code').value.toUpperCase().trim();
       if (!code) {
         alert("Entrez un code d'invitation");
         return;
       }
       
+      // Chercher l'équipe dans localStorage
       let existingTeam = localStorage.getItem(`team_${code}`);
       
       if (existingTeam) {
         state.currentTeam = JSON.parse(existingTeam);
+        console.log("Équipe trouvée avec", state.currentTeam.players.length, "joueurs");
       } else {
+        // Si l'équipe n'existe pas, la créer
         state.currentTeam = { code: code, players: [] };
+        console.log("Nouvelle équipe créée avec code:", code);
       }
       
+      // Vérifier si l'équipe est pleine
       if (state.currentTeam.players.length >= 4) {
         alert("❌ Cette équipe est déjà complète (4/4) !");
         return;
       }
       
+      // Vérifier si le joueur est déjà dans l'équipe
       if (!state.currentTeam.players.find(p => p.phone === state.user.phone)) {
         state.currentTeam.players.push(state.user);
-        console.log("Joueur ajouté:", state.user.pseudo);
-        console.log("Nombre de joueurs:", state.currentTeam.players.length);
+        console.log("✅ Joueur ajouté:", state.user.pseudo);
+        console.log("👥 Nombre total de joueurs:", state.currentTeam.players.length);
         
         saveTeam();
-        localStorage.setItem(`team_${state.currentTeam.code}`, JSON.stringify(state.currentTeam));
         broadcastTeam();
       }
       
@@ -330,7 +350,6 @@ document.addEventListener('DOMContentLoaded', () => {
           showScreen('screen-team-choice');
         } else {
           saveTeam();
-          localStorage.setItem(`team_${state.currentTeam.code}`, JSON.stringify(state.currentTeam));
           broadcastTeam();
           updateLobbyUI();
         }
@@ -342,8 +361,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const lobbyLogout = document.getElementById('lobby-logout-btn');
   if (lobbyLogout) {
     lobbyLogout.onclick = () => {
+      // Enlever le joueur de l'équipe
+      if (state.currentTeam.players) {
+        state.currentTeam.players = state.currentTeam.players.filter(p => p.phone !== state.user?.phone);
+        if (state.currentTeam.players.length === 0) {
+          localStorage.removeItem(`team_${state.currentTeam.code}`);
+          state.currentTeam = { code: null, players: [] };
+        } else {
+          saveTeam();
+          broadcastTeam();
+        }
+      }
       state.user = null;
-      state.currentTeam = { code: null, players: [] };
       showScreen('screen-auth');
     };
   }
@@ -364,20 +393,17 @@ document.addEventListener('DOMContentLoaded', () => {
   if (startGame) {
     startGame.onclick = () => {
       if (state.currentTeam.players.length === 4) {
+        console.log("🎮 LANCEMENT DU JEU");
         startGame1();
       } else {
-        alert("Il faut 4 joueurs pour commencer !");
+        alert(`Il faut 4 joueurs pour commencer ! Actuellement: ${state.currentTeam.players.length}/4`);
       }
     };
   }
   
-  // ADMIN
+  // ADMIN (version simplifiée)
   const showAdminBtn = document.getElementById('show-admin-btn');
   const closeAdmin = document.getElementById('close-admin');
-  const adminLoginBtn = document.getElementById('admin-login-btn');
-  const addAdminBtn = document.getElementById('add-admin-btn');
-  const addQuestionBtn = document.getElementById('add-question-btn');
-  const newQuestionType = document.getElementById('new-question-type');
   
   if (showAdminBtn) {
     showAdminBtn.onclick = () => {
@@ -393,92 +419,13 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
   
-  if (adminLoginBtn) {
-    adminLoginBtn.onclick = () => {
-      const phone = document.getElementById('admin-phone-input').value.trim();
-      const ownerSection = document.getElementById('owner-section');
-      const adminSection = document.getElementById('admin-section');
-      
-      if (phone === OWNER_PHONE) {
-        if (ownerSection) ownerSection.classList.remove('hidden');
-        if (adminSection) adminSection.classList.remove('hidden');
-        displayAdminList();
-      } else if (ADMIN_LIST.includes(phone)) {
-        if (adminSection) adminSection.classList.remove('hidden');
-      } else {
-        alert("Accès refusé");
-      }
-    };
-  }
-  
-  if (addAdminBtn) {
-    addAdminBtn.onclick = () => {
-      const newAdmin = document.getElementById('new-admin-phone').value.trim();
-      if (newAdmin && !ADMIN_LIST.includes(newAdmin)) {
-        ADMIN_LIST.push(newAdmin);
-        localStorage.setItem('purge_admin_list', JSON.stringify(ADMIN_LIST));
-        displayAdminList();
-        alert("Admin ajouté !");
-      }
-    };
-  }
-  
-  if (addQuestionBtn) {
-    addQuestionBtn.onclick = () => {
-      const type = newQuestionType ? newQuestionType.value : 'game1';
-      const question = document.getElementById('new-question-text').value;
-      const answer = document.getElementById('new-question-answer').value;
-      
-      if (type === 'game1' && question && answer) {
-        if (typeof GAME1_QUESTIONS !== 'undefined') {
-          GAME1_QUESTIONS.push({ question: question, reponse: answer.toLowerCase() });
-          localStorage.setItem('purge_game1_questions', JSON.stringify(GAME1_QUESTIONS));
-          alert("✅ Question ajoutée !");
-        }
-      } else if (type === 'game2') {
-        const img = document.getElementById('new-question-image').value;
-        const pers = document.getElementById('new-question-personnage').value;
-        const desc = document.getElementById('new-question-description').value;
-        if (img && pers && desc && typeof GAME2_IMAGES !== 'undefined') {
-          GAME2_IMAGES.push({ img: img, personnage: pers, description: desc });
-          localStorage.setItem('purge_game2_images', JSON.stringify(GAME2_IMAGES));
-          alert("✅ Image ajoutée !");
-        }
-      }
-    };
-  }
-  
-  if (newQuestionType) {
-    newQuestionType.onchange = (e) => {
-      const field = document.getElementById('game2-image-field');
-      if (field) field.classList.toggle('hidden', e.target.value !== 'game2');
-    };
-  }
-  
-  function displayAdminList() {
-    const list = document.getElementById('admin-list');
-    if (list) {
-      list.innerHTML = ADMIN_LIST.map((p, i) => `<li>${p} <button onclick="window.removeAdmin(${i})">❌</button></li>`).join('');
-    }
-  }
-  
-  window.removeAdmin = (i) => {
-    ADMIN_LIST.splice(i, 1);
-    localStorage.setItem('purge_admin_list', JSON.stringify(ADMIN_LIST));
-    displayAdminList();
-  };
-  
-  // Charger les données sauvegardées
-  if (localStorage.getItem('purge_admin_list')) {
-    ADMIN_LIST = JSON.parse(localStorage.getItem('purge_admin_list'));
-  }
-  
   console.log("=== INITIALISATION TERMINÉE ===");
 });
 
 // ========== FONCTIONS DU JEU ==========
 
 function startGame1() {
+  console.log("🎮 Début du Jeu 1");
   state.game1.round = 1;
   state.game1.playerDebts = {};
   state.currentTeam.players.forEach(p => state.game1.playerDebts[p.phone] = 0);
@@ -487,7 +434,11 @@ function startGame1() {
 }
 
 function loadQuestion() {
-  if (typeof GAME1_QUESTIONS === 'undefined') return;
+  if (typeof GAME1_QUESTIONS === 'undefined') {
+    console.error("GAME1_QUESTIONS non défini");
+    return;
+  }
+  
   const q = GAME1_QUESTIONS[(state.game1.round - 1) % GAME1_QUESTIONS.length];
   
   const questionText = document.getElementById('question-text');
@@ -503,9 +454,9 @@ function loadQuestion() {
     state.currentTeam.players.forEach((p, i) => {
       playersAnswers.innerHTML += `
         <div class="answer-box">
-          <img src="${p.avatar}" style="width:45px;height:45px;border-radius:50%;">
+          <img src="${p.avatar}" style="width:45px;height:45px;border-radius:50%;object-fit:cover;">
           <div><strong>${escapeHtml(p.pseudo)}</strong></div>
-          <input type="text" id="answer-${i}" placeholder="Réponse...">
+          <input type="text" id="answer-${i}" placeholder="Votre réponse...">
         </div>
       `;
     });
@@ -519,19 +470,23 @@ function startTimer(seconds) {
   let timeLeft = seconds;
   const timerEl = document.getElementById('timer');
   
-  const interval = setInterval(() => {
+  if (window.gameTimer) clearInterval(window.gameTimer);
+  
+  window.gameTimer = setInterval(() => {
     timeLeft--;
     const sec = timeLeft < 10 ? '0' + timeLeft : timeLeft;
     if (timerEl) timerEl.textContent = `00:${sec}`;
     
     if (timeLeft <= 0) {
-      clearInterval(interval);
+      clearInterval(window.gameTimer);
       validateGame1Round();
     }
   }, 1000);
 }
 
 function validateGame1Round() {
+  console.log("✅ Validation manche", state.game1.round);
+  
   const answers = [];
   
   state.currentTeam.players.forEach((p, i) => {
@@ -572,6 +527,7 @@ function validateGame1Round() {
   if (state.game1.round <= 5) {
     loadQuestion();
   } else {
+    // Fin du jeu 1 - déterminer le perdant
     const phones = Object.keys(state.game1.playerDebts);
     if (phones.length > 0) {
       const max = phones.reduce((a, b) => state.game1.playerDebts[a] > state.game1.playerDebts[b] ? a : b);
@@ -585,14 +541,23 @@ function validateGame1Round() {
 }
 
 function initGame2() {
+  console.log("🎮 Début du Jeu 2");
   state.game2.currentImgIndex = 0;
   state.game2.positions = {};
   state.currentTeam.players.forEach(p => state.game2.positions[p.phone] = 0);
+  
+  const nextBtn = document.getElementById('next-game2');
+  if (nextBtn) nextBtn.classList.add('hidden');
+  
   loadDevineImage();
 }
 
 function loadDevineImage() {
-  if (typeof GAME2_IMAGES === 'undefined') return;
+  if (typeof GAME2_IMAGES === 'undefined') {
+    console.error("GAME2_IMAGES non défini");
+    return;
+  }
+  
   const img = GAME2_IMAGES[state.game2.currentImgIndex % GAME2_IMAGES.length];
   
   const devineImg = document.getElementById('devine-img');
@@ -642,19 +607,8 @@ function nextDevine() {
   }
 }
 
-// Boutons du jeu
-document.addEventListener('click', (e) => {
-  if (e.target.id === 'validate-round') validateGame1Round();
-  if (e.target.id === 'submit-devine') submitDevine();
-  if (e.target.id === 'vote-blanc') voteBlanc();
-  if (e.target.id === 'next-game2') showScreen('screen-game3');
-  if (e.target.id === 'finish-game3') finishGame();
-  if (e.target.id === 'play-again') { localStorage.clear(); location.reload(); }
-  if (e.target.id === 'g1-back') showScreen('screen-lobby');
-  if (e.target.id === 'g2-back') showScreen('screen-lobby');
-});
-
 function finishGame() {
+  console.log("🏆 FIN DU JEU");
   const score = 1200;
   const win = score >= 1000;
   
@@ -677,3 +631,23 @@ function finishGame() {
   
   showScreen('screen-results');
 }
+
+// Boutons du jeu
+document.addEventListener('click', (e) => {
+  if (e.target.id === 'validate-round') validateGame1Round();
+  if (e.target.id === 'submit-devine') submitDevine();
+  if (e.target.id === 'vote-blanc') voteBlanc();
+  if (e.target.id === 'next-game2') {
+    showScreen('screen-game3');
+  }
+  if (e.target.id === 'finish-game3') finishGame();
+  if (e.target.id === 'play-again') { 
+    localStorage.clear(); 
+    location.reload(); 
+  }
+  if (e.target.id === 'g1-back') {
+    if (window.gameTimer) clearInterval(window.gameTimer);
+    showScreen('screen-lobby');
+  }
+  if (e.target.id === 'g2-back') showScreen('screen-lobby');
+});
