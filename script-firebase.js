@@ -368,7 +368,36 @@ function finishGame() {
   }
   showScreen('screen-results');
 }
-
+// ========== MUSIQUE DE FOND ==========
+  const audio = document.getElementById('background-music');
+  const toggleBtn = document.getElementById('toggle-music');
+  
+  if (audio && toggleBtn) {
+    let musicStarted = false;
+    
+    function startMusic() {
+      if (!musicStarted) {
+        audio.volume = 0.3;
+        audio.play().catch(e => console.log("Auto-play bloqué"));
+        musicStarted = true;
+      }
+    }
+    
+    document.body.addEventListener('click', startMusic, { once: true });
+    
+    let isPlaying = true;
+    toggleBtn.onclick = () => {
+      if (isPlaying) {
+        audio.pause();
+        toggleBtn.textContent = '🔇';
+        isPlaying = false;
+      } else {
+        audio.play();
+        toggleBtn.textContent = '🔊';
+        isPlaying = true;
+      }
+    };
+  }
 // ========== INITIALISATION ==========
 document.addEventListener('DOMContentLoaded', () => {
   console.log("=== PURGE GAME AVEC FIREBASE ===");
