@@ -4,53 +4,22 @@ INFO PURGE ADMIN
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Info Purge 24 - Panel Admin</title>
+    <title>Info Purge 24 - Panel Admin Luxueux</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Poppins:wght@300;400;500;600;700&display=swap');
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: 'Rajdhani', sans-serif;
-            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #0a0a1a 100%);
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
             color: #ffffff;
             min-height: 100vh;
             position: relative;
         }
         
-        /* BANDEAU DÉFILANT */
-        .marquee {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: linear-gradient(90deg, #ff4444, #1a1a2e, #ff4444);
-            color: white;
-            font-family: 'Orbitron', monospace;
-            font-size: 1.2em;
-            font-weight: bold;
-            padding: 8px 0;
-            overflow: hidden;
-            white-space: nowrap;
-            z-index: 1000;
-            border-bottom: 2px solid #ff4444;
-        }
-        
-        .marquee-content {
-            display: inline-block;
-            animation: marquee 20s linear infinite;
-            letter-spacing: 3px;
-        }
-        
-        .marquee-content span { margin: 0 40px; }
-        
-        @keyframes marquee {
-            0% { transform: translateX(0%); }
-            100% { transform: translateX(-50%); }
-        }
-        
-        /* ANIMATION POINTS FLOTTANTS */
-        .floating-dots {
+        /* PARTICULES */
+        .particles {
             position: fixed;
             top: 0;
             left: 0;
@@ -61,21 +30,50 @@ INFO PURGE ADMIN
             overflow: hidden;
         }
         
-        .dot {
+        .particle {
             position: absolute;
-            width: 4px;
-            height: 4px;
-            background: radial-gradient(circle, #ff4444, #ff8888);
+            background: radial-gradient(circle, #ffd700, #ff8c00);
             border-radius: 50%;
-            opacity: 0.6;
-            animation: floatDot linear infinite;
+            opacity: 0.4;
+            animation: floatParticle linear infinite;
         }
         
-        @keyframes floatDot {
-            0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.8; }
-            90% { opacity: 0.8; }
-            100% { transform: translateY(-20vh) translateX(calc(100px * var(--direction))) rotate(360deg); opacity: 0; }
+        @keyframes floatParticle {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-20vh) translateX(calc(100px * var(--direction))); opacity: 0; }
+        }
+        
+        /* BANDEAU */
+        .luxury-marquee {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, #0a0a0f, #1a1a2e, #0a0a0f);
+            backdrop-filter: blur(20px);
+            color: #ffd700;
+            font-family: 'Playfair Display', serif;
+            font-size: 1em;
+            padding: 10px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            z-index: 1000;
+            border-bottom: 2px solid #ffd700;
+        }
+        
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 25s linear infinite;
+            letter-spacing: 4px;
+        }
+        
+        .marquee-content span { margin: 0 40px; }
+        
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
         }
         
         .container {
@@ -87,67 +85,59 @@ INFO PURGE ADMIN
             z-index: 1;
         }
         
-        /* LOGIN BOX */
+        /* LOGIN BOX LUXUEUX */
         .login-box {
-            max-width: 450px;
+            max-width: 500px;
             margin: 100px auto;
-            background: rgba(26, 26, 46, 0.95);
-            backdrop-filter: blur(10px);
-            border: 2px solid #ff4444;
-            border-radius: 30px;
+            background: linear-gradient(135deg, rgba(26,26,46,0.98), rgba(10,10,15,0.98));
+            backdrop-filter: blur(20px);
+            border: 2px solid #ffd700;
+            border-radius: 40px;
             padding: 50px 40px;
             text-align: center;
-            box-shadow: 0 0 30px rgba(255,68,68,0.3);
+            box-shadow: 0 0 50px rgba(255,215,0,0.2);
             animation: glowPulse 2s infinite;
         }
         
         @keyframes glowPulse {
-            0% { box-shadow: 0 0 20px rgba(255,68,68,0.3); }
-            50% { box-shadow: 0 0 40px rgba(255,68,68,0.6); }
-            100% { box-shadow: 0 0 20px rgba(255,68,68,0.3); }
-        }
-        
-        .login-box h1 {
-            font-family: 'Orbitron', monospace;
-            color: #ff4444;
-            font-size: 2em;
-            margin-bottom: 20px;
+            0%, 100% { box-shadow: 0 0 20px rgba(255,215,0,0.2); }
+            50% { box-shadow: 0 0 50px rgba(255,215,0,0.4); }
         }
         
         .login-logo {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #ff4444, #cc0000);
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
-            margin: 0 auto 20px;
-            box-shadow: 0 0 20px rgba(255,68,68,0.5);
+            font-size: 50px;
+            margin: 0 auto 25px;
+            box-shadow: 0 0 30px rgba(255,215,0,0.5);
         }
         
         .pin-input {
-            font-size: 36px;
+            font-size: 38px;
             text-align: center;
             letter-spacing: 15px;
-            width: 250px;
-            margin: 20px auto;
+            width: 260px;
+            margin: 25px auto;
             background: rgba(0,0,0,0.6);
-            border: 2px solid #ff4444;
-            color: #ff4444;
+            border: 2px solid #ffd700;
+            color: #ffd700;
             padding: 12px;
-            border-radius: 15px;
-            font-family: 'Orbitron', monospace;
+            border-radius: 20px;
+            font-family: 'Playfair Display', monospace;
         }
         
         /* HEADER ADMIN */
         .admin-header {
-            background: linear-gradient(135deg, rgba(255,68,68,0.2), rgba(26,26,46,0.9));
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,68,68,0.3);
-            border-radius: 25px;
-            padding: 25px 30px;
+            background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(26,26,46,0.9));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 30px;
+            padding: 30px;
             margin-bottom: 30px;
             position: relative;
             overflow: hidden;
@@ -160,141 +150,122 @@ INFO PURGE ADMIN
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255,68,68,0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
+            background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%);
+            animation: rotateGlow 20s linear infinite;
         }
         
-        @keyframes rotate {
+        @keyframes rotateGlow {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
-        }
-        
-        .admin-header h1 {
-            font-family: 'Orbitron', monospace;
-            font-size: 2.2em;
-            background: linear-gradient(135deg, #ff4444, #ff8888, #ff4444);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            position: relative;
-            z-index: 1;
         }
         
         .stats-bar {
             display: flex;
             gap: 20px;
             justify-content: center;
-            margin-top: 20px;
+            margin-top: 25px;
             flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
         }
         
         .stat-card {
             background: rgba(0,0,0,0.5);
-            border-radius: 15px;
-            padding: 10px 20px;
+            border-radius: 20px;
+            padding: 15px 25px;
             text-align: center;
-            border: 1px solid #ff4444;
+            border: 1px solid #ffd700;
+            min-width: 120px;
         }
         
         .stat-card span {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: bold;
-            color: #ff4444;
-            font-family: 'Orbitron', monospace;
+            color: #ffd700;
+            font-family: 'Playfair Display', serif;
         }
         
         /* BOUTONS */
         .btn-group {
             display: flex;
-            gap: 12px;
+            gap: 15px;
             flex-wrap: wrap;
             justify-content: center;
-            margin: 20px 0;
+            margin: 25px 0 15px;
+            position: relative;
+            z-index: 1;
         }
         
         button {
-            background: linear-gradient(135deg, #ff4444, #cc0000);
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
             border: none;
-            padding: 12px 24px;
-            border-radius: 40px;
-            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            color: #0a0a0f;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
-            font-family: 'Orbitron', monospace;
+            font-family: 'Poppins', sans-serif;
             font-size: 14px;
-            position: relative;
-            overflow: hidden;
         }
         
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(255,68,68,0.4);
+            box-shadow: 0 8px 20px rgba(255,215,0,0.3);
         }
         
-        button:active {
-            transform: translateY(0);
-        }
-        
-        .btn-primary { background: linear-gradient(135deg, #ff4444, #cc0000); }
-        .btn-success { background: linear-gradient(135deg, #27ae60, #1e8449); }
-        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); }
-        .btn-danger { background: linear-gradient(135deg, #c0392b, #922b21); }
-        .btn-info { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .btn-danger { background: linear-gradient(135deg, #c0392b, #922b21); color: white; }
+        .btn-success { background: linear-gradient(135deg, #27ae60, #1e8449); color: white; }
+        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
+        .btn-info { background: linear-gradient(135deg, #3498db, #2980b9); color: white; }
         
         /* CARTES */
         .card {
-            background: rgba(26, 26, 46, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,68,68,0.3);
-            border-radius: 20px;
+            background: rgba(26,26,46,0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,215,0,0.2);
+            border-radius: 25px;
             padding: 25px;
             margin-bottom: 30px;
         }
         
         .card h2 {
-            font-family: 'Orbitron', monospace;
-            color: #ff6666;
+            font-family: 'Playfair Display', serif;
+            color: #ffd700;
             margin-bottom: 20px;
-            border-left: 4px solid #ff4444;
-            padding-left: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            border-left: 4px solid #ffd700;
+            padding-left: 20px;
         }
         
-        /* BARRE DE RECHERCHE */
+        /* RECHERCHE */
         .search-wrapper {
-            margin-bottom: 25px;
-            position: relative;
+            margin-bottom: 30px;
         }
         
         .search-box {
             width: 100%;
             max-width: 500px;
             background: rgba(0,0,0,0.6);
-            border: 2px solid #ff4444;
-            border-radius: 50px;
+            border: 2px solid #ffd700;
+            border-radius: 60px;
             padding: 14px 25px;
             color: white;
             font-size: 1.1em;
-            font-family: 'Rajdhani', sans-serif;
             transition: all 0.3s;
         }
         
         .search-box:focus {
             outline: none;
-            border-color: #ff8888;
-            box-shadow: 0 0 15px rgba(255,68,68,0.3);
+            box-shadow: 0 0 20px rgba(255,215,0,0.3);
         }
         
         /* CLAN CARD */
         .clan-card {
-            background: linear-gradient(135deg, rgba(255,68,68,0.1), rgba(26,26,46,0.5));
-            border: 1px solid rgba(255,68,68,0.3);
-            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(26,26,46,0.5));
+            border: 1px solid rgba(255,215,0,0.2);
+            border-radius: 20px;
             padding: 20px;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
@@ -302,8 +273,17 @@ INFO PURGE ADMIN
         
         .clan-card:hover {
             transform: translateX(8px);
-            border-color: #ff4444;
-            box-shadow: 0 5px 20px rgba(255,68,68,0.2);
+            border-color: #ffd700;
+        }
+        
+        .clan-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
         }
         
         .clan-header {
@@ -316,65 +296,34 @@ INFO PURGE ADMIN
         }
         
         .clan-name {
-            font-size: 1.5em;
+            font-size: 1.4em;
             font-weight: bold;
-            color: #ff6666;
-            font-family: 'Orbitron', monospace;
-        }
-        
-        .clan-leader {
-            color: #ff8888;
-            font-size: 0.9em;
+            color: #ffd700;
+            font-family: 'Playfair Display', serif;
         }
         
         .clan-scores {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             flex-wrap: wrap;
-            margin: 15px 0;
         }
         
         .score-badge {
-            background: rgba(255,68,68,0.2);
-            border-radius: 20px;
+            background: rgba(255,215,0,0.15);
+            border-radius: 30px;
             padding: 5px 12px;
-            font-size: 0.85em;
+            font-size: 0.8em;
+            border: 1px solid rgba(255,215,0,0.3);
         }
         
         .clan-actions {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
             margin-top: 15px;
         }
         
         .clan-actions button { padding: 6px 15px; font-size: 12px; }
-        
-        /* NOTES */
-        .notes-section {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px dashed rgba(255,68,68,0.3);
-        }
-        
-        .note-item {
-            background: rgba(255,68,68,0.1);
-            padding: 8px 12px;
-            margin: 5px 0;
-            border-radius: 10px;
-            font-size: 13px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .delete-note-btn {
-            background: #c0392b;
-            padding: 2px 10px;
-            font-size: 11px;
-        }
         
         /* FORMULAIRES */
         .form-row {
@@ -388,19 +337,18 @@ INFO PURGE ADMIN
             flex: 1;
             min-width: 200px;
             background: rgba(0,0,0,0.6);
-            border: 1px solid #ff4444;
+            border: 1px solid #ffd700;
             padding: 12px;
-            border-radius: 10px;
+            border-radius: 15px;
             color: white;
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
         
         .form-row input:focus, .form-row textarea:focus {
             outline: none;
-            border-color: #ff8888;
+            box-shadow: 0 0 10px rgba(255,215,0,0.2);
         }
         
-        /* SCORE INPUTS */
         .score-input-group {
             display: flex;
             gap: 15px;
@@ -409,80 +357,86 @@ INFO PURGE ADMIN
         }
         
         .score-input-group input {
-            width: 120px;
+            width: 130px;
             background: rgba(0,0,0,0.6);
-            border: 1px solid #ff4444;
+            border: 1px solid #ffd700;
             padding: 10px;
-            border-radius: 8px;
+            border-radius: 12px;
             color: white;
             text-align: center;
         }
         
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .container { padding: 15px; padding-top: 65px; }
-            .admin-header h1 { font-size: 1.5em; }
-            .clan-name { font-size: 1.2em; }
-            .btn-group button { padding: 8px 16px; font-size: 12px; }
+        .notes-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed rgba(255,215,0,0.3);
         }
         
-        /* SCROLLBAR */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #1a1a2e; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #ff4444; border-radius: 10px; }
+        .note-item {
+            background: rgba(255,215,0,0.1);
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 12px;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .delete-note-btn {
+            background: #c0392b;
+            padding: 3px 12px;
+            font-size: 11px;
+        }
         
         .loading {
             text-align: center;
-            padding: 40px;
-            color: #ff8888;
-            font-family: 'Orbitron', monospace;
+            padding: 50px;
+            color: #ffd700;
+            font-family: 'Playfair Display', serif;
         }
         
-        .badge-live {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            background: #ff0000;
-            border-radius: 50%;
-            animation: pulse 1s infinite;
-            margin-right: 8px;
-        }
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #1a1a2e; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #ffd700, #ff8c00); border-radius: 10px; }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        @media (max-width: 768px) {
+            .container { padding: 15px; padding-top: 65px; }
+            .stat-card span { font-size: 22px; }
+            .clan-name { font-size: 1.1em; }
         }
     </style>
 </head>
 <body>
-    <div class="marquee">
+    <div class="particles" id="particles"></div>
+    
+    <div class="luxury-marquee">
         <div class="marquee-content">
-            <span>⚡ INFO PURGE 24 ⚡</span>
-            <span>🏆 LE RESPECT NE SE DEMANDE PAS, IL S'IMPOSE 🏆</span>
-            <span>👑 PANEL ADMIN - JOYBOY 👑</span>
-            <span>🔥 GESTION DES CLANS 🔥</span>
-            <span>⚡ INFO PURGE 24 ⚡</span>
+            <span>⚜️ INFO PURGE 24 - PANEL ADMIN ⚜️</span>
+            <span>👑 JOYBOY 👑</span>
+            <span>⚜️ GESTION DES CLANS ⚜️</span>
         </div>
     </div>
-    
-    <div class="floating-dots" id="floatingDots"></div>
     
     <div class="container">
         <!-- ÉCRAN DE CONNEXION -->
         <div id="loginScreen" class="login-box">
             <div class="login-logo">👑</div>
-            <h1>INFO PURGE 24</h1>
-            <p style="color:#ff8888; margin-bottom:20px;">Espace réservé aux administrateurs</p>
-            <input type="password" id="pinCode" class="pin-input" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" placeholder="****">
+            <h1 style="color:#ffd700; font-family:'Playfair Display';">INFO PURGE 24</h1>
+            <p style="color:#ffaa44; margin-bottom:20px;">Espace réservé aux administrateurs</p>
+            <input type="password" id="pinCode" class="pin-input" maxlength="4" placeholder="****">
             <button onclick="checkPin()" style="width:100%; margin-top:20px;">🔐 SE CONNECTER</button>
-            <div id="loginError" class="error" style="color:#ff6666; margin-top:15px;"></div>
-            <a href="index.html" style="color:#ff8888; display:block; margin-top:25px; text-decoration:none;">← Retour au site public</a>
+            <div id="loginError" style="color:#ff6666; margin-top:15px;"></div>
+            <a href="index.html" style="color:#ffd700; display:block; margin-top:25px; text-decoration:none;">← Retour au site public</a>
         </div>
 
         <!-- PANEL ADMIN -->
         <div id="adminPanel" style="display:none;">
             <div class="admin-header">
-                <h1>⚡ INFO PURGE 24 - PANEL ADMINISTRATEUR ⚡</h1>
+                <h1 style="font-family:'Playfair Display'; font-size:2em; text-align:center; color:#ffd700;">⚜️ PANEL ADMINISTRATEUR ⚜️</h1>
                 <div class="stats-bar">
                     <div class="stat-card"><span id="statClans">0</span><br>Clans</div>
                     <div class="stat-card"><span id="statTotalPoints">0</span><br>Points totaux</div>
@@ -497,13 +451,11 @@ INFO PURGE ADMIN
                 </div>
             </div>
 
-            <!-- BARRE DE RECHERCHE -->
             <div class="search-wrapper">
-                <input type="text" id="searchInput" class="search-box" placeholder="🔍 Rechercher un clan par son nom..." onkeyup="filterClans()">
-                <div id="searchInfo" style="margin-top:8px; font-size:12px; color:#ff8888;"></div>
+                <input type="text" id="searchInput" class="search-box" placeholder="🔍 Rechercher un clan..." onkeyup="filterClans()">
+                <div id="searchInfo" style="margin-top:8px; font-size:12px; color:#ffaa44;"></div>
             </div>
 
-            <!-- SECTION RÉINITIALISATION -->
             <div class="card">
                 <h2>🔄 RÉINITIALISATION DES SCORES</h2>
                 <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
@@ -513,7 +465,6 @@ INFO PURGE ADMIN
                 </div>
             </div>
 
-            <!-- AJOUTER UN CLAN -->
             <div class="card">
                 <h2>➕ AJOUTER UN NOUVEAU CLAN</h2>
                 <div class="form-row">
@@ -521,7 +472,7 @@ INFO PURGE ADMIN
                     <input type="text" id="newClanLeader" placeholder="Chef du clan">
                 </div>
                 <div class="form-row">
-                    <textarea id="newClanDesc" placeholder="Description du clan" rows="2"></textarea>
+                    <textarea id="newClanDesc" placeholder="Description" rows="2"></textarea>
                 </div>
                 <div class="form-row">
                     <input type="number" id="newClanWeek" placeholder="Points semaine">
@@ -531,34 +482,28 @@ INFO PURGE ADMIN
                 <button onclick="addNewClan()" class="btn-success">✅ AJOUTER CE CLAN</button>
             </div>
 
-            <!-- LISTE DES CLANS -->
             <div class="card">
-                <h2>📋 LISTE DES CLANS <span class="badge-live"></span> LIVE</h2>
-                <div id="clansList"><div class="loading">⏳ Chargement des clans...</div></div>
+                <h2>📋 LISTE DES CLANS</h2>
+                <div id="clansList"><div class="loading">⏳ Chargement...</div></div>
             </div>
 
-            <!-- AJOUTER AUX CLASSEMENTS -->
             <div class="card">
                 <h2>⭐ AJOUTER AUX 3 CLASSEMENTS</h2>
-                <p style="margin-bottom:15px; color:#ff8888;">⚠️ Ajoute des points aux classements : SEMAINE + MOIS + ANNÉE</p>
                 <div id="scoreInputs"><div class="loading">Chargement...</div></div>
             </div>
 
-            <!-- AJOUTER À L'ANNÉE UNIQUEMENT -->
             <div class="card">
                 <h2>🎯 AJOUTER UNIQUEMENT À L'ANNÉE</h2>
-                <p style="margin-bottom:15px; color:#ff8888;">⚠️ Ces points vont uniquement dans le classement ANNUEL</p>
                 <div id="yearScoreInputs"><div class="loading">Chargement...</div></div>
             </div>
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
-        // Configuration Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyB3yYAuiGqbtrbZ1aSYxAjduZ65adNIpag",
             authDomain: "purge-game-58718.firebaseapp.com",
@@ -572,45 +517,36 @@ INFO PURGE ADMIN
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         
-        // Variables
         const ADMIN_PIN = "2007";
         let currentClans = [];
         let searchTerm = "";
         
-        // Points flottants
-        function createFloatingDots() {
-            const container = document.getElementById('floatingDots');
+        // Particules
+        function createParticles() {
+            const container = document.getElementById('particles');
             for(let i = 0; i < 50; i++) {
-                const dot = document.createElement('div');
-                dot.className = 'dot';
+                const p = document.createElement('div');
+                p.className = 'particle';
                 const size = Math.random() * 6 + 2;
-                const duration = Math.random() * 8 + 4;
-                const delay = Math.random() * 10;
-                const startX = Math.random() * 100;
-                const direction = Math.random() > 0.5 ? 1 : -1;
-                dot.style.width = size + 'px';
-                dot.style.height = size + 'px';
-                dot.style.left = startX + '%';
-                dot.style.animationDuration = duration + 's';
-                dot.style.animationDelay = delay + 's';
-                dot.style.setProperty('--direction', direction);
-                container.appendChild(dot);
+                p.style.width = size + 'px';
+                p.style.height = size + 'px';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDuration = (Math.random() * 10 + 5) + 's';
+                p.style.animationDelay = (Math.random() * 15) + 's';
+                p.style.setProperty('--direction', Math.random() > 0.5 ? 1 : -1);
+                container.appendChild(p);
             }
         }
+        createParticles();
         
-        createFloatingDots();
-        
-        // Connexion
         function checkPin() {
-            const enteredPin = document.getElementById('pinCode').value;
-            if(enteredPin === ADMIN_PIN) {
+            if(document.getElementById('pinCode').value === ADMIN_PIN) {
                 localStorage.setItem('adminLoggedIn', 'true');
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
                 loadDataFromFirebase();
             } else {
-                document.getElementById('loginError').innerText = '❌ Code incorrect - Accès refusé';
-                document.getElementById('pinCode').value = '';
+                document.getElementById('loginError').innerText = '❌ Code incorrect';
             }
         }
         
@@ -626,390 +562,232 @@ INFO PURGE ADMIN
             document.getElementById('adminPanel').style.display = 'none';
         }
         
-        // Chargement depuis Firebase
         async function loadDataFromFirebase() {
-            try {
-                const snapshot = await database.ref('clans').once('value');
-                const clans = [];
-                snapshot.forEach(childSnapshot => {
-                    const clan = childSnapshot.val();
-                    clan.id = childSnapshot.key;
-                    clans.push(clan);
-                });
-                currentClans = clans;
-                updateStats();
-                displayAdmin();
-            } catch(e) {
-                console.error(e);
-                document.getElementById('clansList').innerHTML = '<div class="loading">❌ Erreur de chargement Firebase</div>';
-            }
+            const snapshot = await database.ref('clans').once('value');
+            currentClans = [];
+            snapshot.forEach(child => {
+                const clan = child.val();
+                clan.id = child.key;
+                currentClans.push(clan);
+            });
+            updateStats();
+            displayAdmin();
         }
         
         function updateStats() {
             document.getElementById('statClans').innerText = currentClans.length;
-            let totalPoints = 0;
-            let totalLikes = 0;
-            currentClans.forEach(clan => {
-                totalPoints += (clan.score_week || 0) + (clan.score_month || 0) + (clan.score_year || 0);
-                totalLikes += (clan.likes || 0);
+            let totalPoints = 0, totalLikes = 0;
+            currentClans.forEach(c => {
+                totalPoints += (c.score_week || 0) + (c.score_month || 0) + (c.score_year || 0);
+                totalLikes += (c.likes || 0);
             });
             document.getElementById('statTotalPoints').innerText = totalPoints;
             document.getElementById('statLikes').innerText = totalLikes;
         }
         
-        // Sauvegarde dans Firebase
         async function syncToFirebase() {
-            try {
-                for (const clan of currentClans) {
-                    const clanData = { ...clan };
-                    delete clanData.id;
-                    await database.ref(`clans/${clan.id}`).set(clanData);
-                }
-                alert("✅ Données sauvegardées dans Firebase !");
-                loadDataFromFirebase();
-            } catch(e) {
-                alert("❌ Erreur: " + e.message);
+            for(const clan of currentClans) {
+                const data = {...clan};
+                delete data.id;
+                await database.ref(`clans/${clan.id}`).set(data);
             }
+            alert("✅ Données sauvegardées !");
         }
         
-        // IMPORT DES ANCIENS CLANS DEPUIS GITHUB
         async function importOldClans() {
-            const GITHUB_URL = "https://raw.githubusercontent.com/ablaye2020/info-purge-24/main/data.json";
-            
-            if(confirm("⚠️ Attention : Cette action va AJOUTER les clans de l'ancien site à Firebase. Les clans avec le même nom ne seront pas doublons. Continuer ?")) {
-                try {
-                    document.getElementById('clansList').innerHTML = '<div class="loading">⏳ Importation depuis GitHub...</div>';
-                    
-                    const response = await fetch(GITHUB_URL + "?t=" + Date.now());
-                    if (!response.ok) throw new Error("Fichier non trouvé");
-                    const githubData = await response.json();
-                    
-                    let importedCount = 0;
-                    let duplicateCount = 0;
-                    
-                    const existingNames = currentClans.map(c => c.name);
-                    
-                    for (const clan of githubData.clans) {
-                        if (!existingNames.includes(clan.name)) {
-                            const newClan = {
-                                name: clan.name,
-                                leader: clan.leader || "Inconnu",
-                                description: clan.description || "",
-                                score_week: clan.score_week || 0,
-                                score_month: clan.score_month || 0,
-                                score_year: clan.score_year || 0,
-                                likes: clan.likes || 0,
-                                notes: clan.notes || [],
-                                created_at: new Date().toISOString()
-                            };
-                            await database.ref('clans').push(newClan);
-                            importedCount++;
-                        } else {
-                            duplicateCount++;
-                        }
+            const url = "https://raw.githubusercontent.com/ablaye2020/info-purge-24/main/data.json";
+            if(confirm("Importer les anciens clans ?")) {
+                const res = await fetch(url + "?t=" + Date.now());
+                const data = await res.json();
+                let count = 0;
+                const existingNames = currentClans.map(c => c.name);
+                for(const clan of data.clans) {
+                    if(!existingNames.includes(clan.name)) {
+                        await database.ref('clans').push({
+                            name: clan.name, leader: clan.leader || "Inconnu",
+                            description: clan.description || "",
+                            score_week: clan.score_week || 0, score_month: clan.score_month || 0,
+                            score_year: clan.score_year || 0, likes: clan.likes || 0, notes: clan.notes || []
+                        });
+                        count++;
                     }
-                    
-                    alert(`✅ Import terminé !\n\n📊 ${importedCount} nouveaux clans ajoutés\n🔄 ${duplicateCount} clans déjà existants (ignorés)`);
-                    loadDataFromFirebase();
-                    
-                } catch(e) {
-                    alert("❌ Erreur d'import: " + e.message);
                 }
+                alert(`✅ ${count} clans importés !`);
+                loadDataFromFirebase();
             }
         }
         
-        // EXPORT VERS JSON
         async function exportToJSON() {
-            try {
-                const exportData = {
-                    clans: currentClans,
-                    exportDate: new Date().toISOString(),
-                    version: "Info Purge 24"
-                };
-                
-                const dataStr = JSON.stringify(exportData, null, 2);
-                const blob = new Blob([dataStr], {type: "application/json"});
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'infopurge24_backup.json';
-                a.click();
-                URL.revokeObjectURL(url);
-                
-                alert(`✅ Exporté ! ${currentClans.length} clans sauvegardés.`);
-            } catch(e) {
-                alert("❌ Erreur: " + e.message);
-            }
+            const data = { clans: currentClans, exportDate: new Date().toISOString() };
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'infopurge24_backup.json';
+            a.click();
+            URL.revokeObjectURL(blob);
+            alert("✅ Exporté !");
         }
         
-        // Filtrage
         function filterClans() {
             searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const filteredCount = currentClans.filter(clan => clan.name.toLowerCase().includes(searchTerm)).length;
-            const searchInfo = document.getElementById('searchInfo');
-            if (searchTerm === "") {
-                searchInfo.innerHTML = `📋 ${currentClans.length} clans au total`;
-            } else {
-                searchInfo.innerHTML = `🔍 ${filteredCount} clan(s) trouvé(s) pour "${searchTerm}"`;
-            }
+            const filtered = currentClans.filter(c => c.name.toLowerCase().includes(searchTerm));
+            document.getElementById('searchInfo').innerHTML = searchTerm ? `🔍 ${filtered.length} clan(s) trouvé(s)` : `📋 ${currentClans.length} clans`;
             displayAdmin();
         }
         
-        // CRUD Clans
         function editClan(id) {
             const clan = currentClans.find(c => c.id === id);
-            if (!clan) return;
-            
-            const newName = prompt("Nouveau nom du clan :", clan.name);
-            if (newName && newName.trim() !== "") clan.name = newName.trim();
-            
+            const newName = prompt("Nouveau nom :", clan.name);
+            if(newName) clan.name = newName;
             const newLeader = prompt("Nouveau chef :", clan.leader);
-            if (newLeader && newLeader.trim() !== "") clan.leader = newLeader.trim();
-            
-            const newDesc = prompt("Nouvelle description :", clan.description || "");
-            clan.description = newDesc || "";
-            
+            if(newLeader) clan.leader = newLeader;
             syncToFirebase();
         }
         
         function addNoteToClan(id) {
-            const year = prompt("Année de la note (ex: 2024) :");
-            if (!year) return;
-            const content = prompt("Contenu de la note :");
-            if (!content) return;
-            
-            const clan = currentClans.find(c => c.id === id);
-            if (clan) {
-                if (!clan.notes) clan.notes = [];
-                clan.notes.push({ year: parseInt(year), content: content });
+            const year = prompt("Année :");
+            const content = prompt("Note :");
+            if(year && content) {
+                const clan = currentClans.find(c => c.id === id);
+                if(!clan.notes) clan.notes = [];
+                clan.notes.push({ year: parseInt(year), content });
                 syncToFirebase();
-                alert(`✅ Note ajoutée à ${clan.name}`);
+                alert("✅ Note ajoutée");
             }
         }
         
-        function deleteNote(clanId, noteIndex) {
+        function deleteNote(clanId, idx) {
             const clan = currentClans.find(c => c.id === clanId);
-            if (clan && clan.notes[noteIndex]) {
-                clan.notes.splice(noteIndex, 1);
-                syncToFirebase();
-                alert("✅ Note supprimée");
-            }
+            clan.notes.splice(idx, 1);
+            syncToFirebase();
         }
         
         function resetWeekScores() {
-            if(confirm("⚠️ Réinitialiser TOUS les scores de la SEMAINE ?")) {
-                currentClans.forEach(clan => { clan.score_week = 0; });
+            if(confirm("Réinitialiser scores SEMAINE ?")) {
+                currentClans.forEach(c => c.score_week = 0);
                 syncToFirebase();
-                alert("✅ Scores de la SEMAINE réinitialisés !");
             }
         }
         
         function resetMonthScores() {
-            if(confirm("⚠️ Réinitialiser TOUS les scores du MOIS ?")) {
-                currentClans.forEach(clan => { clan.score_month = 0; });
+            if(confirm("Réinitialiser scores MOIS ?")) {
+                currentClans.forEach(c => c.score_month = 0);
                 syncToFirebase();
-                alert("✅ Scores du MOIS réinitialisés !");
             }
         }
         
         function resetYearScores() {
-            if(confirm("⚠️ Réinitialiser TOUS les scores de l'ANNÉE ?")) {
-                currentClans.forEach(clan => { clan.score_year = 0; });
+            if(confirm("Réinitialiser scores ANNÉE ?")) {
+                currentClans.forEach(c => c.score_year = 0);
                 syncToFirebase();
-                alert("✅ Scores de l'ANNÉE réinitialisés !");
             }
         }
         
         function addNewClan() {
             const name = document.getElementById('newClanName').value;
             const leader = document.getElementById('newClanLeader').value;
-            const description = document.getElementById('newClanDesc').value;
-            const week = parseInt(document.getElementById('newClanWeek').value) || 0;
-            const month = parseInt(document.getElementById('newClanMonth').value) || 0;
-            const year = parseInt(document.getElementById('newClanYear').value) || 0;
-            
-            if(!name || !leader) {
-                alert('❌ Veuillez entrer le nom et le chef du clan');
-                return;
-            }
-            
-            const newClan = {
-                name: name,
-                leader: leader,
-                description: description || "",
-                score_week: week,
-                score_month: month,
-                score_year: year,
-                likes: 0,
-                notes: [],
-                created_at: new Date().toISOString()
-            };
-            
-            database.ref('clans').push(newClan).then(() => {
+            if(!name || !leader) { alert("Nom et chef requis"); return; }
+            database.ref('clans').push({
+                name, leader, description: document.getElementById('newClanDesc').value,
+                score_week: parseInt(document.getElementById('newClanWeek').value) || 0,
+                score_month: parseInt(document.getElementById('newClanMonth').value) || 0,
+                score_year: parseInt(document.getElementById('newClanYear').value) || 0,
+                likes: 0, notes: []
+            }).then(() => {
+                alert(`✅ Clan ${name} ajouté`);
                 document.getElementById('newClanName').value = '';
                 document.getElementById('newClanLeader').value = '';
                 document.getElementById('newClanDesc').value = '';
                 document.getElementById('newClanWeek').value = '';
                 document.getElementById('newClanMonth').value = '';
                 document.getElementById('newClanYear').value = '';
-                alert(`✅ Clan "${name}" ajouté !`);
                 loadDataFromFirebase();
             });
         }
         
         function deleteClan(id) {
-            const clan = currentClans.find(c => c.id === id);
-            if(confirm(`⚠️ Supprimer définitivement "${clan.name}" ?`)) {
-                database.ref(`clans/${id}`).remove().then(() => {
-                    alert(`✅ "${clan.name}" supprimé.`);
-                    loadDataFromFirebase();
-                });
+            if(confirm("Supprimer ce clan ?")) {
+                database.ref(`clans/${id}`).remove().then(() => loadDataFromFirebase());
             }
         }
         
         function addPointsToAll(id) {
-            const input = document.getElementById(`points_${id}`);
-            const points = parseInt(input.value);
-            if(!isNaN(points) && points > 0) {
+            const pts = parseInt(document.getElementById(`points_${id}`).value);
+            if(pts > 0) {
                 const clan = currentClans.find(c => c.id === id);
-                if(clan) {
-                    clan.score_week = (clan.score_week || 0) + points;
-                    clan.score_month = (clan.score_month || 0) + points;
-                    clan.score_year = (clan.score_year || 0) + points;
-                    syncToFirebase();
-                    alert(`✅ ${points} points ajoutés à ${clan.name} (3 classements) !`);
-                }
-                input.value = '';
-            } else {
-                alert('❌ Entrez un nombre valide');
+                clan.score_week += pts;
+                clan.score_month += pts;
+                clan.score_year += pts;
+                syncToFirebase();
+                alert(`✅ +${pts} points pour ${clan.name}`);
+                document.getElementById(`points_${id}`).value = '';
             }
         }
         
         function addPointsToYear(id) {
-            const input = document.getElementById(`year_points_${id}`);
-            const points = parseInt(input.value);
-            if(!isNaN(points) && points > 0) {
+            const pts = parseInt(document.getElementById(`year_points_${id}`).value);
+            if(pts > 0) {
                 const clan = currentClans.find(c => c.id === id);
-                if(clan) {
-                    clan.score_year = (clan.score_year || 0) + points;
-                    syncToFirebase();
-                    alert(`✅ ${points} points ajoutés à ${clan.name} (classement ANNÉE) !`);
-                }
-                input.value = '';
-            } else {
-                alert('❌ Entrez un nombre valide');
+                clan.score_year += pts;
+                syncToFirebase();
+                alert(`✅ +${pts} points annuels pour ${clan.name}`);
+                document.getElementById(`year_points_${id}`).value = '';
             }
         }
         
-        // Affichage principal
         function displayAdmin() {
-            let filteredClans = currentClans;
-            if (searchTerm !== "") {
-                filteredClans = currentClans.filter(clan => clan.name.toLowerCase().includes(searchTerm));
-            }
+            let filtered = currentClans;
+            if(searchTerm) filtered = currentClans.filter(c => c.name.toLowerCase().includes(searchTerm));
             
             // Liste des clans
-            const clansContainer = document.getElementById('clansList');
-            if(currentClans.length === 0) {
-                clansContainer.innerHTML = '<div class="loading">📭 Aucun clan. Cliquez sur "IMPORTER ANCIENS CLANS"</div>';
-            } else if (filteredClans.length === 0 && searchTerm !== "") {
-                clansContainer.innerHTML = `<div class="loading">🔍 Aucun clan trouvé pour "${searchTerm}"</div>`;
-            } else {
-                clansContainer.innerHTML = filteredClans.map(clan => `
-                    <div class="clan-card">
-                        <div class="clan-header">
-                            <div>
-                                <span class="clan-name">⚔️ ${escapeHtml(clan.name)}</span>
-                                <div class="clan-leader">👑 ${escapeHtml(clan.leader)}</div>
-                            </div>
-                            <div class="clan-scores">
-                                <span class="score-badge">📅 S: ${clan.score_week || 0}</span>
-                                <span class="score-badge">📆 M: ${clan.score_month || 0}</span>
-                                <span class="score-badge">🗓️ A: ${clan.score_year || 0}</span>
-                                <span class="score-badge">❤️ ${clan.likes || 0}</span>
-                            </div>
-                        </div>
-                        <div>📝 ${escapeHtml(clan.description) || "Aucune description"}</div>
-                        ${clan.notes && clan.notes.length > 0 ? `
-                            <div class="notes-section">
-                                <strong>📝 Notes:</strong>
-                                ${clan.notes.map((note, idx) => `
-                                    <div class="note-item">
-                                        📅 ${note.year}: ${escapeHtml(note.content)}
-                                        <button onclick="deleteNote('${clan.id}', ${idx})" class="delete-note-btn">🗑️</button>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        ` : ''}
-                        <div class="clan-actions">
-                            <button onclick="editClan('${clan.id}')" class="btn-info">✏️ MODIFIER</button>
-                            <button onclick="addNoteToClan('${clan.id}')" style="background:#3498db;">📝 NOTE</button>
-                            <button onclick="deleteClan('${clan.id}')" class="btn-danger">🗑️ SUPPRIMER</button>
+            document.getElementById('clansList').innerHTML = filtered.map(c => `
+                <div class="clan-card">
+                    <div class="clan-header">
+                        <span class="clan-name">⚔️ ${escapeHtml(c.name)}</span>
+                        <div class="clan-scores">
+                            <span class="score-badge">📅 S:${c.score_week||0}</span>
+                            <span class="score-badge">📆 M:${c.score_month||0}</span>
+                            <span class="score-badge">🗓️ A:${c.score_year||0}</span>
+                            <span class="score-badge">❤️ ${c.likes||0}</span>
                         </div>
                     </div>
-                `).join('');
-            }
+                    <div>👑 ${escapeHtml(c.leader)}</div>
+                    <div>📝 ${escapeHtml(c.description) || "Aucune description"}</div>
+                    ${c.notes?.length ? `<div class="notes-section"><strong>📝 Notes:</strong>${c.notes.map((n,i)=>`<div class="note-item">📅 ${n.year}: ${escapeHtml(n.content)}<button onclick="deleteNote('${c.id}',${i})" class="delete-note-btn">🗑️</button></div>`).join('')}</div>` : ''}
+                    <div class="clan-actions">
+                        <button onclick="editClan('${c.id}')" class="btn-info">✏️ MODIFIER</button>
+                        <button onclick="addNoteToClan('${c.id}')" style="background:#3498db;">📝 NOTE</button>
+                        <button onclick="deleteClan('${c.id}')" class="btn-danger">🗑️ SUPPRIMER</button>
+                    </div>
+                </div>
+            `).join('');
             
-            // Ajout aux 3 classements
-            const scoreContainer = document.getElementById('scoreInputs');
-            if(currentClans.length === 0) {
-                scoreContainer.innerHTML = '<div class="loading">Aucun clan disponible</div>';
-            } else {
-                scoreContainer.innerHTML = filteredClans.map(clan => `
-                    <div class="clan-card">
-                        <div class="clan-header">
-                            <span class="clan-name">⚔️ ${escapeHtml(clan.name)}</span>
-                            <div class="clan-scores">
-                                <span class="score-badge">📅 S: ${clan.score_week || 0}</span>
-                                <span class="score-badge">📆 M: ${clan.score_month || 0}</span>
-                                <span class="score-badge">🗓️ A: ${clan.score_year || 0}</span>
-                            </div>
-                        </div>
-                        <div class="score-input-group">
-                            <input type="number" id="points_${clan.id}" placeholder="Points">
-                            <button onclick="addPointsToAll('${clan.id}')" class="btn-primary">➕ AJOUTER AUX 3 CLASSEMENTS</button>
-                        </div>
+            // Ajout points 3 classements
+            document.getElementById('scoreInputs').innerHTML = filtered.map(c => `
+                <div class="clan-card">
+                    <div class="clan-header"><span class="clan-name">⚔️ ${escapeHtml(c.name)}</span></div>
+                    <div class="score-input-group">
+                        <input type="number" id="points_${c.id}" placeholder="Points">
+                        <button onclick="addPointsToAll('${c.id}')" class="btn-primary">➕ AJOUTER AUX 3 CLASSEMENTS</button>
                     </div>
-                `).join('');
-            }
+                </div>
+            `).join('');
             
-            // Ajout à l'année
-            const yearContainer = document.getElementById('yearScoreInputs');
-            if(currentClans.length === 0) {
-                yearContainer.innerHTML = '<div class="loading">Aucun clan disponible</div>';
-            } else {
-                yearContainer.innerHTML = filteredClans.map(clan => `
-                    <div class="clan-card">
-                        <div class="clan-header">
-                            <span class="clan-name">⚔️ ${escapeHtml(clan.name)}</span>
-                            <span class="score-badge">🗓️ ANNÉE: ${clan.score_year || 0} pts</span>
-                        </div>
-                        <div class="score-input-group">
-                            <input type="number" id="year_points_${clan.id}" placeholder="Points Année">
-                            <button onclick="addPointsToYear('${clan.id}')" class="btn-warning">🎯 AJOUTER À L'ANNÉE</button>
-                        </div>
+            // Ajout points année
+            document.getElementById('yearScoreInputs').innerHTML = filtered.map(c => `
+                <div class="clan-card">
+                    <div class="clan-header"><span class="clan-name">⚔️ ${escapeHtml(c.name)}</span><span class="score-badge">🗓️ A:${c.score_year||0}</span></div>
+                    <div class="score-input-group">
+                        <input type="number" id="year_points_${c.id}" placeholder="Points Année">
+                        <button onclick="addPointsToYear('${c.id}')" class="btn-warning">🎯 AJOUTER À L'ANNÉE</button>
                     </div>
-                `).join('');
-            }
+                </div>
+            `).join('');
         }
         
-        function escapeHtml(str) {
-            if(!str) return '';
-            return str.replace(/[&<>]/g, function(m) {
-                if(m === '&') return '&amp;';
-                if(m === '<') return '&lt;';
-                if(m === '>') return '&gt;';
-                return m;
-            });
-        }
+        function escapeHtml(str) { return str?.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])) || ''; }
         
-        // Rafraîchissement auto
-        setInterval(() => {
-            if(document.getElementById('adminPanel').style.display === 'block') {
-                loadDataFromFirebase();
-            }
-        }, 15000);
+        setInterval(() => { if(document.getElementById('adminPanel').style.display !== 'none') loadDataFromFirebase(); }, 15000);
     </script>
 </body>
 </html>
-Joyboy 
