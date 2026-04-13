@@ -1,231 +1,1043 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Purge Game - Multiplicateur de Dettes</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>INFO PURGE 24 - Classement des Clans</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        .marquee {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(90deg, #ff4444, #1a1a2e, #ff4444);
+            color: white;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5em;
+            font-weight: bold;
+            padding: 12px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border-bottom: 2px solid #ff4444;
+        }
+        
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+            letter-spacing: 3px;
+        }
+        
+        .marquee-content span {
+            margin: 0 40px;
+        }
+        
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        .floating-dots {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            overflow: hidden;
+        }
+        
+        .dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, #ff4444, #ff8888);
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: floatDot linear infinite;
+        }
+        
+        @keyframes floatDot {
+            0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-20vh) translateX(calc(100px * var(--direction))) rotate(360deg); opacity: 0; }
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
+            color: #ffffff;
+            padding: 20px;
+            padding-top: 90px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .live-badge {
+            display: inline-block;
+            background: #ff0000;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            animation: pulse 1.5s infinite;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,0,0,0.7); }
+            70% { opacity: 0.8; box-shadow: 0 0 0 10px rgba(255,0,0,0); }
+            100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,0,0,0); }
+        }
+        
+        h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 3.5em;
+            font-weight: 900;
+            letter-spacing: 5px;
+            background: linear-gradient(135deg, #ff4444, #ff6b6b, #ff4444);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .citation {
+            font-style: italic;
+            font-size: 1.1em;
+            color: #ff4444;
+            letter-spacing: 2px;
+            margin-top: 15px;
+            border-top: 1px solid rgba(255,68,68,0.3);
+            border-bottom: 1px solid rgba(255,68,68,0.3);
+            display: inline-block;
+            padding: 10px 20px;
+        }
+        
+        nav {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        nav button {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            border: none;
+            padding: 12px 28px;
+            font-family: 'Orbitron', monospace;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        
+        nav button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255,68,68,0.5);
+        }
+        
+        .section {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,68,68,0.2);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            display: none;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section h2 {
+            font-family: 'Orbitron', monospace;
+            color: #ff4444;
+            margin-bottom: 20px;
+            border-left: 4px solid #ff4444;
+            padding-left: 15px;
+        }
+        
+        .ranking-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .ranking-tab {
+            background: rgba(255,68,68,0.1);
+            border: 1px solid rgba(255,68,68,0.3);
+            padding: 8px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .ranking-tab:hover {
+            background: rgba(255,68,68,0.3);
+        }
+        
+        .ranking-tab.active {
+            background: #ff4444;
+            border-color: #ff4444;
+            color: white;
+        }
+        
+        .ranking-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 18px;
+            background: linear-gradient(90deg, rgba(255,68,68,0.1) 0%, rgba(255,68,68,0) 100%);
+            margin: 12px 0;
+            border-radius: 12px;
+            border-left: 4px solid #ff4444;
+            flex-wrap: wrap;
+            gap: 15px;
+            transition: all 0.3s;
+        }
+        
+        .ranking-item:hover {
+            transform: translateX(5px);
+            background: linear-gradient(90deg, rgba(255,68,68,0.2) 0%, rgba(255,68,68,0) 100%);
+        }
+        
+        .ranking-number {
+            font-family: 'Orbitron', monospace;
+            font-size: 32px;
+            font-weight: bold;
+            color: #ff4444;
+            min-width: 70px;
+        }
+        
+        .clan-icon {
+            font-size: 48px;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+            transition: transform 0.3s;
+        }
+        
+        .ranking-item:hover .clan-icon {
+            transform: scale(1.1);
+        }
+        
+        .ranking-name {
+            font-size: 1.4em;
+            font-weight: 800;
+            color: white;
+            letter-spacing: 1px;
+        }
+        
+        .ranking-leader {
+            font-size: 0.9em;
+            font-weight: 500;
+            color: #ff8888;
+            margin-top: 4px;
+        }
+        
+        .ranking-score {
+            flex: 1;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #ff4444;
+            font-family: 'Orbitron', monospace;
+            background: rgba(255,68,68,0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-align: center;
+            min-width: 150px;
+        }
+        
+        .clan-like-btn {
+            background: rgba(255,68,68,0.2);
+            border: 1px solid rgba(255,68,68,0.5);
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .clan-like-btn:hover {
+            background: #ff4444;
+            transform: scale(1.05);
+        }
+        
+        .admin-actions {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+        }
+        
+        .admin-actions h3 {
+            color: #ff4444;
+            margin-bottom: 15px;
+        }
+        
+        .admin-actions input, .admin-actions textarea, .admin-actions select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: 1px solid rgba(255,68,68,0.3);
+            background: #1a1a2e;
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        .admin-actions input:focus, .admin-actions textarea:focus {
+            outline: none;
+            border-color: #ff4444;
+        }
+        
+        .btn-danger {
+            background: #cc0000;
+            margin-left: 10px;
+        }
+        
+        .btn-danger:hover {
+            background: #990000;
+        }
+        
+        .btn-small {
+            padding: 5px 12px;
+            font-size: 12px;
+        }
+        
+        .message {
+            background: rgba(255,68,68,0.1);
+            border: 1px solid rgba(255,68,68,0.2);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 12px;
+        }
+        
+        .message strong {
+            color: #ff4444;
+            font-size: 1.1em;
+        }
+        
+        .like-btn {
+            background: rgba(255,68,68,0.2);
+            padding: 5px 12px;
+            font-size: 12px;
+            margin-top: 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            border: none;
+            color: white;
+        }
+        
+        .like-btn:hover {
+            background: #ff4444;
+        }
+        
+        .admin-link {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            border: 1px solid #ff4444;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 12px;
+            color: #ff8888;
+            text-decoration: none;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+            font-family: 'Orbitron', monospace;
+            cursor: pointer;
+        }
+        
+        .admin-link:hover {
+            background: #ff4444;
+            color: black;
+        }
+        
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            border: 1px solid #ff4444;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 24px;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+            color: white;
+        }
+        
+        .refresh-btn {
+            background: rgba(255,68,68,0.2);
+            border: 1px solid #ff4444;
+            margin-bottom: 20px;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+        
+        .refresh-btn:hover {
+            background: #ff4444;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: #1a1a2e;
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid #ff4444;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .modal-content input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ff4444;
+            background: #0a0a1a;
+            color: white;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; letter-spacing: 2px; }
+            .ranking-item { flex-direction: column; text-align: center; }
+            .ranking-number { font-size: 24px; }
+            .clan-icon { font-size: 36px; }
+            .ranking-name { font-size: 1.2em; }
+            .marquee { font-size: 0.9em; padding: 8px 0; }
+            body { padding-top: 70px; }
+        }
+    </style>
 </head>
 <body>
-  <div class="app">
-    <!-- ÉCRAN 1 : ABONNEMENT -->
-    <div id="screen-subscribe" class="screen active">
-      <div class="subscribe-container">
-        <div class="logo-area">
-          <div class="logo-circle">PG</div>
+    <div class="marquee">
+        <div class="marquee-content">
+            <span>⚡ INFO PURGE 24 ⚡</span>
+            <span>🏆 LE RESPECT NE SE DEMANDE PAS, IL S'IMPOSE 🏆</span>
+            <span>⚡ INFO PURGE 24 ⚡</span>
+            <span>👑 JOYBOY 👑</span>
+            <span>⚡ INFO PURGE 24 ⚡</span>
+            <span>🔥 PURGE TOUS LES JOURS 🔥</span>
+            <span>⚡ INFO PURGE 24 ⚡</span>
         </div>
-        <h2>Rejoignez la chaîne</h2>
-        <p class="sub-text">Abonnez-vous pour continuer</p>
-        <a href="https://whatsapp.com/channel/0029VbCLsX44IBhF4woPb93M" target="_blank" class="btn-wa">
-          🔔 Chaîne WhatsApp
-        </a>
-        <button id="verify-subscription" class="btn-primary">J'ai rejoint → Continuer</button>
-      </div>
+    </div>
+    
+    <div class="floating-dots" id="floatingDots"></div>
+    
+    <div class="container">
+        <div class="admin-link" onclick="showAdminModal()">⚡ ADMIN</div>
+        <div class="music-control" onclick="toggleMusic()" id="musicBtn">🎵</div>
+        
+        <header>
+            <div class="live-badge">🔴 LIVE</div>
+            <h1>⚡ INFO PURGE 24 ⚡</h1>
+            <div class="citation">"Le respect ne se demande pas, il s'impose" - Joyboy</div>
+            <nav>
+                <button onclick="showSection('ranking')">🏆 CLASSEMENT</button>
+                <button onclick="showSection('forum')">💬 FORUM PURGE</button>
+            </nav>
+        </header>
+
+        <div id="ranking" class="section active">
+            <h2>🏆 CLASSEMENT DES CLANS</h2>
+            <button class="refresh-btn" onclick="loadClans()">🔄 RAFRAÎCHIR</button>
+            <div class="ranking-tabs">
+                <div class="ranking-tab active" onclick="showRankingPeriod('week', this)">📅 SEMAINE</div>
+                <div class="ranking-tab" onclick="showRankingPeriod('month', this)">📆 MOIS</div>
+                <div class="ranking-tab" onclick="showRankingPeriod('year', this)">🗓️ ANNÉE</div>
+            </div>
+            <div id="rankingList">⏳ Chargement...</div>
+        </div>
+
+        <div id="forum" class="section">
+            <h2>💬 FORUM PURGE 24</h2>
+            <button class="refresh-btn" onclick="loadForum()">🔄 RAFRAÎCHIR</button>
+            <form id="forumForm">
+                <input type="text" id="authorName" placeholder="Votre pseudo" required>
+                <textarea id="forumMessage" placeholder="Votre message" rows="3" required></textarea>
+                <button type="submit">📢 PUBLIER</button>
+            </form>
+            <div id="forumMessages">⏳ Chargement...</div>
+        </div>
     </div>
 
-    <!-- ÉCRAN 2 : AUTHENTIFICATION -->
-    <div id="screen-auth" class="screen">
-      <div class="auth-header">
-        <h1>⚔️ Purge Game ⚔️</h1>
-        <p class="subtitle">Le jeu où la dette vous suit</p>
-      </div>
-      <div class="tabs">
-        <button class="tab active" data-tab="login">🔐 CONNEXION</button>
-        <button class="tab" data-tab="register">📝 INSCRIPTION</button>
-      </div>
-
-      <div id="login-form" class="form active">
-        <div class="input-group">
-          <label>📞 Numéro de téléphone (avec indicatif)</label>
-          <input type="tel" id="login-phone" placeholder="Ex: +241612345678">
+    <!-- Modal Admin -->
+    <div id="adminModal" class="modal hidden">
+        <div class="modal-content">
+            <h2 style="color:#ff4444;">👑 ESPACE ADMIN</h2>
+            <input type="password" id="adminCode" placeholder="Code admin">
+            <button onclick="verifyAdmin()">SE CONNECTER</button>
+            <p id="adminError" style="color:#ff4444; margin-top:10px;"></p>
+            <button onclick="closeAdminModal()" style="margin-top:10px; background:#333;">FERMER</button>
         </div>
-        <div class="input-group">
-          <label>🎮 Pseudo</label>
-          <input type="text" id="login-pseudo" placeholder="Votre pseudo">
-        </div>
-        <button id="login-btn" class="btn-primary">Se connecter</button>
-        <p id="login-error" class="error"></p>
-      </div>
-
-      <div id="register-form" class="form">
-        <div class="input-group">
-          <label>📞 Numéro de téléphone (avec indicatif)</label>
-          <input type="tel" id="reg-phone" placeholder="Ex: +241612345678">
-          <button id="reg-verify-phone" class="btn-secondary verify-btn">Vérifier</button>
-          <span id="phone-status" class="status">⛔ Non vérifié</span>
-        </div>
-        <div class="input-group">
-          <label>🎮 Pseudo</label>
-          <input type="text" id="reg-pseudo" placeholder="Votre pseudo">
-        </div>
-        <div class="input-group">
-          <label>🖼️ Photo de profil</label>
-          <div class="avatar-upload">
-            <img id="reg-avatar-preview" src="https://i.pravatar.cc/150?img=7" alt="Avatar">
-            <input type="file" id="reg-avatar-file" accept="image/*" capture="environment">
-          </div>
-        </div>
-        <button id="register-btn" class="btn-primary" disabled>S'inscrire</button>
-        <p id="reg-error" class="error"></p>
-      </div>
     </div>
 
-    <!-- ÉCRAN 3 : CRÉER OU REJOINDRE -->
-    <div id="screen-team-choice" class="screen">
-      <div class="choice-container">
-        <div class="choice-header">
-          <div class="user-info-mini">
-            <img id="choice-user-avatar" src="" alt="avatar">
-            <span id="choice-user-pseudo"></span>
-          </div>
-          <button id="choice-logout" class="icon-btn logout">🚪</button>
+    <!-- Panel Admin (caché par défaut) -->
+    <div id="adminPanel" class="modal hidden">
+        <div class="modal-content" style="max-width: 600px;">
+            <h2 style="color:#ff4444;">🛡️ PANEL ADMIN</h2>
+            
+            <div class="admin-actions">
+                <h3>➕ AJOUTER UN CLAN</h3>
+                <input type="text" id="newClanName" placeholder="Nom du clan">
+                <input type="text" id="newClanLeader" placeholder="Chef du clan">
+                <input type="number" id="newClanScoreWeek" placeholder="Points semaine">
+                <input type="number" id="newClanScoreMonth" placeholder="Points mois">
+                <input type="number" id="newClanScoreYear" placeholder="Points année">
+                <button onclick="addClan()">AJOUTER LE CLAN</button>
+            </div>
+            
+            <div class="admin-actions">
+                <h3>🗑️ SUPPRIMER UN CLAN</h3>
+                <select id="deleteClanSelect">
+                    <option value="">-- Choisir un clan --</option>
+                </select>
+                <button onclick="deleteClan()" class="btn-danger">SUPPRIMER</button>
+            </div>
+            
+            <div class="admin-actions">
+                <h3>📝 AJOUTER UNE NOTE À UN CLAN</h3>
+                <select id="noteClanSelect">
+                    <option value="">-- Choisir un clan --</option>
+                </select>
+                <input type="number" id="noteYear" placeholder="Année (ex: 2024)">
+                <textarea id="noteContent" placeholder="Contenu de la note" rows="3"></textarea>
+                <button onclick="addNoteToClan()">AJOUTER LA NOTE</button>
+            </div>
+            
+            <div class="admin-actions">
+                <h3>📋 NOTES DES CLANS</h3>
+                <div id="clansNotesList"></div>
+            </div>
+            
+            <button onclick="closeAdminPanel()" style="margin-top:20px;">FERMER</button>
         </div>
-        <h2>⚔️ Rejoindre ou créer une équipe ⚔️</h2>
-        <p class="choice-subtitle">Une équipe = 4 joueurs maximum</p>
-        <div class="choice-buttons">
-          <button id="create-team-btn" class="btn-primary create-btn">✨ Créer une équipe</button>
-          <button id="show-join-team-btn" class="btn-secondary join-choice-btn">🔗 Rejoindre une équipe</button>
-        </div>
-        <div id="join-team-section" class="join-team-section hidden">
-          <div class="input-group">
-            <label>🔑 Code d'invitation (6 caractères)</label>
-            <input type="text" id="choice-join-code" placeholder="Ex: ABC123" maxlength="6">
-            <button id="choice-join-btn" class="btn-primary" style="margin-top:15px;">Rejoindre</button>
-          </div>
-          <p id="join-error" class="error"></p>
-        </div>
-      </div>
     </div>
 
-    <!-- ÉCRAN 4 : LOBBY -->
-    <div id="screen-lobby" class="screen">
-      <div class="lobby-header">
-        <h2>🏠 Votre équipe</h2>
-        <button id="lobby-logout-btn" class="icon-btn logout">🚪 Déconnexion</button>
-      </div>
-      <div class="code-section">
-        <p class="code-label">🔑 Code d'invitation</p>
-        <div class="code-display">
-          <span id="invite-code">------</span>
-          <button id="copy-code-btn" class="icon-btn copy-btn">📋 Copier</button>
-        </div>
-        <p class="code-hint">Partagez ce code avec vos amis (max 4 joueurs)</p>
-      </div>
-      <div class="members-section">
-        <h3>👥 Membres <span id="online-count">(0/4)</span></h3>
-        <div id="members-list" class="members-grid"></div>
-      </div>
-      <div class="lobby-actions">
-        <button id="leave-team" class="btn-outline">🚪 Quitter l'équipe</button>
-        <button id="start-game" class="btn-primary" disabled>⚔️ Lancer le game (4/4)</button>
-      </div>
-    </div>
-
-    <!-- JEU 1 -->
-    <div id="screen-game1" class="screen">
-      <div class="game-header">
-        <button id="g1-back" class="icon-btn">←</button>
-        <div class="round-info">📊 Manche <span id="round-current">1</span>/5</div>
-        <div class="timer" id="timer">01:00</div>
-      </div>
-      <div class="game-content">
-        <div class="question-card"><p id="question-text"></p></div>
-        <div id="players-answers" class="answers-grid"></div>
-        <button id="validate-round" class="btn-primary" disabled>✅ Valider la manche</button>
-      </div>
-    </div>
-
-    <!-- JEU 2 -->
-    <div id="screen-game2" class="screen">
-      <div class="game-header">
-        <button id="g2-back" class="icon-btn">←</button>
-        <h3>🔍 Devine le personnage</h3>
-        <div></div>
-      </div>
-      <div class="game-content">
-        <img id="devine-img" src="" class="devine-image">
-        <p id="devine-question"></p>
-        <input type="text" id="devine-input" placeholder="Votre réponse...">
-        <div class="button-group">
-          <button id="submit-devine" class="btn-primary">📝 Soumettre</button>
-          <button id="vote-blanc" class="btn-secondary">⚪ Bulletin blanc</button>
-        </div>
-        <button id="next-game2" class="btn-primary hidden">🎮 Continuer</button>
-      </div>
-    </div>
-
-    <!-- JEU 3 -->
-    <div id="screen-game3" class="screen">
-      <div class="game-header"><h3>💀 Spam or Ban - Affrontement final 💀</h3></div>
-      <div class="game-content">
-        <p style="text-align:center; margin:30px 0;">Combat ultime entre équipes !</p>
-        <button id="finish-game3" class="btn-primary">🏆 Terminer la partie</button>
-      </div>
-    </div>
-
-    <!-- RÉSULTATS -->
-    <div id="screen-results" class="screen">
-      <div class="result-card">
-        <h2>📊 Résultat final</h2>
-        <p id="final-score">Score: 0</p>
-        <div id="win-reward" class="hidden">
-          <p>🏆 VICTOIRE ! 🏆</p>
-          <p>Groupe de <span id="group-size"></span> membres débloqué</p>
-          <p>📧 Contact: PrimePurge@proton.me</p>
-        </div>
-        <div id="lose-ban" class="hidden">
-          <p>💀 DÉFAITE - Banni 1 semaine 💀</p>
-        </div>
-        <button id="play-again" class="btn-primary">🔄 Rejouer</button>
-      </div>
-    </div>
-
-    <!-- ADMIN -->
-    <div id="admin-floating">
-      <button id="show-admin-btn" class="admin-toggle">👑</button>
-      <div id="admin-panel" class="hidden">
-        <h4>👑 Panneau Admin</h4>
-        <input type="tel" id="admin-phone-input" placeholder="Numéro admin">
-        <button id="admin-login-btn" class="btn-primary">Connexion</button>
-        <div id="owner-section" class="hidden">
-          <h5>⭐ Owner</h5>
-          <input type="tel" id="new-admin-phone" placeholder="Ajouter admin">
-          <button id="add-admin-btn" class="btn-secondary">Ajouter</button>
-          <ul id="admin-list"></ul>
-        </div>
-        <div id="admin-section" class="hidden">
-          <h5>🛡️ Admin</h5>
-          <input type="text" id="new-question-text" placeholder="Question">
-          <input type="text" id="new-question-answer" placeholder="Réponse">
-          <select id="new-question-type">
-            <option value="game1">Jeu 1</option>
-            <option value="game2">Jeu 2 (image)</option>
-          </select>
-          <div id="game2-image-field" class="hidden">
-            <input type="text" id="new-question-image" placeholder="URL Image">
-            <input type="text" id="new-question-personnage" placeholder="Personnage">
-            <input type="text" id="new-question-description" placeholder="Description">
-          </div>
-          <button id="add-question-btn" class="btn-primary">Ajouter</button>
-        </div>
-        <button id="close-admin" class="btn-outline">Fermer</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MUSIQUE DE FOND -->
-  <audio id="background-music" loop>
-    <source src="song.mp3.m4a">
-  </audio>
-  <div id="music-control" class="music-control">
-    <button id="toggle-music" class="music-btn">🔊</button>
-  </div>
-
-  <script src="questions.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <script src="firebase-config.js"></script>
-  <script src="script-firebase.js"></script>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
+    <script>
+        // Configuration Firebase (à remplacer par la tienne)
+        const firebaseConfig = {
+            apiKey: "AIzaSyB3yYAuiGqbtrbZ1aSYxAjduZ65adNIpag",
+            authDomain: "purge-game-58718.firebaseapp.com",
+            databaseURL: "https://purge-game-58718-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "purge-game-58718",
+            storageBucket: "purge-game-58718.firebasestorage.app",
+            messagingSenderId: "554574972856",
+            appId: "1:554574972856:web:9de17e7f77eb7b5be4b14d"
+        };
+        
+        // Initialiser Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        
+        // Variables globales
+        let currentRankingPeriod = 'week';
+        let isAdmin = false;
+        let backgroundMusic = null;
+        let musicPlaying = false;
+        
+        // CODE ADMIN (à changer selon ton choix)
+        const ADMIN_CODE = "JOYBOY2024";
+        
+        // ========== FONCTIONS D'INITIALISATION ==========
+        function createFloatingDots() {
+            const container = document.getElementById('floatingDots');
+            for(let i = 0; i < 50; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                const size = Math.random() * 6 + 2;
+                const duration = Math.random() * 8 + 4;
+                const delay = Math.random() * 10;
+                const startX = Math.random() * 100;
+                const direction = Math.random() > 0.5 ? 1 : -1;
+                dot.style.width = size + 'px';
+                dot.style.height = size + 'px';
+                dot.style.left = startX + '%';
+                dot.style.animationDuration = duration + 's';
+                dot.style.animationDelay = delay + 's';
+                dot.style.setProperty('--direction', direction);
+                container.appendChild(dot);
+            }
+        }
+        
+        function getClanIcon(index) {
+            const icons = ['⚔️', '🛡️', '👑', '🏰', '🐉', '⚡', '🔥', '❄️', '🌊', '🌪️', '💀', '🦅', '🐺', '🦁', '🏹', '🗡️', '🔱', '⛓️', '🌙', '⭐', '🌀', '🎯', '💎'];
+            return icons[index % icons.length];
+        }
+        
+        function escapeHtml(str) {
+            if(!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if(m === '&') return '&amp;';
+                if(m === '<') return '&lt;';
+                if(m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        function showTempMessage(msg, isError = false) {
+            const tempDiv = document.createElement('div');
+            tempDiv.style.cssText = `position:fixed; bottom:100px; left:50%; transform:translateX(-50%); background:${isError ? '#cc0000' : '#ff4444'}; color:white; padding:10px 20px; border-radius:30px; z-index:1000; animation:fadeOut 2s ease forwards; font-family:Orbitron;`;
+            tempDiv.innerHTML = msg;
+            document.body.appendChild(tempDiv);
+            setTimeout(() => { tempDiv.remove(); }, 2000);
+        }
+        
+        // ========== CHARGEMENT DES DONNÉES ==========
+        async function loadClans() {
+            try {
+                const snapshot = await database.ref('clans').once('value');
+                const clans = [];
+                
+                snapshot.forEach(childSnapshot => {
+                    const clan = childSnapshot.val();
+                    clan.id = childSnapshot.key;
+                    clans.push(clan);
+                });
+                
+                if (clans.length === 0) {
+                    // Créer des clans par défaut
+                    const defaultClans = [
+                        { name: "KILLER", leader: "Unknown", score_week: 1250, score_month: 4500, score_year: 15000, likes: 45, notes: [] },
+                        { name: "HADÈS", leader: "Benny Hadès", score_week: 1100, score_month: 4200, score_year: 12800, likes: 38, notes: [] },
+                        { name: "OMBRES", leader: "Monarque des Ombres", score_week: 980, score_month: 3800, score_year: 11200, likes: 42, notes: [] },
+                        { name: "BUTTERFLY", leader: "Inconnue Boy", score_week: 850, score_month: 3200, score_year: 9800, likes: 31, notes: [] },
+                        { name: "GHOST", leader: "James Ghost", score_week: 720, score_month: 2900, score_year: 8700, likes: 28, notes: [] },
+                        { name: "BIG DEAL", leader: "Grady Big Deal", score_week: 650, score_month: 2600, score_year: 7600, likes: 25, notes: [] },
+                        { name: "WORKER", leader: "Unknown", score_week: 580, score_month: 2300, score_year: 6900, likes: 22, notes: [] }
+                    ];
+                    
+                    for (const clan of defaultClans) {
+                        await database.ref('clans').push(clan);
+                    }
+                    loadClans();
+                    return;
+                }
+                
+                globalClans = clans;
+                updateRanking();
+                updateClanSelects();
+            } catch(e) {
+                console.error(e);
+                document.getElementById('rankingList').innerHTML = '<div style="text-align:center; padding:50px;">❌ Erreur de chargement</div>';
+            }
+        }
+        
+        function updateRanking() {
+            let clans = [...globalClans];
+            
+            if (currentRankingPeriod === 'week') {
+                clans.sort((a,b) => (b.score_week || 0) - (a.score_week || 0));
+            } else if (currentRankingPeriod === 'month') {
+                clans.sort((a,b) => (b.score_month || 0) - (a.score_month || 0));
+            } else {
+                clans.sort((a,b) => (b.score_year || 0) - (a.score_year || 0));
+            }
+            
+            const container = document.getElementById('rankingList');
+            if (clans.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:50px;">🏆 Aucun clan enregistré</div>';
+                return;
+            }
+            
+            let periodLabel = currentRankingPeriod === 'week' ? 'POINTS SEMAINE' : (currentRankingPeriod === 'month' ? 'POINTS MOIS' : 'POINTS ANNÉE');
+            
+            container.innerHTML = clans.map((clan, index) => {
+                let score = currentRankingPeriod === 'week' ? (clan.score_week || 0) : 
+                           (currentRankingPeriod === 'month' ? (clan.score_month || 0) : (clan.score_year || 0));
+                
+                let notesHtml = '';
+                if (clan.notes && clan.notes.length > 0) {
+                    notesHtml = `<div style="margin-top:10px; font-size:12px; color:#ff8888;">
+                        📝 ${clan.notes.map(n => `${n.year}: ${n.content}`).join(' | ')}
+                    </div>`;
+                }
+                
+                return `
+                    <div class="ranking-item">
+                        <span class="ranking-number">#${index+1}</span>
+                        <div style="display:flex; align-items:center; gap:15px; flex:2;">
+                            <div class="clan-icon">${getClanIcon(index)}</div>
+                            <div>
+                                <div class="ranking-name">⚔️ ${escapeHtml(clan.name)}</div>
+                                <div class="ranking-leader">👑 ${escapeHtml(clan.leader)}</div>
+                                ${notesHtml}
+                            </div>
+                        </div>
+                        <span class="ranking-score">⭐ ${score} ${periodLabel}</span>
+                        <button class="clan-like-btn" onclick="likeClan('${clan.id}')">❤️ ${clan.likes || 0} likes</button>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        async function likeClan(id) {
+            try {
+                const clanRef = database.ref(`clans/${id}`);
+                const snapshot = await clanRef.once('value');
+                const clan = snapshot.val();
+                if (clan) {
+                    const newLikes = (clan.likes || 0) + 1;
+                    await clanRef.update({ likes: newLikes });
+                    showTempMessage("❤️ Like enregistré !");
+                    loadClans();
+                }
+            } catch(e) {
+                showTempMessage("❌ Erreur", true);
+            }
+        }
+        
+        function updateClanSelects() {
+            const deleteSelect = document.getElementById('deleteClanSelect');
+            const noteSelect = document.getElementById('noteClanSelect');
+            
+            if (deleteSelect) {
+                deleteSelect.innerHTML = '<option value="">-- Choisir un clan --</option>' + 
+                    globalClans.map(clan => `<option value="${clan.id}">${escapeHtml(clan.name)}</option>`).join('');
+            }
+            if (noteSelect) {
+                noteSelect.innerHTML = '<option value="">-- Choisir un clan --</option>' + 
+                    globalClans.map(clan => `<option value="${clan.id}">${escapeHtml(clan.name)}</option>`).join('');
+            }
+            
+            displayClansNotes();
+        }
+        
+        function displayClansNotes() {
+            const container = document.getElementById('clansNotesList');
+            if (!container) return;
+            
+            if (!globalClans || globalClans.length === 0) {
+                container.innerHTML = '<p>Aucun clan</p>';
+                return;
+            }
+            
+            container.innerHTML = globalClans.map(clan => `
+                <div style="margin:15px 0; padding:10px; background:rgba(255,68,68,0.1); border-radius:8px;">
+                    <strong style="color:#ff4444;">${escapeHtml(clan.name)}</strong>
+                    ${clan.notes && clan.notes.length > 0 ? clan.notes.map(n => `
+                        <div style="margin-left:15px; font-size:13px;">📅 ${n.year}: ${escapeHtml(n.content)}</div>
+                    `).join('') : '<div style="margin-left:15px; font-size:13px;">Aucune note</div>'}
+                </div>
+            `).join('');
+        }
+        
+        // ========== FORUM ==========
+        async function loadForum() {
+            try {
+                const snapshot = await database.ref('forum').once('value');
+                const messages = [];
+                
+                snapshot.forEach(childSnapshot => {
+                    const msg = childSnapshot.val();
+                    msg.id = childSnapshot.key;
+                    messages.push(msg);
+                });
+                
+                messages.reverse();
+                
+                const container = document.getElementById('forumMessages');
+                if (messages.length === 0) {
+                    container.innerHTML = '<div style="text-align:center; padding:50px;">💬 Soyez le premier à commenter !</div>';
+                    return;
+                }
+                
+                container.innerHTML = messages.map(msg => `
+                    <div class="message">
+                        <strong>🔥 ${escapeHtml(msg.author)}</strong> <small>${msg.date}</small>
+                        <p style="margin-top:8px;">${escapeHtml(msg.message)}</p>
+                        <button class="like-btn" onclick="likeMessage('${msg.id}')">❤️ ${msg.likes || 0} likes</button>
+                        ${isAdmin ? `<button class="like-btn" style="background:#cc0000; margin-left:10px;" onclick="deleteMessage('${msg.id}')">🗑️ Supprimer</button>` : ''}
+                    </div>
+                `).join('');
+            } catch(e) {
+                console.error(e);
+            }
+        }
+        
+        async function likeMessage(id) {
+            try {
+                const msgRef = database.ref(`forum/${id}`);
+                const snapshot = await msgRef.once('value');
+                const msg = snapshot.val();
+                if (msg) {
+                    const newLikes = (msg.likes || 0) + 1;
+                    await msgRef.update({ likes: newLikes });
+                    showTempMessage("💬 Like enregistré !");
+                    loadForum();
+                }
+            } catch(e) {
+                showTempMessage("❌ Erreur", true);
+            }
+        }
+        
+        async function deleteMessage(id) {
+            if (confirm("Supprimer ce message ?")) {
+                await database.ref(`forum/${id}`).remove();
+                showTempMessage("🗑️ Message supprimé");
+                loadForum();
+            }
+        }
+        
+        document.getElementById('forumForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const author = document.getElementById('authorName').value;
+            const message = document.getElementById('forumMessage').value;
+            
+            const newMsg = {
+                author: author,
+                message: message,
+                likes: 0,
+                date: new Date().toLocaleString()
+            };
+            
+            await database.ref('forum').push(newMsg);
+            showTempMessage("✅ Message publié !");
+            document.getElementById('forumForm').reset();
+            loadForum();
+        });
+        
+        // ========== ADMIN ==========
+        function showAdminModal() {
+            document.getElementById('adminModal').classList.remove('hidden');
+        }
+        
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.add('hidden');
+            document.getElementById('adminCode').value = '';
+            document.getElementById('adminError').innerHTML = '';
+        }
+        
+        function verifyAdmin() {
+            const code = document.getElementById('adminCode').value;
+            if (code === ADMIN_CODE) {
+                isAdmin = true;
+                closeAdminModal();
+                document.getElementById('adminPanel').classList.remove('hidden');
+                showTempMessage("👑 Connecté en tant qu'Admin");
+            } else {
+                document.getElementById('adminError').innerHTML = 'Code incorrect !';
+            }
+        }
+        
+        function closeAdminPanel() {
+            document.getElementById('adminPanel').classList.add('hidden');
+        }
+        
+        async function addClan() {
+            const name = document.getElementById('newClanName').value;
+            const leader = document.getElementById('newClanLeader').value;
+            const score_week = parseInt(document.getElementById('newClanScoreWeek').value) || 0;
+            const score_month = parseInt(document.getElementById('newClanScoreMonth').value) || 0;
+            const score_year = parseInt(document.getElementById('newClanScoreYear').value) || 0;
+            
+            if (!name || !leader) {
+                alert("Nom et chef du clan requis");
+                return;
+            }
+            
+            const newClan = {
+                name: name,
+                leader: leader,
+                score_week: score_week,
+                score_month: score_month,
+                score_year: score_year,
+                likes: 0,
+                notes: []
+            };
+            
+            await database.ref('clans').push(newClan);
+            showTempMessage("✅ Clan ajouté !");
+            document.getElementById('newClanName').value = '';
+            document.getElementById('newClanLeader').value = '';
+            document.getElementById('newClanScoreWeek').value = '';
+            document.getElementById('newClanScoreMonth').value = '';
+            document.getElementById('newClanScoreYear').value = '';
+            loadClans();
+        }
+        
+        async function deleteClan() {
+            const clanId = document.getElementById('deleteClanSelect').value;
+            if (!clanId) {
+                alert("Choisissez un clan");
+                return;
+            }
+            
+            if (confirm("Supprimer définitivement ce clan ?")) {
+                await database.ref(`clans/${clanId}`).remove();
+                showTempMessage("🗑️ Clan supprimé");
+                loadClans();
+            }
+        }
+        
+        async function addNoteToClan() {
+            const clanId = document.getElementById('noteClanSelect').value;
+            const year = document.getElementById('noteYear').value;
+            const content = document.getElementById('noteContent').value;
+            
+            if (!clanId || !year || !content) {
+                alert("Tous les champs sont requis");
+                return;
+            }
+            
+            const clanRef = database.ref(`clans/${clanId}`);
+            const snapshot = await clanRef.once('value');
+            const clan = snapshot.val();
+            
+            const notes = clan.notes || [];
+            notes.push({ year: parseInt(year), content: content });
+            
+            await clanRef.update({ notes: notes });
+            showTempMessage("📝 Note ajoutée !");
+            document.getElementById('noteYear').value = '';
+            document.getElementById('noteContent').value = '';
+            loadClans();
+        }
+        
+        // ========== AFFICHAGE ==========
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            if(sectionId === 'ranking') loadClans();
+            if(sectionId === 'forum') loadForum();
+        }
+        
+        function showRankingPeriod(period, element) {
+            currentRankingPeriod = period;
+            document.querySelectorAll('.ranking-tab').forEach(tab => tab.classList.remove('active'));
+            element.classList.add('active');
+            updateRanking();
+        }
+        
+        // ========== MUSIQUE ==========
+        function initMusic() {
+            try {
+                backgroundMusic = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3');
+                backgroundMusic.loop = true;
+                backgroundMusic.volume = 0.15;
+            } catch(e) {}
+        }
+        
+        function toggleMusic() {
+            if(!backgroundMusic) initMusic();
+            if(musicPlaying) {
+                backgroundMusic.pause();
+                musicPlaying = false;
+                document.getElementById('musicBtn').innerHTML = '🎵';
+            } else {
+                backgroundMusic.play().catch(e => console.log("Auto-play bloqué"));
+                musicPlaying = true;
+                document.getElementById('musicBtn').innerHTML = '🎵🔊';
+            }
+        }
+        
+        // Démarrer la musique au premier clic
+        document.body.addEventListener('click', () => {
+            if(!musicPlaying && backgroundMusic) {
+                backgroundMusic.play().catch(e => {});
+                musicPlaying = true;
+                document.getElementById('musicBtn').innerHTML = '🎵🔊';
+            }
+        }, { once: true });
+        
+        // Variables globales
+        let globalClans = [];
+        
+        // Initialisation
+        createFloatingDots();
+        initMusic();
+        loadClans();
+        loadForum();
+        
+        // Rafraîchissement automatique toutes les 10 secondes
+        setInterval(() => {
+            loadClans();
+            if (document.getElementById('forum').classList.contains('active')) {
+                loadForum();
+            }
+        }, 10000);
+        
+        // Ajout du style d'animation
+        const style = document.createElement('style');
+        style.textContent = `@keyframes fadeOut { 0% { opacity: 1; transform: translateX(-50%) translateY(0); } 70% { opacity: 1; } 100% { opacity: 0; transform: translateX(-50%) translateY(-20px); } }`;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>
+WILLI SHIRO SHADOW NIGHT DIANNY 
