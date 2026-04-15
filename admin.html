@@ -7,13 +7,16 @@ INFO PURGE ADMIN
     <title>INFO PURGE 24 - Admin Panel</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             font-family: 'Montserrat', sans-serif;
             background: #0a0a0a;
             color: #ffffff;
             min-height: 100vh;
         }
+        
         .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        
         .admin-header {
             background: linear-gradient(135deg, #1a0000, #2a0a0a);
             border-radius: 30px;
@@ -22,7 +25,9 @@ INFO PURGE ADMIN
             margin-bottom: 30px;
             border: 1px solid #FFD700;
         }
+        
         h1 { font-family: 'Cinzel', serif; color: #FFD700; font-size: 2em; }
+        
         .stats-bar {
             display: flex;
             gap: 20px;
@@ -30,6 +35,7 @@ INFO PURGE ADMIN
             flex-wrap: wrap;
             margin: 20px 0;
         }
+        
         .stat-card {
             background: rgba(139,0,0,0.3);
             border-radius: 15px;
@@ -37,7 +43,9 @@ INFO PURGE ADMIN
             text-align: center;
             border: 1px solid #FFD700;
         }
-        .stat-card span { font-size: 28px; font-weight: bold; color: #FFD700; }
+        
+        .stat-card span { font-size: 28px; font-weight: bold; color: #FFD700; font-family: 'Cinzel', serif; }
+        
         .btn-group {
             display: flex;
             gap: 15px;
@@ -45,6 +53,7 @@ INFO PURGE ADMIN
             flex-wrap: wrap;
             margin: 20px 0;
         }
+        
         button {
             background: linear-gradient(135deg, #8B0000, #cc0000);
             border: none;
@@ -53,9 +62,15 @@ INFO PURGE ADMIN
             color: #FFD700;
             font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
         }
-        button:hover { transform: translateY(-2px); }
-        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(204,0,0,0.4); }
+        
+        .btn-danger { background: #c0392b; }
+        .btn-danger:hover { background: #a93226; }
+        
         .card {
             background: #1a1a1a;
             border: 1px solid #8B0000;
@@ -63,6 +78,7 @@ INFO PURGE ADMIN
             padding: 25px;
             margin-bottom: 30px;
         }
+        
         .card h2 {
             font-family: 'Cinzel', serif;
             color: #FFD700;
@@ -70,6 +86,7 @@ INFO PURGE ADMIN
             border-left: 4px solid #FFD700;
             padding-left: 15px;
         }
+        
         .clan-card {
             background: linear-gradient(95deg, #121212, #1a0505);
             border: 1px solid #8B0000;
@@ -77,7 +94,19 @@ INFO PURGE ADMIN
             padding: 18px;
             margin-bottom: 15px;
         }
-        .clan-name { font-size: 1.3em; font-weight: bold; color: #FFD700; }
+        
+        .clan-name { font-size: 1.3em; font-weight: bold; color: #FFD700; font-family: 'Cinzel', serif; }
+        
+        .clan-stats { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0; }
+        
+        .stat {
+            background: rgba(139,0,0,0.3);
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.75em;
+            color: #FFD700;
+        }
+        
         .status-badge {
             display: inline-block;
             padding: 4px 12px;
@@ -85,14 +114,19 @@ INFO PURGE ADMIN
             font-size: 0.7em;
             font-weight: bold;
         }
+        
         .status-badge.pending { background: #f39c12; color: #000; }
         .status-badge.approved { background: #27ae60; color: #fff; }
         .status-badge.rejected { background: #c0392b; color: #fff; }
+        
         .photos-preview { display: flex; gap: 10px; margin: 10px 0; flex-wrap: wrap; }
         .photos-preview img { width: 80px; height: 80px; object-fit: cover; border-radius: 10px; cursor: pointer; }
+        
         .admin-actions { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
         .admin-actions input { background: #0a0a0a; border: 1px solid #FFD700; padding: 8px; border-radius: 8px; color: white; width: 100px; }
+        
         .loading { text-align: center; padding: 40px; color: #FFD700; }
+        
         .login-box {
             max-width: 400px;
             margin: 100px auto;
@@ -102,6 +136,7 @@ INFO PURGE ADMIN
             padding: 40px;
             text-align: center;
         }
+        
         .pin-input {
             font-size: 32px;
             text-align: center;
@@ -114,6 +149,7 @@ INFO PURGE ADMIN
             padding: 10px;
             border-radius: 15px;
         }
+        
         @media (max-width: 768px) {
             .photos-preview img { width: 60px; height: 60px; }
         }
@@ -137,20 +173,27 @@ INFO PURGE ADMIN
                     <div class="stat-card"><span id="statPending">0</span><br>En attente</div>
                     <div class="stat-card"><span id="statApproved">0</span><br>Approuvées</div>
                     <div class="stat-card"><span id="statRejected">0</span><br>Rejetées</div>
+                    <div class="stat-card"><span id="statClans">0</span><br>Clans</div>
                 </div>
                 <div class="btn-group">
                     <button onclick="logout()">🚪 DÉCONNEXION</button>
                     <a href="index.html"><button>🏠 VOIR LE SITE</button></a>
-                    <button onclick="syncToFirebase()" class="btn-success">💾 SAUVEGARDER</button>
-                    <button onclick="importOldClans()" class="btn-warning">📥 IMPORTER ANCIENS CLANS</button>
                 </div>
             </div>
 
+            <!-- LISTE DES CLANS -->
+            <div class="card">
+                <h2>📋 LISTE DES CLANS</h2>
+                <div id="clansListAdmin"><div class="loading">⏳ Chargement...</div></div>
+            </div>
+
+            <!-- PURGES EN ATTENTE -->
             <div class="card">
                 <h2>⏳ PURGES EN ATTENTE DE VALIDATION</h2>
                 <div id="pendingSubmissions"><div class="loading">⏳ Chargement...</div></div>
             </div>
 
+            <!-- TOUTES LES SOUMISSIONS -->
             <div class="card">
                 <h2>📋 TOUTES LES SOUMISSIONS</h2>
                 <div id="allSubmissions"><div class="loading">⏳ Chargement...</div></div>
@@ -190,6 +233,7 @@ INFO PURGE ADMIN
                 localStorage.setItem('adminLoggedIn', 'true');
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
+                loadClansAdmin();
                 loadPendingSubmissions();
                 loadAllSubmissions();
             } else {
@@ -200,6 +244,7 @@ INFO PURGE ADMIN
         if(localStorage.getItem('adminLoggedIn') === 'true') {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
+            loadClansAdmin();
             loadPendingSubmissions();
             loadAllSubmissions();
         }
@@ -210,6 +255,58 @@ INFO PURGE ADMIN
             document.getElementById('adminPanel').style.display = 'none';
         }
         
+        // ========== GESTION DES CLANS ==========
+        async function loadClansAdmin() {
+            try {
+                const snapshot = await database.ref('clans').once('value');
+                const clansMap = new Map();
+                snapshot.forEach(child => {
+                    const clan = child.val();
+                    if(!clansMap.has(clan.name)) {
+                        clan.id = child.key;
+                        clansMap.set(clan.name, clan);
+                    }
+                });
+                const clans = Array.from(clansMap.values());
+                
+                document.getElementById('statClans').innerText = clans.length;
+                
+                const container = document.getElementById('clansListAdmin');
+                if(clans.length === 0) {
+                    container.innerHTML = '<div class="loading">📭 Aucun clan enregistré</div>';
+                    return;
+                }
+                
+                container.innerHTML = clans.map(clan => `
+                    <div class="clan-card">
+                        <div class="clan-name">⚔️ ${escapeHtml(clan.name)}</div>
+                        <div>👑 ${escapeHtml(clan.leader)}</div>
+                        <div class="clan-stats">
+                            <span class="stat">📅 S: ${clan.score_week || 0}</span>
+                            <span class="stat">📆 M: ${clan.score_month || 0}</span>
+                            <span class="stat">🗓️ A: ${clan.score_year || 0}</span>
+                            <span class="stat">❤️ ${clan.likes || 0}</span>
+                        </div>
+                        ${clan.description ? `<div style="margin-top:8px; font-size:0.8em; color:#aaa;">📝 ${escapeHtml(clan.description)}</div>` : ''}
+                        <button onclick="deleteClan('${clan.id}')" class="btn-danger" style="margin-top:10px;">🗑️ SUPPRIMER CE CLAN</button>
+                    </div>
+                `).join('');
+            } catch(e) {
+                console.error(e);
+            }
+        }
+        
+        async function deleteClan(id) {
+            if(confirm("⚠️ Supprimer définitivement ce clan ?")) {
+                await database.ref(`clans/${id}`).remove();
+                alert("✅ Clan supprimé !");
+                loadClansAdmin();
+                // Rafraîchir le site public si nécessaire
+                if(typeof loadClans === 'function') loadClans();
+            }
+        }
+        
+        // ========== GESTION DES SOUMISSIONS ==========
         async function loadPendingSubmissions() {
             const snapshot = await database.ref('submissions').orderByChild('status').equalTo('pending').once('value');
             const submissions = [];
@@ -229,7 +326,7 @@ INFO PURGE ADMIN
                     <div class="clan-name">⚔️ ${escapeHtml(sub.clanName)}</div>
                     <div style="margin:10px 0;"><strong>🔗 Lien:</strong> <a href="${escapeHtml(sub.link)}" target="_blank" style="color:#FFD700;">${escapeHtml(sub.link)}</a></div>
                     <div class="photos-preview">
-                        ${sub.photos.map(photo => `<img src="${photo}" onclick="window.open('${photo}')">`).join('')}
+                        ${sub.photos ? sub.photos.map(photo => `<img src="${photo}" onclick="window.open('${photo}')">`).join('') : ''}
                     </div>
                     <div style="font-size:0.7em; color:#888;">Soumis le ${new Date(sub.submittedAt).toLocaleString()}</div>
                     <div class="admin-actions">
@@ -304,6 +401,7 @@ INFO PURGE ADMIN
                 alert(`✅ Purge approuvée ! +${points} points pour ${submission.clanName}`);
                 loadPendingSubmissions();
                 loadAllSubmissions();
+                loadClansAdmin();
             }
         }
         
@@ -326,63 +424,10 @@ INFO PURGE ADMIN
             }
         }
         
-        async function syncToFirebase() {
-            alert("Fonction sync - À implémenter");
-        }
-        
-        // ========== IMPORTER DEPUIS GITHUB ==========
-        async function importOldClans() {
-            const GITHUB_URL = "https://raw.githubusercontent.com/ablaye2020/info-purge-24/main/data.json";
-            
-            if(confirm("⚠️ Importer les clans depuis GitHub ? Les doublons seront ignorés.")) {
-                try {
-                    document.getElementById('pendingSubmissions').innerHTML = '<div class="loading">⏳ Importation...</div>';
-                    
-                    const response = await fetch(GITHUB_URL + "?t=" + Date.now());
-                    if (!response.ok) throw new Error("Fichier non trouvé");
-                    const githubData = await response.json();
-                    
-                    let importedCount = 0;
-                    let duplicateCount = 0;
-                    
-                    const snapshot = await database.ref('clans').once('value');
-                    const existingClans = [];
-                    snapshot.forEach(child => {
-                        existingClans.push(child.val().name);
-                    });
-                    
-                    for (const clan of githubData.clans) {
-                        if (!existingClans.includes(clan.name)) {
-                            const newClan = {
-                                name: clan.name,
-                                leader: clan.leader || "Inconnu",
-                                description: clan.description || "",
-                                score_week: clan.score_week || 0,
-                                score_month: clan.score_month || 0,
-                                score_year: clan.score_year || 0,
-                                likes: clan.likes || 0,
-                                notes: clan.notes || []
-                            };
-                            await database.ref('clans').push(newClan);
-                            importedCount++;
-                        } else {
-                            duplicateCount++;
-                        }
-                    }
-                    
-                    alert(`✅ Import terminé !\n\n📊 ${importedCount} clans ajoutés\n🔄 ${duplicateCount} clans déjà existants`);
-                    
-                    loadPendingSubmissions();
-                    loadAllSubmissions();
-                    
-                } catch(e) {
-                    alert("❌ Erreur: " + e.message);
-                }
-            }
-        }
-        
+        // Rafraîchissement automatique toutes les 10 secondes
         setInterval(() => {
             if(document.getElementById('adminPanel').style.display !== 'none') {
+                loadClansAdmin();
                 loadPendingSubmissions();
                 loadAllSubmissions();
             }
