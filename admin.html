@@ -4,15 +4,11 @@ INFO PURGE ADMIN
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Info Purge 24 - Panel Admin</title>
+    <title>INFO PURGE 24 - Admin Panel</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;900&family=Montserrat:wght@300;400;500;600;700&display=swap');
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             font-family: 'Montserrat', sans-serif;
@@ -21,86 +17,24 @@ INFO PURGE ADMIN
             min-height: 100vh;
         }
         
-        /* BANDEAU ROUGE */
-        .red-banner {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: linear-gradient(135deg, #8B0000, #cc0000, #8B0000);
-            color: #FFD700;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1em;
-            font-weight: bold;
-            padding: 10px 0;
-            text-align: center;
-            z-index: 1000;
-            border-bottom: 2px solid #FFD700;
-        }
-        
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
-            padding-top: 80px;
+            padding-top: 30px;
         }
         
-        /* LOGIN BOX */
-        .login-box {
-            max-width: 450px;
-            margin: 120px auto;
-            background: linear-gradient(135deg, #1a1a1a, #2a0000);
-            border: 2px solid #8B0000;
-            border-radius: 25px;
-            padding: 45px 35px;
-            text-align: center;
-            box-shadow: 0 0 40px rgba(204,0,0,0.3);
-        }
-        
-        .login-logo {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #8B0000, #cc0000);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            margin: 0 auto 20px;
-            border: 2px solid #FFD700;
-        }
-        
-        .pin-input {
-            font-size: 32px;
-            text-align: center;
-            letter-spacing: 12px;
-            width: 220px;
-            margin: 20px auto;
-            background: #0a0a0a;
-            border: 2px solid #8B0000;
-            color: #FFD700;
-            padding: 12px;
-            border-radius: 15px;
-            font-family: monospace;
-        }
-        
-        .pin-input:focus {
-            outline: none;
-            border-color: #FFD700;
-        }
-        
-        /* HEADER ADMIN */
         .admin-header {
-            background: linear-gradient(135deg, #1a1a1a, #2a0000);
-            border-radius: 20px;
-            padding: 25px 30px;
-            margin-bottom: 30px;
-            border: 1px solid #8B0000;
+            background: linear-gradient(135deg, #1a0000, #2a0a0a);
+            border-radius: 30px;
+            padding: 30px;
             text-align: center;
+            margin-bottom: 30px;
+            border: 1px solid #FFD700;
         }
         
-        .admin-header h1 {
-            font-family: 'Cormorant Garamond', serif;
+        h1 {
+            font-family: 'Cinzel', serif;
             color: #FFD700;
             font-size: 2em;
         }
@@ -118,20 +52,19 @@ INFO PURGE ADMIN
             border-radius: 15px;
             padding: 12px 25px;
             text-align: center;
-            border: 1px solid #8B0000;
+            border: 1px solid #FFD700;
         }
         
         .stat-card span {
             font-size: 28px;
             font-weight: bold;
             color: #FFD700;
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Cinzel', serif;
         }
         
-        /* BOUTONS */
         .btn-group {
             display: flex;
-            gap: 12px;
+            gap: 15px;
             justify-content: center;
             flex-wrap: wrap;
             margin: 20px 0;
@@ -147,20 +80,10 @@ INFO PURGE ADMIN
             cursor: pointer;
             transition: all 0.3s;
             font-family: 'Montserrat', sans-serif;
-            font-size: 13px;
         }
         
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(204,0,0,0.4);
-        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(204,0,0,0.4); }
         
-        .btn-danger { background: linear-gradient(135deg, #660000, #8B0000); }
-        .btn-success { background: linear-gradient(135deg, #006600, #008800); }
-        .btn-warning { background: linear-gradient(135deg, #cc6600, #ff8800); }
-        .btn-info { background: linear-gradient(135deg, #006699, #0088cc); }
-        
-        /* CARTES */
         .card {
             background: #1a1a1a;
             border: 1px solid #8B0000;
@@ -170,328 +93,147 @@ INFO PURGE ADMIN
         }
         
         .card h2 {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Cinzel', serif;
             color: #FFD700;
             margin-bottom: 20px;
-            border-left: 4px solid #8B0000;
+            border-left: 4px solid #FFD700;
             padding-left: 15px;
-            font-size: 1.5em;
         }
         
-        /* RECHERCHE */
-        .search-box {
-            width: 100%;
-            max-width: 400px;
-            background: #0a0a0a;
-            border: 2px solid #8B0000;
-            border-radius: 50px;
-            padding: 12px 20px;
-            color: white;
-            margin-bottom: 20px;
-        }
-        
-        .search-box:focus {
-            outline: none;
-            border-color: #FFD700;
-        }
-        
-        /* CLAN CARD */
         .clan-card {
-            background: linear-gradient(95deg, #1a1a1a, #2a0a0a);
+            background: linear-gradient(95deg, #121212, #1a0505);
             border: 1px solid #8B0000;
             border-radius: 15px;
             padding: 18px;
-            margin-bottom: 12px;
-            transition: all 0.3s;
-        }
-        
-        .clan-card:hover {
-            border-color: #FFD700;
-            transform: translateX(5px);
-        }
-        
-        .clan-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
         
         .clan-name {
             font-size: 1.3em;
             font-weight: bold;
             color: #FFD700;
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Cinzel', serif;
         }
         
-        .clan-scores {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .score-badge {
-            background: rgba(139,0,0,0.3);
+        .status-badge {
+            display: inline-block;
             padding: 4px 12px;
             border-radius: 20px;
-            font-size: 0.75em;
-        }
-        
-        .clan-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 12px;
-        }
-        
-        .clan-actions button { padding: 5px 12px; font-size: 11px; }
-        
-        /* FORMULAIRES */
-        .form-row {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-bottom: 15px;
-        }
-        
-        .form-row input, .form-row textarea {
-            flex: 1;
-            background: #0a0a0a;
-            border: 1px solid #8B0000;
-            padding: 12px;
-            border-radius: 12px;
-            color: white;
-            font-family: 'Montserrat', sans-serif;
-        }
-        
-        .form-row input:focus, .form-row textarea:focus {
-            outline: none;
-            border-color: #FFD700;
-        }
-        
-        .score-input-group {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .score-input-group input {
-            width: 120px;
-            background: #0a0a0a;
-            border: 1px solid #8B0000;
-            padding: 8px;
-            border-radius: 10px;
-            color: white;
-            text-align: center;
-        }
-        
-        /* CHAT ADMIN */
-        .chat-container {
-            background: #0a0a0a;
-            border-radius: 15px;
-            overflow: hidden;
-            border: 1px solid #8B0000;
-        }
-        
-        .chat-messages {
-            height: 300px;
-            overflow-y: auto;
-            padding: 15px;
-            background: #0a0a0a;
-        }
-        
-        .chat-message {
-            margin-bottom: 12px;
-            padding: 8px 12px;
-            background: #1a1a1a;
-            border-radius: 12px;
-            border-left: 3px solid #FFD700;
-        }
-        
-        .chat-author {
-            color: #FFD700;
-            font-weight: bold;
-            font-size: 0.85em;
-        }
-        
-        .chat-time {
-            color: #888;
             font-size: 0.7em;
-            margin-left: 10px;
+            font-weight: bold;
         }
         
-        .chat-text {
-            margin-top: 5px;
-            font-size: 0.9em;
-        }
+        .status-badge.pending { background: #f39c12; color: #000; }
+        .status-badge.approved { background: #27ae60; color: #fff; }
+        .status-badge.rejected { background: #c0392b; color: #fff; }
         
-        .chat-input-area {
+        .photos-preview {
             display: flex;
             gap: 10px;
-            padding: 15px;
-            background: #1a1a1a;
-            border-top: 1px solid #8B0000;
-        }
-        
-        .chat-input {
-            flex: 1;
-            background: #0a0a0a;
-            border: 1px solid #8B0000;
-            padding: 10px 15px;
-            border-radius: 25px;
-            color: white;
-        }
-        
-        .chat-input:focus {
-            outline: none;
-            border-color: #FFD700;
-        }
-        
-        .send-btn {
-            padding: 8px 20px;
-            background: linear-gradient(135deg, #8B0000, #cc0000);
-        }
-        
-        /* NOTE ITEM */
-        .note-item {
-            background: rgba(139,0,0,0.2);
-            padding: 6px 10px;
-            margin: 5px 0;
-            border-radius: 10px;
-            font-size: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            margin: 10px 0;
             flex-wrap: wrap;
         }
         
-        .delete-note-btn {
-            background: #660000;
-            padding: 2px 10px;
-            font-size: 10px;
+        .photos-preview img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+            cursor: pointer;
         }
         
-        /* SCROLLBAR */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #1a1a1a; }
-        ::-webkit-scrollbar-thumb { background: #8B0000; border-radius: 10px; }
+        .admin-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .admin-actions input {
+            background: #0a0a0a;
+            border: 1px solid #FFD700;
+            padding: 8px;
+            border-radius: 8px;
+            color: white;
+            width: 100px;
+        }
         
         .loading {
             text-align: center;
-            padding: 30px;
+            padding: 40px;
             color: #FFD700;
         }
         
+        .login-box {
+            max-width: 400px;
+            margin: 100px auto;
+            background: #1a1a1a;
+            border: 2px solid #FFD700;
+            border-radius: 30px;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .pin-input {
+            font-size: 32px;
+            text-align: center;
+            letter-spacing: 10px;
+            width: 200px;
+            margin: 20px auto;
+            background: #0a0a0a;
+            border: 2px solid #8B0000;
+            color: #FFD700;
+            padding: 10px;
+            border-radius: 15px;
+        }
+        
         @media (max-width: 768px) {
-            .container { padding: 15px; padding-top: 70px; }
-            .stat-card span { font-size: 20px; }
-            .chat-messages { height: 250px; }
+            .photos-preview img { width: 60px; height: 60px; }
         }
     </style>
 </head>
 <body>
-    <div class="red-banner">
-        🔴 JOY INFO PURGE 24 - PANEL ADMINISTRATEUR 🔴
-    </div>
-    
     <div class="container">
-        <!-- ÉCRAN DE CONNEXION -->
         <div id="loginScreen" class="login-box">
-            <div class="login-logo">👑</div>
-            <h2 style="color:#FFD700;">INFO PURGE 24</h2>
-            <p style="color:#ff8888; margin-bottom:20px;">Espace réservé aux administrateurs</p>
+            <div class="login-logo" style="font-size:50px;">👑</div>
+            <h2 style="color:#FFD700;">ADMIN PANEL</h2>
             <input type="password" id="pinCode" class="pin-input" maxlength="4" placeholder="****">
             <button onclick="checkPin()" style="width:100%; margin-top:20px;">🔐 SE CONNECTER</button>
-            <div id="loginError" style="color:#ff6666; margin-top:15px;"></div>
-            <a href="index.html" style="color:#FFD700; display:block; margin-top:20px; text-decoration:none;">← Retour au site public</a>
+            <div id="loginError" style="color:#ff8888; margin-top:15px;"></div>
+            <a href="index.html" style="color:#FFD700; display:block; margin-top:20px;">← Retour au site</a>
         </div>
 
-        <!-- PANEL ADMIN -->
         <div id="adminPanel" style="display:none;">
             <div class="admin-header">
-                <h1>⚜️ PANEL ADMINISTRATEUR ⚜️</h1>
+                <h1>⚜️ PANEL ADMIN INFO PURGE 24 ⚜️</h1>
                 <div class="stats-bar">
-                    <div class="stat-card"><span id="statClans">0</span><br>Clans</div>
-                    <div class="stat-card"><span id="statTotalPoints">0</span><br>Points totaux</div>
-                    <div class="stat-card"><span id="statLikes">0</span><br>Likes</div>
+                    <div class="stat-card"><span id="statPending">0</span><br>En attente</div>
+                    <div class="stat-card"><span id="statApproved">0</span><br>Approuvées</div>
+                    <div class="stat-card"><span id="statRejected">0</span><br>Rejetées</div>
                 </div>
                 <div class="btn-group">
-                    <button onclick="logout()" class="btn-danger">🚪 DÉCONNEXION</button>
-                    <a href="index.html"><button class="btn-info">🏠 VOIR LE SITE</button></a>
-                    <button onclick="syncToFirebase()" class="btn-success">💾 SAUVEGARDER</button>
-                    <button onclick="exportToJSON()" class="btn-warning">📤 EXPORTER JSON</button>
+                    <button onclick="logout()">🚪 DÉCONNEXION</button>
+                    <a href="index.html"><button>🏠 VOIR LE SITE</button></a>
                 </div>
             </div>
 
-            <!-- RECHERCHE -->
-            <input type="text" id="searchInput" class="search-box" placeholder="🔍 Rechercher un clan..." onkeyup="filterClans()">
-            <div id="searchInfo" style="font-size:12px; color:#ff8888; margin-bottom:15px;"></div>
-
-            <!-- RÉINITIALISATION RAPIDE -->
             <div class="card">
-                <h2>🔄 RÉINITIALISATION RAPIDE</h2>
-                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                    <button onclick="resetWeekScores()" style="background:#e74c3c;">📅 RÉINIT SEMAINE</button>
-                    <button onclick="resetMonthScores()" style="background:#e67e22;">📆 RÉINIT MOIS</button>
-                    <button onclick="resetYearScores()" style="background:#f39c12;">🗓️ RÉINIT ANNÉE</button>
-                </div>
+                <h2>⏳ PURGES EN ATTENTE DE VALIDATION</h2>
+                <div id="pendingSubmissions"><div class="loading">⏳ Chargement...</div></div>
             </div>
 
-            <!-- AJOUTER CLAN -->
             <div class="card">
-                <h2>➕ AJOUTER UN CLAN</h2>
-                <div class="form-row">
-                    <input type="text" id="newClanName" placeholder="Nom du clan">
-                    <input type="text" id="newClanLeader" placeholder="Chef du clan">
-                </div>
-                <div class="form-row">
-                    <textarea id="newClanDesc" placeholder="Description" rows="2"></textarea>
-                </div>
-                <div class="form-row">
-                    <input type="number" id="newClanWeek" placeholder="Points semaine">
-                    <input type="number" id="newClanMonth" placeholder="Points mois">
-                    <input type="number" id="newClanYear" placeholder="Points année">
-                </div>
-                <button onclick="addNewClan()" class="btn-success">✅ AJOUTER</button>
-            </div>
-
-            <!-- LISTE DES CLANS -->
-            <div class="card">
-                <h2>📋 LISTE DES CLANS</h2>
-                <div id="clansList"><div class="loading">⏳ Chargement...</div></div>
-            </div>
-
-            <!-- AJOUTER POINTS -->
-            <div class="card">
-                <h2>⭐ AJOUTER AUX CLASSEMENTS</h2>
-                <div id="scoreInputs"><div class="loading">Chargement...</div></div>
-            </div>
-
-            <!-- CHAT ADMIN -->
-            <div class="card">
-                <h2>💬 CHAT ADMIN</h2>
-                <div class="chat-container">
-                    <div class="chat-messages" id="chatMessages">
-                        <div class="loading">⏳ Chargement du chat...</div>
-                    </div>
-                    <div class="chat-input-area">
-                        <input type="text" id="chatInput" class="chat-input" placeholder="Message aux autres admins..." onkeypress="if(event.key==='Enter') sendChatMessage()">
-                        <button class="send-btn" onclick="sendChatMessage()">📤 ENVOYER</button>
-                    </div>
-                </div>
+                <h2>📋 TOUTES LES SOUMISSIONS</h2>
+                <div id="allSubmissions"><div class="loading">⏳ Chargement...</div></div>
             </div>
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 
     <script>
-        // Configuration Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyB3yYAuiGqbtrbZ1aSYxAjduZ65adNIpag",
             authDomain: "purge-game-58718.firebaseapp.com",
@@ -506,301 +248,160 @@ INFO PURGE ADMIN
         const database = firebase.database();
         
         const ADMIN_PIN = "2007";
-        let currentClans = [];
-        let searchTerm = "";
-        let currentAdmin = null;
-        
-        // ========== CONNEXION ==========
-        function checkPin() {
-            const pin = document.getElementById('pinCode').value;
-            if(pin === ADMIN_PIN) {
-                currentAdmin = "Joyboy";
-                localStorage.setItem('adminLoggedIn', 'true');
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('adminPanel').style.display = 'block';
-                loadDataFromFirebase();
-                loadChatMessages();
-            } else {
-                document.getElementById('loginError').innerText = '❌ Code incorrect';
-                document.getElementById('pinCode').value = '';
-            }
-        }
-        
-        if(localStorage.getItem('adminLoggedIn') === 'true') {
-            currentAdmin = "Joyboy";
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('adminPanel').style.display = 'block';
-            loadDataFromFirebase();
-            loadChatMessages();
-        }
-        
-        function logout() {
-            localStorage.removeItem('adminLoggedIn');
-            currentAdmin = null;
-            document.getElementById('loginScreen').style.display = 'block';
-            document.getElementById('adminPanel').style.display = 'none';
-        }
-        
-        // ========== GESTION DES CLANS ==========
-        async function loadDataFromFirebase() {
-            const snapshot = await database.ref('clans').once('value');
-            const clansMap = new Map();
-            snapshot.forEach(child => {
-                const clan = child.val();
-                if(!clansMap.has(clan.name)) {
-                    clan.id = child.key;
-                    clansMap.set(clan.name, clan);
-                }
-            });
-            currentClans = Array.from(clansMap.values());
-            updateStats();
-            displayAdmin();
-        }
-        
-        function updateStats() {
-            document.getElementById('statClans').innerText = currentClans.length;
-            let totalPoints = 0, totalLikes = 0;
-            currentClans.forEach(c => {
-                totalPoints += (c.score_week || 0) + (c.score_month || 0) + (c.score_year || 0);
-                totalLikes += (c.likes || 0);
-            });
-            document.getElementById('statTotalPoints').innerText = totalPoints;
-            document.getElementById('statLikes').innerText = totalLikes;
-        }
-        
-        async function syncToFirebase() {
-            for(const clan of currentClans) {
-                const data = {...clan};
-                delete data.id;
-                await database.ref(`clans/${clan.id}`).set(data);
-            }
-            alert("✅ Données sauvegardées !");
-        }
-        
-        async function exportToJSON() {
-            const data = { clans: currentClans, exportDate: new Date().toISOString() };
-            const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'infopurge24_backup.json';
-            a.click();
-            URL.revokeObjectURL(blob);
-            alert("✅ Exporté !");
-        }
-        
-        function filterClans() {
-            searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = currentClans.filter(c => c.name.toLowerCase().includes(searchTerm));
-            document.getElementById('searchInfo').innerHTML = searchTerm ? `🔍 ${filtered.length} clan(s) trouvé(s)` : `📋 ${currentClans.length} clans`;
-            displayAdmin();
-        }
-        
-        function editClan(id) {
-            const clan = currentClans.find(c => c.id === id);
-            const newName = prompt("Nouveau nom :", clan.name);
-            if(newName) clan.name = newName;
-            const newLeader = prompt("Nouveau chef :", clan.leader);
-            if(newLeader) clan.leader = newLeader;
-            syncToFirebase();
-            displayAdmin();
-        }
-        
-        function addNoteToClan(id) {
-            const year = prompt("Année :");
-            const content = prompt("Note :");
-            if(year && content) {
-                const clan = currentClans.find(c => c.id === id);
-                if(!clan.notes) clan.notes = [];
-                clan.notes.push({ year: parseInt(year), content });
-                syncToFirebase();
-                alert("✅ Note ajoutée");
-                displayAdmin();
-            }
-        }
-        
-        function deleteNote(clanId, idx) {
-            const clan = currentClans.find(c => c.id === clanId);
-            clan.notes.splice(idx, 1);
-            syncToFirebase();
-            displayAdmin();
-        }
-        
-        function resetWeekScores() {
-            if(confirm("Réinitialiser scores SEMAINE ?")) {
-                currentClans.forEach(c => c.score_week = 0);
-                syncToFirebase();
-            }
-        }
-        
-        function resetMonthScores() {
-            if(confirm("Réinitialiser scores MOIS ?")) {
-                currentClans.forEach(c => c.score_month = 0);
-                syncToFirebase();
-            }
-        }
-        
-        function resetYearScores() {
-            if(confirm("Réinitialiser scores ANNÉE ?")) {
-                currentClans.forEach(c => c.score_year = 0);
-                syncToFirebase();
-            }
-        }
-        
-        function addNewClan() {
-            const name = document.getElementById('newClanName').value;
-            const leader = document.getElementById('newClanLeader').value;
-            if(!name || !leader) { alert("Nom et chef requis"); return; }
-            database.ref('clans').push({
-                name, leader,
-                description: document.getElementById('newClanDesc').value,
-                score_week: parseInt(document.getElementById('newClanWeek').value) || 0,
-                score_month: parseInt(document.getElementById('newClanMonth').value) || 0,
-                score_year: parseInt(document.getElementById('newClanYear').value) || 0,
-                likes: 0, notes: []
-            }).then(() => {
-                alert(`✅ Clan ${name} ajouté`);
-                document.getElementById('newClanName').value = '';
-                document.getElementById('newClanLeader').value = '';
-                document.getElementById('newClanDesc').value = '';
-                document.getElementById('newClanWeek').value = '';
-                document.getElementById('newClanMonth').value = '';
-                document.getElementById('newClanYear').value = '';
-                loadDataFromFirebase();
-            });
-        }
-        
-        function deleteClan(id) {
-            if(confirm("Supprimer ce clan ?")) {
-                database.ref(`clans/${id}`).remove().then(() => loadDataFromFirebase());
-            }
-        }
-        
-        function addPointsToAll(id) {
-            const pts = parseInt(document.getElementById(`points_${id}`).value);
-            if(pts > 0) {
-                const clan = currentClans.find(c => c.id === id);
-                clan.score_week += pts;
-                clan.score_month += pts;
-                clan.score_year += pts;
-                syncToFirebase();
-                alert(`✅ +${pts} points pour ${clan.name}`);
-                document.getElementById(`points_${id}`).value = '';
-                displayAdmin();
-            }
-        }
-        
-        function addPointsToYear(id) {
-            const pts = parseInt(document.getElementById(`year_points_${id}`).value);
-            if(pts > 0) {
-                const clan = currentClans.find(c => c.id === id);
-                clan.score_year += pts;
-                syncToFirebase();
-                alert(`✅ +${pts} points annuels pour ${clan.name}`);
-                document.getElementById(`year_points_${id}`).value = '';
-                displayAdmin();
-            }
-        }
-        
-        function displayAdmin() {
-            let filtered = currentClans;
-            if(searchTerm) filtered = currentClans.filter(c => c.name.toLowerCase().includes(searchTerm));
-            
-            // Liste des clans
-            document.getElementById('clansList').innerHTML = filtered.map(c => `
-                <div class="clan-card">
-                    <div class="clan-header">
-                        <span class="clan-name">⚔️ ${escapeHtml(c.name)}</span>
-                        <div class="clan-scores">
-                            <span class="score-badge">📅 S:${c.score_week||0}</span>
-                            <span class="score-badge">📆 M:${c.score_month||0}</span>
-                            <span class="score-badge">🗓️ A:${c.score_year||0}</span>
-                            <span class="score-badge">❤️ ${c.likes||0}</span>
-                        </div>
-                    </div>
-                    <div>👑 ${escapeHtml(c.leader)}</div>
-                    <div>📝 ${escapeHtml(c.description) || "Aucune description"}</div>
-                    ${c.notes?.length ? `<div style="margin-top:10px;"><strong>📝 Notes:</strong>${c.notes.map((n,i)=>`<div class="note-item">📅 ${n.year}: ${escapeHtml(n.content)}<button onclick="deleteNote('${c.id}',${i})" class="delete-note-btn">🗑️</button></div>`).join('')}</div>` : ''}
-                    <div class="clan-actions">
-                        <button onclick="editClan('${c.id}')" class="btn-info">✏️ MODIFIER</button>
-                        <button onclick="addNoteToClan('${c.id}')" style="background:#3498db;">📝 NOTE</button>
-                        <button onclick="deleteClan('${c.id}')" class="btn-danger">🗑️ SUPPRIMER</button>
-                    </div>
-                </div>
-            `).join('');
-            
-            // Ajout points
-            document.getElementById('scoreInputs').innerHTML = filtered.map(c => `
-                <div class="clan-card">
-                    <div class="clan-header"><span class="clan-name">⚔️ ${escapeHtml(c.name)}</span></div>
-                    <div class="score-input-group">
-                        <input type="number" id="points_${c.id}" placeholder="Points">
-                        <button onclick="addPointsToAll('${c.id}')" class="btn-success">➕ AJOUTER AUX 3 CLASSEMENTS</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-        
-        // ========== CHAT ADMIN ==========
-        async function loadChatMessages() {
-            const snapshot = await database.ref('admin_chat').once('value');
-            const messages = [];
-            snapshot.forEach(child => {
-                messages.push({ id: child.key, ...child.val() });
-            });
-            messages.reverse();
-            
-            const container = document.getElementById('chatMessages');
-            if(messages.length === 0) {
-                container.innerHTML = '<div class="loading">💬 Aucun message, soyez le premier !</div>';
-                return;
-            }
-            
-            container.innerHTML = messages.map(msg => `
-                <div class="chat-message">
-                    <div class="chat-author">
-                        👑 ${escapeHtml(msg.author)}
-                        <span class="chat-time">${msg.time || ''}</span>
-                    </div>
-                    <div class="chat-text">${escapeHtml(msg.message)}</div>
-                </div>
-            `).join('');
-            
-            // Scroll en bas
-            container.scrollTop = container.scrollHeight;
-        }
-        
-        async function sendChatMessage() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-            if(!message) return;
-            
-            await database.ref('admin_chat').push({
-                author: currentAdmin || "Admin",
-                message: message,
-                time: new Date().toLocaleTimeString(),
-                date: new Date().toISOString()
-            });
-            
-            input.value = '';
-            loadChatMessages();
-        }
-        
-        // Écouter les nouveaux messages en temps réel
-        database.ref('admin_chat').on('child_added', () => {
-            loadChatMessages();
-        });
         
         function escapeHtml(str) {
             if(!str) return '';
             return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
         }
         
-        // Rafraîchissement auto
+        function checkPin() {
+            const pin = document.getElementById('pinCode').value;
+            if(pin === ADMIN_PIN) {
+                localStorage.setItem('adminLoggedIn', 'true');
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                loadPendingSubmissions();
+                loadAllSubmissions();
+            } else {
+                document.getElementById('loginError').innerText = '❌ Code incorrect';
+            }
+        }
+        
+        if(localStorage.getItem('adminLoggedIn') === 'true') {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            loadPendingSubmissions();
+            loadAllSubmissions();
+        }
+        
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            document.getElementById('loginScreen').style.display = 'block';
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+        
+        async function loadPendingSubmissions() {
+            const snapshot = await database.ref('submissions').orderByChild('status').equalTo('pending').once('value');
+            const submissions = [];
+            snapshot.forEach(child => submissions.push({ id: child.key, ...child.val() }));
+            
+            const container = document.getElementById('pendingSubmissions');
+            if(submissions.length === 0) {
+                container.innerHTML = '<div class="loading">✅ Aucune purge en attente</div>';
+                document.getElementById('statPending').innerText = '0';
+                return;
+            }
+            
+            document.getElementById('statPending').innerText = submissions.length;
+            
+            container.innerHTML = submissions.map(sub => `
+                <div class="clan-card">
+                    <div class="clan-name">⚔️ ${escapeHtml(sub.clanName)}</div>
+                    <div style="margin:10px 0;"><strong>🔗 Lien:</strong> <a href="${escapeHtml(sub.link)}" target="_blank" style="color:#FFD700;">${escapeHtml(sub.link)}</a></div>
+                    <div class="photos-preview">
+                        ${sub.photos.map(photo => `<img src="${photo}" onclick="window.open('${photo}')">`).join('')}
+                    </div>
+                    <div style="font-size:0.7em; color:#888;">Soumis le ${new Date(sub.submittedAt).toLocaleString()}</div>
+                    <div class="admin-actions">
+                        <input type="number" id="points_${sub.id}" placeholder="Points" style="width:100px;">
+                        <button onclick="approveSubmission('${sub.id}')" style="background:#27ae60;">✅ Approuver</button>
+                        <button onclick="rejectSubmission('${sub.id}')" style="background:#c0392b;">❌ Rejeter</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        async function loadAllSubmissions() {
+            const snapshot = await database.ref('submissions').once('value');
+            const submissions = [];
+            snapshot.forEach(child => submissions.push({ id: child.key, ...child.val() }));
+            submissions.reverse();
+            
+            const container = document.getElementById('allSubmissions');
+            if(submissions.length === 0) {
+                container.innerHTML = '<div class="loading">📭 Aucune soumission</div>';
+                return;
+            }
+            
+            let approved = 0, rejected = 0;
+            submissions.forEach(s => {
+                if(s.status === 'approved') approved++;
+                if(s.status === 'rejected') rejected++;
+            });
+            document.getElementById('statApproved').innerText = approved;
+            document.getElementById('statRejected').innerText = rejected;
+            
+            container.innerHTML = submissions.map(sub => `
+                <div class="clan-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+                        <span class="clan-name">⚔️ ${escapeHtml(sub.clanName)}</span>
+                        <span class="status-badge ${sub.status}">${getStatusText(sub.status)}</span>
+                    </div>
+                    <div style="margin:10px 0;"><strong>🔗 Lien:</strong> <a href="${escapeHtml(sub.link)}" target="_blank" style="color:#FFD700;">${escapeHtml(sub.link)}</a></div>
+                    <div class="photos-preview">
+                        ${sub.photos ? sub.photos.map(photo => `<img src="${photo}" onclick="window.open('${photo}')">`).join('') : ''}
+                    </div>
+                    <div style="font-size:0.7em; color:#888;">Soumis le ${new Date(sub.submittedAt).toLocaleString()}</div>
+                    ${sub.status === 'approved' ? `<div style="margin-top:10px; color:#2ecc71;">🏆 Points attribués: +${sub.points}</div>` : ''}
+                    ${sub.status === 'rejected' ? `<div style="margin-top:10px; color:#ff8888;">❌ Rejeté: ${sub.rejectReason || ''}</div>` : ''}
+                </div>
+            `).join('');
+        }
+        
+        async function approveSubmission(id) {
+            const points = parseInt(document.getElementById(`points_${id}`).value);
+            if(isNaN(points) || points <= 0) {
+                alert("Entrez un nombre de points valide");
+                return;
+            }
+            
+            const submissionRef = database.ref(`submissions/${id}`);
+            const submission = (await submissionRef.once('value')).val();
+            
+            if(submission) {
+                await submissionRef.update({ status: 'approved', points: points, approvedAt: Date.now() });
+                
+                const clanRef = database.ref(`clans/${submission.clanId}`);
+                const clan = (await clanRef.once('value')).val();
+                if(clan) {
+                    await clanRef.update({
+                        score_year: (clan.score_year || 0) + points,
+                        score_month: (clan.score_month || 0) + points,
+                        score_week: (clan.score_week || 0) + points
+                    });
+                }
+                
+                alert(`✅ Purge approuvée ! +${points} points pour ${submission.clanName}`);
+                loadPendingSubmissions();
+                loadAllSubmissions();
+            }
+        }
+        
+        async function rejectSubmission(id) {
+            const reason = prompt("Raison du rejet :");
+            if(reason) {
+                await database.ref(`submissions/${id}`).update({ status: 'rejected', rejectReason: reason, rejectedAt: Date.now() });
+                alert("❌ Purge rejetée");
+                loadPendingSubmissions();
+                loadAllSubmissions();
+            }
+        }
+        
+        function getStatusText(status) {
+            switch(status) {
+                case 'pending': return '⏳ En attente';
+                case 'approved': return '✅ Approuvé';
+                case 'rejected': return '❌ Rejeté';
+                default: return '❓ Inconnu';
+            }
+        }
+        
         setInterval(() => {
             if(document.getElementById('adminPanel').style.display !== 'none') {
-                loadDataFromFirebase();
+                loadPendingSubmissions();
+                loadAllSubmissions();
             }
-        }, 15000);
+        }, 10000);
     </script>
 </body>
 </html>
