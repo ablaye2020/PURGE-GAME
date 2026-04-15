@@ -1,5 +1,12 @@
 JOY INFO PURGE 24 PRODUCTION 
-<!DOCTYPE html>
+// Debug - Vérifier Firebase
+database.ref('clans').once('value').then(snapshot => {
+    console.log("📊 Clans trouvés:", snapshot.numChildren());
+    if(snapshot.numChildren() === 0) {
+        console.log("⚠️ Aucun clan dans Firebase !");
+        document.getElementById('rankingList').innerHTML = '<div class="loading">⚠️ Aucun clan. Utilisez l\'admin pour importer.</div>';
+    }
+}).catch(e => console.error("Firebase error:", e));<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
