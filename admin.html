@@ -70,6 +70,8 @@ INFO PURGE ADMIN
         
         .btn-danger { background: #c0392b; }
         .btn-danger:hover { background: #a93226; }
+        .btn-warning { background: #e67e22; }
+        .btn-warning:hover { background: #d35400; }
         
         .card {
             background: #1a1a1a;
@@ -122,8 +124,34 @@ INFO PURGE ADMIN
         .photos-preview { display: flex; gap: 10px; margin: 10px 0; flex-wrap: wrap; }
         .photos-preview img { width: 80px; height: 80px; object-fit: cover; border-radius: 10px; cursor: pointer; }
         
-        .admin-actions { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+        .admin-actions { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; align-items: center; }
         .admin-actions input { background: #0a0a0a; border: 1px solid #FFD700; padding: 8px; border-radius: 8px; color: white; width: 100px; }
+        
+        .points-input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .points-input-group input {
+            background: #0a0a0a;
+            border: 1px solid #FFD700;
+            padding: 8px;
+            border-radius: 8px;
+            color: white;
+            width: 100px;
+        }
+        
+        .reset-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .reset-buttons button { padding: 8px 20px; }
         
         .loading { text-align: center; padding: 40px; color: #FFD700; }
         
@@ -170,10 +198,9 @@ INFO PURGE ADMIN
             <div class="admin-header">
                 <h1>⚜️ PANEL ADMIN INFO PURGE 24 ⚜️</h1>
                 <div class="stats-bar">
-                    <div class="stat-card"><span id="statPending">0</span><br>En attente</div>
-                    <div class="stat-card"><span id="statApproved">0</span><br>Approuvées</div>
-                    <div class="stat-card"><span id="statRejected">0</span><br>Rejetées</div>
                     <div class="stat-card"><span id="statClans">0</span><br>Clans</div>
+                    <div class="stat-card"><span id="statPending">0</span><br>Purges en attente</div>
+                    <div class="stat-card"><span id="statClanRequests">0</span><br>Demandes de clan</div>
                 </div>
                 <div class="btn-group">
                     <button onclick="logout()">🚪 DÉCONNEXION</button>
@@ -181,13 +208,29 @@ INFO PURGE ADMIN
                 </div>
             </div>
 
-            <!-- LISTE DES CLANS -->
+            <!-- SECTION RÉINITIALISATION DES SCORES -->
+            <div class="card">
+                <h2>🔄 RÉINITIALISATION DES SCORES</h2>
+                <div class="reset-buttons">
+                    <button onclick="resetScores('week')" class="btn-warning">📅 RÉINITIALISER SEMAINE</button>
+                    <button onclick="resetScores('month')" class="btn-warning">📆 RÉINITIALISER MOIS</button>
+                    <button onclick="resetScores('year')" class="btn-warning">🗓️ RÉINITIALISER ANNÉE</button>
+                </div>
+            </div>
+
+            <!-- LISTE DES CLANS AVEC GESTION DES POINTS -->
             <div class="card">
                 <h2>📋 LISTE DES CLANS</h2>
                 <div id="clansListAdmin"><div class="loading">⏳ Chargement...</div></div>
             </div>
 
-            <!-- PURGES EN ATTENTE -->
+            <!-- DEMANDES D'AJOUT DE CLAN -->
+            <div class="card">
+                <h2>📝 DEMANDES D'AJOUT DE CLAN</h2>
+                <div id="clanRequestsList"><div class="loading">⏳ Chargement...</div></div>
+            </div>
+
+            <!-- PURGES EN ATTENTE DE VALIDATION -->
             <div class="card">
                 <h2>⏳ PURGES EN ATTENTE DE VALIDATION</h2>
                 <div id="pendingSubmissions"><div class="loading">⏳ Chargement...</div></div>
@@ -195,7 +238,7 @@ INFO PURGE ADMIN
 
             <!-- TOUTES LES SOUMISSIONS -->
             <div class="card">
-                <h2>📋 TOUTES LES SOUMISSIONS</h2>
+                <h2>📋 HISTORIQUE DES SOUMISSIONS</h2>
                 <div id="allSubmissions"><div class="loading">⏳ Chargement...</div></div>
             </div>
         </div>
@@ -227,15 +270,21 @@ INFO PURGE ADMIN
             return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
         }
         
+        function showToast(msg, isError = false) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `position:fixed; bottom:100px; left:50%; transform:translateX(-50%); background:${isError ? '#c0392b' : '#27ae60'}; color:white; padding:10px 20px; border-radius:50px; z-index:2000; animation:fadeOut 2s ease forwards; font-weight:bold;`;
+            toast.innerHTML = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+        
         function checkPin() {
             const pin = document.getElementById('pinCode').value;
             if(pin === ADMIN_PIN) {
                 localStorage.setItem('adminLoggedIn', 'true');
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
-                loadClansAdmin();
-                loadPendingSubmissions();
-                loadAllSubmissions();
+                loadAllData();
             } else {
                 document.getElementById('loginError').innerText = '❌ Code incorrect';
             }
@@ -244,9 +293,7 @@ INFO PURGE ADMIN
         if(localStorage.getItem('adminLoggedIn') === 'true') {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
-            loadClansAdmin();
-            loadPendingSubmissions();
-            loadAllSubmissions();
+            loadAllData();
         }
         
         function logout() {
@@ -255,7 +302,14 @@ INFO PURGE ADMIN
             document.getElementById('adminPanel').style.display = 'none';
         }
         
-        // ========== GESTION DES CLANS ==========
+        async function loadAllData() {
+            await loadClansAdmin();
+            await loadClanRequests();
+            await loadPendingSubmissions();
+            await loadAllSubmissions();
+        }
+        
+        // ========== GESTION DES CLANS AVEC POINTS ==========
         async function loadClansAdmin() {
             try {
                 const snapshot = await database.ref('clans').once('value');
@@ -282,13 +336,23 @@ INFO PURGE ADMIN
                         <div class="clan-name">⚔️ ${escapeHtml(clan.name)}</div>
                         <div>👑 ${escapeHtml(clan.leader)}</div>
                         <div class="clan-stats">
-                            <span class="stat">📅 S: ${clan.score_week || 0}</span>
-                            <span class="stat">📆 M: ${clan.score_month || 0}</span>
-                            <span class="stat">🗓️ A: ${clan.score_year || 0}</span>
-                            <span class="stat">❤️ ${clan.likes || 0}</span>
+                            <span class="stat">📅 SEMAINE: ${clan.score_week || 0}</span>
+                            <span class="stat">📆 MOIS: ${clan.score_month || 0}</span>
+                            <span class="stat">🗓️ ANNÉE: ${clan.score_year || 0}</span>
+                            <span class="stat">❤️ LIKES: ${clan.likes || 0}</span>
                         </div>
                         ${clan.description ? `<div style="margin-top:8px; font-size:0.8em; color:#aaa;">📝 ${escapeHtml(clan.description)}</div>` : ''}
-                        <button onclick="deleteClan('${clan.id}')" class="btn-danger" style="margin-top:10px;">🗑️ SUPPRIMER CE CLAN</button>
+                        
+                        <div class="points-input-group">
+                            <input type="number" id="points_week_${clan.id}" placeholder="+ SEMAINE" style="width:100px;">
+                            <input type="number" id="points_month_${clan.id}" placeholder="+ MOIS" style="width:100px;">
+                            <input type="number" id="points_year_${clan.id}" placeholder="+ ANNÉE" style="width:100px;">
+                            <button onclick="addPointsToClan('${clan.id}')" style="background:#27ae60;">➕ AJOUTER</button>
+                        </div>
+                        
+                        <div class="admin-actions" style="margin-top:10px;">
+                            <button onclick="deleteClan('${clan.id}')" class="btn-danger">🗑️ SUPPRIMER</button>
+                        </div>
                     </div>
                 `).join('');
             } catch(e) {
@@ -296,30 +360,131 @@ INFO PURGE ADMIN
             }
         }
         
-        async function deleteClan(id) {
-            if(confirm("⚠️ Supprimer définitivement ce clan ?")) {
-                await database.ref(`clans/${id}`).remove();
-                alert("✅ Clan supprimé !");
+        async function addPointsToClan(id) {
+            const weekPoints = parseInt(document.getElementById(`points_week_${id}`).value) || 0;
+            const monthPoints = parseInt(document.getElementById(`points_month_${id}`).value) || 0;
+            const yearPoints = parseInt(document.getElementById(`points_year_${id}`).value) || 0;
+            
+            if(weekPoints === 0 && monthPoints === 0 && yearPoints === 0) {
+                showToast("❌ Entrez au moins un nombre de points", true);
+                return;
+            }
+            
+            const clanRef = database.ref(`clans/${id}`);
+            const snapshot = await clanRef.once('value');
+            const clan = snapshot.val();
+            
+            if(clan) {
+                const updates = {};
+                if(weekPoints > 0) updates.score_week = (clan.score_week || 0) + weekPoints;
+                if(monthPoints > 0) updates.score_month = (clan.score_month || 0) + monthPoints;
+                if(yearPoints > 0) updates.score_year = (clan.score_year || 0) + yearPoints;
+                
+                await clanRef.update(updates);
+                showToast(`✅ +${weekPoints} S, +${monthPoints} M, +${yearPoints} A pour ${clan.name}`);
+                
+                document.getElementById(`points_week_${id}`).value = '';
+                document.getElementById(`points_month_${id}`).value = '';
+                document.getElementById(`points_year_${id}`).value = '';
+                
                 loadClansAdmin();
-                // Rafraîchir le site public si nécessaire
-                if(typeof loadClans === 'function') loadClans();
             }
         }
         
-        // ========== GESTION DES SOUMISSIONS ==========
+        async function deleteClan(id) {
+            if(confirm("⚠️ Supprimer définitivement ce clan ?")) {
+                await database.ref(`clans/${id}`).remove();
+                showToast("✅ Clan supprimé !");
+                loadClansAdmin();
+                loadAllSubmissions();
+            }
+        }
+        
+        // ========== RÉINITIALISATION DES SCORES ==========
+        async function resetScores(period) {
+            let periodName = period === 'week' ? 'SEMAINE' : (period === 'month' ? 'MOIS' : 'ANNÉE');
+            if(confirm(`⚠️ Réinitialiser tous les scores de ${periodName} ?`)) {
+                const snapshot = await database.ref('clans').once('value');
+                const updates = {};
+                snapshot.forEach(child => {
+                    const key = child.key;
+                    if(period === 'week') updates[`${key}/score_week`] = 0;
+                    else if(period === 'month') updates[`${key}/score_month`] = 0;
+                    else updates[`${key}/score_year`] = 0;
+                });
+                await database.ref('clans').update(updates);
+                showToast(`✅ Scores de ${periodName} réinitialisés !`);
+                loadClansAdmin();
+            }
+        }
+        
+        // ========== GESTION DES DEMANDES DE CLAN ==========
+        async function loadClanRequests() {
+            const snapshot = await database.ref('clan_requests').orderByChild('status').equalTo('pending').once('value');
+            const requests = [];
+            snapshot.forEach(child => requests.push({ id: child.key, ...child.val() }));
+            
+            const container = document.getElementById('clanRequestsList');
+            document.getElementById('statClanRequests').innerText = requests.length;
+            
+            if(requests.length === 0) {
+                container.innerHTML = '<div class="loading">✅ Aucune demande en attente</div>';
+                return;
+            }
+            
+            container.innerHTML = requests.map(req => `
+                <div class="clan-card">
+                    <div class="clan-name">⚔️ ${escapeHtml(req.clanName)}</div>
+                    <div>👑 Chef: ${escapeHtml(req.clanLeader)}</div>
+                    <div>📞 Contact: ${escapeHtml(req.contact)}</div>
+                    ${req.description ? `<div>📝 ${escapeHtml(req.description)}</div>` : ''}
+                    <div style="margin-top:15px;">
+                        <button onclick="approveClanRequest('${req.id}', '${escapeHtml(req.clanName)}', '${escapeHtml(req.clanLeader)}', '${escapeHtml(req.description)}')" style="background:#27ae60; margin-right:10px;">✅ Approuver</button>
+                        <button onclick="rejectClanRequest('${req.id}')" style="background:#c0392b;">❌ Rejeter</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        async function approveClanRequest(id, clanName, clanLeader, description) {
+            const newClan = {
+                name: clanName,
+                leader: clanLeader,
+                description: description || "",
+                score_week: 0,
+                score_month: 0,
+                score_year: 0,
+                likes: 0,
+                notes: []
+            };
+            
+            await database.ref('clans').push(newClan);
+            await database.ref(`clan_requests/${id}`).update({ status: 'approved', approvedAt: Date.now() });
+            
+            showToast(`✅ Clan "${clanName}" ajouté avec succès !`);
+            loadClansAdmin();
+            loadClanRequests();
+        }
+        
+        async function rejectClanRequest(id) {
+            await database.ref(`clan_requests/${id}`).update({ status: 'rejected', rejectedAt: Date.now() });
+            showToast("❌ Demande rejetée");
+            loadClanRequests();
+        }
+        
+        // ========== GESTION DES SOUMISSIONS DE PURGE ==========
         async function loadPendingSubmissions() {
             const snapshot = await database.ref('submissions').orderByChild('status').equalTo('pending').once('value');
             const submissions = [];
             snapshot.forEach(child => submissions.push({ id: child.key, ...child.val() }));
             
             const container = document.getElementById('pendingSubmissions');
+            document.getElementById('statPending').innerText = submissions.length;
+            
             if(submissions.length === 0) {
                 container.innerHTML = '<div class="loading">✅ Aucune purge en attente</div>';
-                document.getElementById('statPending').innerText = '0';
                 return;
             }
-            
-            document.getElementById('statPending').innerText = submissions.length;
             
             container.innerHTML = submissions.map(sub => `
                 <div class="clan-card">
@@ -350,14 +515,6 @@ INFO PURGE ADMIN
                 return;
             }
             
-            let approved = 0, rejected = 0;
-            submissions.forEach(s => {
-                if(s.status === 'approved') approved++;
-                if(s.status === 'rejected') rejected++;
-            });
-            document.getElementById('statApproved').innerText = approved;
-            document.getElementById('statRejected').innerText = rejected;
-            
             container.innerHTML = submissions.map(sub => `
                 <div class="clan-card">
                     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
@@ -378,7 +535,7 @@ INFO PURGE ADMIN
         async function approveSubmission(id) {
             const points = parseInt(document.getElementById(`points_${id}`).value);
             if(isNaN(points) || points <= 0) {
-                alert("Entrez un nombre de points valide");
+                showToast("❌ Entrez un nombre de points valide", true);
                 return;
             }
             
@@ -398,7 +555,7 @@ INFO PURGE ADMIN
                     });
                 }
                 
-                alert(`✅ Purge approuvée ! +${points} points pour ${submission.clanName}`);
+                showToast(`✅ Purge approuvée ! +${points} points pour ${submission.clanName}`);
                 loadPendingSubmissions();
                 loadAllSubmissions();
                 loadClansAdmin();
@@ -409,7 +566,7 @@ INFO PURGE ADMIN
             const reason = prompt("Raison du rejet :");
             if(reason) {
                 await database.ref(`submissions/${id}`).update({ status: 'rejected', rejectReason: reason, rejectedAt: Date.now() });
-                alert("❌ Purge rejetée");
+                showToast("❌ Purge rejetée");
                 loadPendingSubmissions();
                 loadAllSubmissions();
             }
@@ -424,10 +581,16 @@ INFO PURGE ADMIN
             }
         }
         
+        // Animation pour les toasts
+        const style = document.createElement('style');
+        style.textContent = `@keyframes fadeOut { 0% { opacity: 1; transform: translateX(-50%) translateY(0); } 100% { opacity: 0; transform: translateX(-50%) translateY(-20px); } }`;
+        document.head.appendChild(style);
+        
         // Rafraîchissement automatique toutes les 10 secondes
         setInterval(() => {
             if(document.getElementById('adminPanel').style.display !== 'none') {
                 loadClansAdmin();
+                loadClanRequests();
                 loadPendingSubmissions();
                 loadAllSubmissions();
             }
@@ -435,3 +598,4 @@ INFO PURGE ADMIN
     </script>
 </body>
 </html>
+J O Y - B O Y 
