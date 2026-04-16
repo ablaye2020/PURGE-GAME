@@ -347,11 +347,11 @@ INFO PURGE ADMIN
                             <input type="number" id="points_week_${clan.id}" placeholder="+ SEMAINE" style="width:100px;">
                             <input type="number" id="points_month_${clan.id}" placeholder="+ MOIS" style="width:100px;">
                             <input type="number" id="points_year_${clan.id}" placeholder="+ ANNÉE" style="width:100px;">
-                            <button onclick="addPointsToClan('${clan.id}')" style="background:#27ae60;">➕ AJOUTER</button>
+                            <button onclick="window.addPointsToClan('${clan.id}')" style="background:#27ae60;">➕ AJOUTER</button>
                         </div>
                         
                         <div class="admin-actions" style="margin-top:10px;">
-                            <button onclick="deleteClan('${clan.id}')" class="btn-danger">🗑️ SUPPRIMER</button>
+                            <button onclick="window.deleteClan('${clan.id}')" class="btn-danger">🗑️ SUPPRIMER</button>
                         </div>
                     </div>
                 `).join('');
@@ -360,7 +360,7 @@ INFO PURGE ADMIN
             }
         }
         
-        async function addPointsToClan(id) {
+        window.addPointsToClan = async function(id) {
             const weekPoints = parseInt(document.getElementById(`points_week_${id}`).value) || 0;
             const monthPoints = parseInt(document.getElementById(`points_month_${id}`).value) || 0;
             const yearPoints = parseInt(document.getElementById(`points_year_${id}`).value) || 0;
@@ -389,19 +389,19 @@ INFO PURGE ADMIN
                 
                 loadClansAdmin();
             }
-        }
+        };
         
-        async function deleteClan(id) {
+        window.deleteClan = async function(id) {
             if(confirm("⚠️ Supprimer définitivement ce clan ?")) {
                 await database.ref(`clans/${id}`).remove();
                 showToast("✅ Clan supprimé !");
                 loadClansAdmin();
                 loadAllSubmissions();
             }
-        }
+        };
         
         // ========== RÉINITIALISATION DES SCORES ==========
-        async function resetScores(period) {
+        window.resetScores = async function(period) {
             let periodName = period === 'week' ? 'SEMAINE' : (period === 'month' ? 'MOIS' : 'ANNÉE');
             if(confirm(`⚠️ Réinitialiser tous les scores de ${periodName} ?`)) {
                 const snapshot = await database.ref('clans').once('value');
@@ -416,7 +416,7 @@ INFO PURGE ADMIN
                 showToast(`✅ Scores de ${periodName} réinitialisés !`);
                 loadClansAdmin();
             }
-        }
+        };
         
         // ========== GESTION DES DEMANDES DE CLAN ==========
         async function loadClanRequests() {
@@ -439,14 +439,14 @@ INFO PURGE ADMIN
                     <div>📞 Contact: ${escapeHtml(req.contact)}</div>
                     ${req.description ? `<div>📝 ${escapeHtml(req.description)}</div>` : ''}
                     <div style="margin-top:15px;">
-                        <button onclick="approveClanRequest('${req.id}', '${escapeHtml(req.clanName)}', '${escapeHtml(req.clanLeader)}', '${escapeHtml(req.description)}')" style="background:#27ae60; margin-right:10px;">✅ Approuver</button>
-                        <button onclick="rejectClanRequest('${req.id}')" style="background:#c0392b;">❌ Rejeter</button>
+                        <button onclick="window.approveClanRequest('${req.id}', '${escapeHtml(req.clanName)}', '${escapeHtml(req.clanLeader)}', '${escapeHtml(req.description)}')" style="background:#27ae60; margin-right:10px;">✅ Approuver</button>
+                        <button onclick="window.rejectClanRequest('${req.id}')" style="background:#c0392b;">❌ Rejeter</button>
                     </div>
                 </div>
             `).join('');
         }
         
-        async function approveClanRequest(id, clanName, clanLeader, description) {
+        window.approveClanRequest = async function(id, clanName, clanLeader, description) {
             const newClan = {
                 name: clanName,
                 leader: clanLeader,
@@ -464,13 +464,13 @@ INFO PURGE ADMIN
             showToast(`✅ Clan "${clanName}" ajouté avec succès !`);
             loadClansAdmin();
             loadClanRequests();
-        }
+        };
         
-        async function rejectClanRequest(id) {
+        window.rejectClanRequest = async function(id) {
             await database.ref(`clan_requests/${id}`).update({ status: 'rejected', rejectedAt: Date.now() });
             showToast("❌ Demande rejetée");
             loadClanRequests();
-        }
+        };
         
         // ========== GESTION DES SOUMISSIONS DE PURGE ==========
         async function loadPendingSubmissions() {
@@ -496,8 +496,8 @@ INFO PURGE ADMIN
                     <div style="font-size:0.7em; color:#888;">Soumis le ${new Date(sub.submittedAt).toLocaleString()}</div>
                     <div class="admin-actions">
                         <input type="number" id="points_${sub.id}" placeholder="Points" style="width:100px;">
-                        <button onclick="approveSubmission('${sub.id}')" style="background:#27ae60;">✅ Approuver</button>
-                        <button onclick="rejectSubmission('${sub.id}')" style="background:#c0392b;">❌ Rejeter</button>
+                        <button onclick="window.approveSubmission('${sub.id}')" style="background:#27ae60;">✅ Approuver</button>
+                        <button onclick="window.rejectSubmission('${sub.id}')" style="background:#c0392b;">❌ Rejeter</button>
                     </div>
                 </div>
             `).join('');
@@ -532,37 +532,41 @@ INFO PURGE ADMIN
             `).join('');
         }
         
-        async function approveSubmission(id) {
+        window.approveSubmission = async function(id) {
             const points = parseInt(document.getElementById(`points_${id}`).value);
             if(isNaN(points) || points <= 0) {
                 showToast("❌ Entrez un nombre de points valide", true);
                 return;
             }
             
-            const submissionRef = database.ref(`submissions/${id}`);
-            const submission = (await submissionRef.once('value')).val();
-            
-            if(submission) {
-                await submissionRef.update({ status: 'approved', points: points, approvedAt: Date.now() });
+            try {
+                const submissionRef = database.ref(`submissions/${id}`);
+                const submission = (await submissionRef.once('value')).val();
                 
-                const clanRef = database.ref(`clans/${submission.clanId}`);
-                const clan = (await clanRef.once('value')).val();
-                if(clan) {
-                    await clanRef.update({
-                        score_year: (clan.score_year || 0) + points,
-                        score_month: (clan.score_month || 0) + points,
-                        score_week: (clan.score_week || 0) + points
-                    });
+                if(submission) {
+                    await submissionRef.update({ status: 'approved', points: points, approvedAt: Date.now() });
+                    
+                    const clanRef = database.ref(`clans/${submission.clanId}`);
+                    const clan = (await clanRef.once('value')).val();
+                    if(clan) {
+                        await clanRef.update({
+                            score_year: (clan.score_year || 0) + points,
+                            score_month: (clan.score_month || 0) + points,
+                            score_week: (clan.score_week || 0) + points
+                        });
+                    }
+                    
+                    showToast(`✅ Purge approuvée ! +${points} points pour ${submission.clanName}`);
+                    loadPendingSubmissions();
+                    loadAllSubmissions();
+                    loadClansAdmin();
                 }
-                
-                showToast(`✅ Purge approuvée ! +${points} points pour ${submission.clanName}`);
-                loadPendingSubmissions();
-                loadAllSubmissions();
-                loadClansAdmin();
+            } catch(e) {
+                showToast("❌ Erreur: " + e.message, true);
             }
-        }
+        };
         
-        async function rejectSubmission(id) {
+        window.rejectSubmission = async function(id) {
             const reason = prompt("Raison du rejet :");
             if(reason) {
                 await database.ref(`submissions/${id}`).update({ status: 'rejected', rejectReason: reason, rejectedAt: Date.now() });
@@ -570,7 +574,7 @@ INFO PURGE ADMIN
                 loadPendingSubmissions();
                 loadAllSubmissions();
             }
-        }
+        };
         
         function getStatusText(status) {
             switch(status) {
@@ -598,4 +602,4 @@ INFO PURGE ADMIN
     </script>
 </body>
 </html>
-J O Y - B O Y 
+J O Y - B O Y
