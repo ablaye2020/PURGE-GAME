@@ -3,366 +3,1399 @@ JOY INFO PURGE 24 PRODUCTION
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INFO PURGE 24 - Classement des clans</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>INFO PURGE 24 - Le Journal Officiel des Clans</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;900&family=Montserrat:wght@300;400;500;600;700&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            background: radial-gradient(circle at 20% 50%, #0a0000 0%, #000000 100%);
-            color: #ff0000;
-            font-family: 'Courier New', monospace;
-            padding: 20px;
+            font-family: 'Montserrat', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
         }
-
+        
+        /* PARTICULES FLOTTANTES */
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, #FFD700, #8B0000);
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: floatParticle linear infinite;
+        }
+        
+        @keyframes floatParticle {
+            0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-20vh) translateX(calc(100px * var(--direction))) rotate(360deg); opacity: 0; }
+        }
+        
+        /* BANDEAU DÉFILANT */
+        .marquee-cinema {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, #000000, #8B0000, #000000);
+            color: #FFD700;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9em;
+            font-weight: 500;
+            padding: 12px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            z-index: 1000;
+            border-bottom: 2px solid #FFD700;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        }
+        
+        .marquee-content {
+            display: inline-block;
+            animation: marqueeScroll 25s linear infinite;
+            letter-spacing: 3px;
+        }
+        
+        .marquee-content span { margin: 0 40px; }
+        
+        @keyframes marqueeScroll {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        .marquee-cinema-bottom {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, #000000, #8B0000, #000000);
+            color: #FFD700;
+            font-family: 'Cinzel', serif;
+            font-size: 0.8em;
+            padding: 8px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            z-index: 1000;
+            border-top: 1px solid #FFD700;
+        }
+        
+        .marquee-content-reverse {
+            display: inline-block;
+            animation: marqueeScrollReverse 30s linear infinite;
+            letter-spacing: 3px;
+        }
+        
+        @keyframes marqueeScrollReverse {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0%); }
+        }
+        
         .container {
-            max-width: 800px;
+            max-width: 1400px;
             margin: 0 auto;
-        }
-
-        /* En-tête avec effet live */
-        .live-header {
-            background: #0a0000;
-            border-bottom: 2px solid #ff0000;
             padding: 20px;
+            padding-top: 90px;
+            padding-bottom: 60px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* EMPEREUR */
+        .emperor-section {
+            background: linear-gradient(135deg, #1a0000, #2a0a0a, #1a0000);
+            border: 2px solid #FFD700;
+            border-radius: 30px;
+            padding: 25px 30px;
+            margin-bottom: 35px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(255,215,0,0.3);
+            animation: emperorGlow 2s infinite;
+        }
+        
+        @keyframes emperorGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,215,0,0.3); }
+            50% { box-shadow: 0 0 40px rgba(255,215,0,0.6); }
+        }
+        
+        .emperor-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%);
+            animation: rotateGlow 15s linear infinite;
+        }
+        
+        @keyframes rotateGlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .emperor-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2em;
+            color: #FFD700;
+            letter-spacing: 5px;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .emperor-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .emperor-crown {
+            font-size: 3.5em;
+            filter: drop-shadow(0 0 10px #FFD700);
+            animation: crownFloat 2s ease-in-out infinite;
+        }
+        
+        @keyframes crownFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .emperor-info { text-align: center; }
+        
+        .emperor-leader {
+            font-family: 'Cinzel', serif;
+            font-size: 2em;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255,215,0,0.5);
+        }
+        
+        .emperor-clan { font-size: 1.2em; color: #ffffff; margin-top: 5px; }
+        .emperor-points { font-size: 1em; color: #ff8888; margin-top: 8px; }
+        .no-emperor { color: #ff8888; font-style: italic; position: relative; z-index: 1; }
+        
+        /* DERNIERS MESSAGES */
+        .latest-messages {
+            background: linear-gradient(135deg, #121212, #1a0505);
+            border: 1px solid #8B0000;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .latest-messages h3 {
+            color: #FFD700;
+            font-family: 'Cinzel', serif;
+            margin-bottom: 15px;
+            border-left: 3px solid #FFD700;
+            padding-left: 12px;
+        }
+        
+        .message-item {
+            background: rgba(0,0,0,0.4);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+        
+        .message-item:hover {
+            background: rgba(139,0,0,0.3);
+            transform: translateX(5px);
+        }
+        
+        .message-author {
+            color: #FFD700;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+        
+        .message-time {
+            font-size: 0.7em;
+            color: #888;
+        }
+        
+        .message-text {
+            font-size: 0.9em;
+            color: #ccc;
+        }
+        
+        .view-all-btn {
+            background: transparent;
+            border: 1px solid #8B0000;
+            padding: 8px 20px;
+            border-radius: 30px;
+            color: #FFD700;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+            font-size: 0.8em;
+        }
+        
+        .view-all-btn:hover {
+            background: #8B0000;
+        }
+        
+        /* HEADER */
+        .royal-header {
+            background: linear-gradient(135deg, #0a0a0a, #1a0000, #0a0a0a);
+            border-radius: 30px;
+            padding: 40px 30px;
             text-align: center;
             margin-bottom: 30px;
-            border-radius: 15px 15px 0 0;
+            border: 1px solid #8B0000;
+            position: relative;
+            overflow: hidden;
         }
-
+        
         .live-badge {
             display: inline-block;
-            background: #ff0000;
-            color: black;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            animation: pulse 1s infinite;
-            margin-bottom: 10px;
+            background: #cc0000;
+            color: #FFD700;
+            font-size: 11px;
+            padding: 6px 18px;
+            border-radius: 50px;
+            margin-bottom: 20px;
+            animation: pulse 1.5s infinite;
         }
-
+        
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(204,0,0,0.7); }
+            50% { opacity: 0.8; box-shadow: 0 0 0 15px rgba(204,0,0,0); }
         }
-
+        
         h1 {
-            font-size: 32px;
-            letter-spacing: 3px;
-            text-shadow: 0 0 10px #ff0000;
+            font-family: 'Cinzel', serif;
+            font-size: 3.5em;
+            font-weight: 900;
+            letter-spacing: 8px;
+            background: linear-gradient(135deg, #FFD700, #FFA500, #FFD700);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
-
+        
         .citation {
-            color: #ff4444;
+            font-family: 'Cinzel', serif;
             font-style: italic;
-            font-size: 12px;
-            margin-top: 10px;
+            font-size: 0.9em;
+            color: #FFD700;
+            margin-top: 20px;
+            padding: 10px 25px;
+            border-top: 1px solid #8B0000;
+            border-bottom: 1px solid #8B0000;
+            display: inline-block;
         }
-
-        /* Section classement */
-        .section-title {
-            font-size: 20px;
-            margin: 30px 0 15px 0;
-            border-left: 4px solid #ff0000;
-            padding-left: 15px;
-        }
-
-        /* Cartes joueurs (comme sur ta capture) */
-        .players-grid {
+        
+        .royal-nav {
             display: flex;
-            flex-direction: column;
             gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
         }
-
-        .player-card {
-            background: rgba(20, 0, 0, 0.7);
-            border: 1px solid #ff0000;
-            border-radius: 15px;
-            padding: 15px;
+        
+        .nav-btn {
+            background: transparent;
+            border: 2px solid #8B0000;
+            padding: 10px 25px;
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            color: #FFD700;
+            cursor: pointer;
+            transition: all 0.4s;
+            border-radius: 60px;
+            font-size: 0.9em;
+        }
+        
+        .nav-btn:hover, .nav-btn.active {
+            background: linear-gradient(135deg, #8B0000, #cc0000);
+            border-color: #FFD700;
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .section { display: none; animation: fadeInUp 0.6s ease; }
+        .section.active { display: block; }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* TABS CLASSEMENT */
+        .ranking-tabs {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            background: rgba(139,0,0,0.3);
+            border: 1px solid #8B0000;
+            padding: 10px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            color: #FFD700;
+            transition: all 0.3s;
+            font-family: 'Cinzel', serif;
+        }
+        
+        .tab-btn:hover { background: #8B0000; }
+        .tab-btn.active { background: linear-gradient(135deg, #8B0000, #cc0000); color: white; }
+        
+        .clans-grid { display: flex; flex-direction: column; gap: 15px; }
+        
+        .clan-card {
+            background: linear-gradient(95deg, #121212 0%, #1a0505 100%);
+            border: 1px solid #8B0000;
+            border-radius: 20px;
+            padding: 18px 22px;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .clan-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 5px;
+            background: linear-gradient(135deg, #8B0000, #FFD700);
+        }
+        
+        .clan-card:hover { transform: translateX(8px); border-color: #FFD700; }
+        
+        .clan-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
+            gap: 15px;
         }
-
-        .player-info {
+        
+        .clan-info {
             display: flex;
             align-items: center;
             gap: 15px;
+            flex: 2;
+        }
+        
+        .clan-rank {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #FFD700;
+            min-width: 55px;
+        }
+        
+        .clan-icon { font-size: 2em; }
+        .clan-name { font-size: 1.3em; font-weight: 800; color: #FFD700; font-family: 'Cinzel', serif; }
+        .clan-leader { font-size: 0.75em; color: #ff8888; margin-top: 3px; }
+        .clan-stats { display: flex; gap: 10px; flex-wrap: wrap; }
+        
+        .stat {
+            background: rgba(139,0,0,0.3);
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.75em;
+            color: #FFD700;
+        }
+        
+        .clan-points {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #FFD700;
+            min-width: 110px;
+            text-align: right;
+        }
+        
+        .like-btn {
+            background: rgba(139,0,0,0.5);
+            border: 1px solid #FFD700;
+            padding: 6px 18px;
+            border-radius: 40px;
+            cursor: pointer;
+            color: #FFD700;
+            transition: all 0.3s;
+        }
+        
+        .like-btn:hover { background: #8B0000; transform: scale(1.05); }
+        .like-btn.liked { background: #FFD700; color: #000000; }
+        
+        /* FORMULAIRES */
+        .submit-form {
+            background: #121212;
+            border: 1px solid #8B0000;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .submit-form input, .submit-form select, .submit-form textarea {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border-radius: 12px;
+            border: 1px solid #8B0000;
+            background: #0a0a0a;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .submit-form input:focus, .submit-form select:focus, .submit-form textarea:focus {
+            outline: none;
+            border-color: #FFD700;
+        }
+        
+        .photo-inputs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .photo-inputs input {
+            margin: 0;
+            padding: 8px;
+            font-size: 0.8em;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7em;
+            font-weight: bold;
+        }
+        
+        .status-badge.pending { background: #f39c12; color: #000; }
+        .status-badge.approved { background: #27ae60; color: #fff; }
+        .status-badge.rejected { background: #c0392b; color: #fff; }
+        
+        .submission-card {
+            background: linear-gradient(95deg, #121212, #1a0505);
+            border: 1px solid #8B0000;
+            border-radius: 15px;
+            padding: 18px;
+            margin-bottom: 15px;
+        }
+        
+        .submission-photos {
+            display: flex;
+            gap: 10px;
             flex-wrap: wrap;
+            margin: 10px 0;
         }
-
-        .rank {
-            font-size: 24px;
+        
+        .submission-photos img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        
+        /* FORUM */
+        .forum-form {
+            background: #121212;
+            border: 1px solid #8B0000;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .forum-form input, .forum-form textarea {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border-radius: 12px;
+            border: 1px solid #8B0000;
+            background: #0a0a0a;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .forum-message {
+            background: #121212;
+            border: 1px solid #8B0000;
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 18px;
+            transition: all 0.3s;
+        }
+        
+        .forum-message:hover { border-color: #FFD700; transform: translateX(5px); }
+        
+        .forum-author {
+            color: #FFD700;
             font-weight: bold;
-            width: 50px;
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 12px;
         }
-
-        .rank-1 { color: #FFD700; text-shadow: 0 0 5px #FFD700; }
-        .rank-2 { color: #C0C0C0; }
-        .rank-3 { color: #CD7F32; }
-
-        .player-name {
-            font-size: 18px;
+        
+        .forum-date { font-size: 0.7em; color: #ff8888; }
+        .forum-content { margin: 12px 0; line-height: 1.6; }
+        
+        .forum-like {
+            background: transparent;
+            border: 1px solid #8B0000;
+            padding: 6px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            color: #FFD700;
+            margin-top: 10px;
+        }
+        
+        .forum-like:hover { background: #8B0000; }
+        .forum-like.liked { background: #FFD700; color: #000000; }
+        
+        .btn-gold {
+            background: linear-gradient(135deg, #8B0000, #cc0000);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            color: #FFD700;
             font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
         }
-
-        .player-badge {
-            background: #330000;
+        
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(204,0,0,0.4); }
+        
+        .refresh-btn {
+            background: rgba(139,0,0,0.3);
+            border: 1px solid #8B0000;
+            padding: 8px 25px;
+            border-radius: 40px;
+            color: #FFD700;
+            cursor: pointer;
+            margin-bottom: 25px;
+        }
+        
+        .admin-link {
+            position: fixed;
+            bottom: 65px;
+            left: 25px;
+            background: #121212;
+            border: 1px solid #8B0000;
+            padding: 8px 18px;
+            border-radius: 50px;
+            color: #FFD700;
+            text-decoration: none;
+            font-size: 11px;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        
+        .admin-link:hover { background: #8B0000; transform: scale(1.05); }
+        
+        .music-control {
+            position: fixed;
+            bottom: 65px;
+            right: 25px;
+            background: #121212;
+            border: 1px solid #8B0000;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            z-index: 100;
+            color: #FFD700;
+        }
+        
+        .music-control:hover { background: #8B0000; transform: scale(1.05); }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #121212; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #8B0000, #FFD700); border-radius: 10px; }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; letter-spacing: 3px; }
+            .clan-row { flex-direction: column; text-align: center; }
+            .clan-info { flex-direction: column; }
+            .emperor-leader { font-size: 1.3em; }
+            .emperor-crown { font-size: 2.5em; }
+            .photo-inputs { grid-template-columns: 1fr; }
+            .nav-btn { padding: 8px 15px; font-size: 0.7em; }
+        }
+        
+        .loading { text-align: center; padding: 50px; color: #FFD700; }
+        
+        .toast-message {
+            position: fixed;
+            bottom: 130px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #FFD700;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 50px;
+            z-index: 2000;
+            font-weight: bold;
+            animation: toastFade 2s ease forwards;
+        }
+        
+        @keyframes toastFade {
+            0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            10% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            90% { opacity: 1; }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+        }
+        
+        .compression-badge {
+            position: fixed;
+            bottom: 20px;
+            right: 90px;
+            background: rgba(0,0,0,0.6);
             padding: 4px 10px;
             border-radius: 20px;
             font-size: 10px;
-            color: #ff8888;
-        }
-
-        .player-stats {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .points {
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .likes {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            background: #1a0000;
-            padding: 5px 10px;
-            border-radius: 20px;
-        }
-
-        .like-btn {
-            background: transparent;
-            border: none;
-            color: #ff0000;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .like-btn:hover {
-            transform: scale(1.1);
-        }
-
-        /* Forum */
-        .forum {
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid #ff0000;
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 40px;
-        }
-
-        .forum h3 {
-            margin-bottom: 15px;
-            border-left: 3px solid #ff0000;
-            padding-left: 10px;
-        }
-
-        .message {
-            background: #0a0a0a;
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 12px;
-            border-left: 3px solid #ff0000;
-        }
-
-        .message-author {
-            color: #ff8888;
-            font-size: 11px;
-        }
-
-        .message-content {
-            color: #cccccc;
-            font-size: 13px;
-        }
-
-        .message-date {
-            color: #660000;
-            font-size: 9px;
-            text-align: right;
-            margin-top: 5px;
-        }
-
-        .form-message {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-
-        .form-message input {
-            flex: 3;
-            padding: 10px;
-            background: #1a1a1a;
-            border: 1px solid #ff0000;
-            color: white;
-            border-radius: 8px;
-        }
-
-        .form-message button {
-            flex: 1;
-            background: #ff0000;
-            color: black;
-            border: none;
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .footer {
-            text-align: center;
-            font-size: 10px;
-            color: #440000;
-            margin-top: 30px;
-            padding-top: 15px;
-            border-top: 1px solid #ff0000;
+            color: #FFD700;
+            z-index: 100;
         }
     </style>
 </head>
 <body>
+    <!-- PARTICULES FLOTTANTES -->
+    <div class="floating-particles" id="floatingParticles"></div>
+    
+    <!-- MUSIQUE DE FOND -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="song.mp3.m4a" type="audio/mp4">
+        <source src="song.mp3" type="audio/mpeg">
+    </audio>
+    
+    <div class="marquee-cinema">
+        <div class="marquee-content">
+            <span>⚜️ JOY INFO PURGE 24 PRODUCTION ⚜️</span>
+            <span>🏆 LE RESPECT NE SE DEMANDE PAS, IL S'IMPOSE 🏆</span>
+            <span>👑 LA COMMUNAUTÉ DES CLANS 👑</span>
+            <span>🔥 PURGE TOUS LES JOURS 🔥</span>
+        </div>
+    </div>
+    
+    <div class="marquee-cinema-bottom">
+        <div class="marquee-content-reverse">
+            <span>⭐ CLASSEMENT OFFICIEL DES CLANS ⭐</span>
+            <span>🏆 FORUM PURGE 24 🏆</span>
+            <span>🔥 SOUMETTEZ VOS PURGES 🔥</span>
+        </div>
+    </div>
+    
     <div class="container">
-        <!-- En-tête avec effet live -->
-        <div class="live-header">
-            <div class="live-badge">🔴 EN DIRECT</div>
-            <h1>⚔️ INFO PURGE 24 ⚔️</h1>
-            <div class="citation">"Le respect ne se demande pas, il s'impose" - Joyboy</div>
+        <a href="admin.html" class="admin-link">👑 JOYBOY ADMIN</a>
+        <div class="music-control" onclick="toggleMusic()" id="musicBtn">🎵</div>
+        <div class="compression-badge">📸 Compression auto active</div>
+        
+        <!-- EMPEREUR -->
+        <div class="emperor-section" id="emperorSection">
+            <div class="emperor-title">🏆 EMPEREUR DE LA PURGE 🏆</div>
+            <div id="emperorContent"><div class="loading">👑 Recherche...</div></div>
         </div>
 
-        <!-- Classement des joueurs -->
-        <div class="section-title">🏆 CLASSEMENT OFFICIEL DES PURGEURS 🏆</div>
-        <div class="players-grid" id="playersGrid"></div>
-
-        <!-- Forum -->
-        <div class="forum">
-            <h3>💬 FORUM PURGE 24</h3>
-            <div id="forumMessages"></div>
-            <div class="form-message">
-                <input type="text" id="messageInput" placeholder="Écris un message...">
-                <button onclick="posterMessage()">POSTER</button>
+        <!-- DERNIERS MESSAGES DU FORUM -->
+        <div class="latest-messages" id="latestMessages">
+            <h3>💬 DERNIERS MESSAGES</h3>
+            <div id="latestMessagesList">⏳ Chargement...</div>
+            <button class="view-all-btn" onclick="showSection('forum')">📢 VOIR TOUS LES MESSAGES</button>
+        </div>
+        
+        <div class="royal-header">
+            <div class="live-badge">🔴 EN DIRECT</div>
+            <h1>⚜️ INFO PURGE 24 ⚜️</h1>
+            <div class="citation">"Le respect ne se demande pas, il s'impose" - Joyboy</div>
+            <div class="royal-nav">
+                <button class="nav-btn active" onclick="showSection('ranking')">🏆 CLASSEMENT</button>
+                <button class="nav-btn" onclick="showSection('submit')">⚔️ SOUMETTRE UNE PURGE</button>
+                <button class="nav-btn" onclick="showSection('requestClan')">📝 DEMANDER UN CLAN</button>
+                <button class="nav-btn" onclick="showSection('forum')">💬 FORUM</button>
             </div>
         </div>
 
-        <div class="footer">
-            INFO PURGE 24 · LE JOURNAL DES CLANS · ÉDITION SPÉCIALE
+        <!-- SECTION CLASSEMENT -->
+        <div id="ranking" class="section active">
+            <div class="ranking-tabs">
+                <button class="tab-btn active" onclick="showRankingPeriod('week', this)">📅 SEMAINE</button>
+                <button class="tab-btn" onclick="showRankingPeriod('month', this)">📆 MOIS</button>
+                <button class="tab-btn" onclick="showRankingPeriod('year', this)">🗓️ ANNÉE</button>
+            </div>
+            <button class="refresh-btn" onclick="loadClans()">🔄 RAFRAÎCHIR</button>
+            <div id="rankingList" class="clans-grid">⏳ Chargement...</div>
+        </div>
+
+        <!-- SECTION SOUMETTRE UNE PURGE -->
+        <div id="submit" class="section">
+            <div class="submit-form">
+                <h3 style="color:#FFD700; margin-bottom:15px;">⚔️ SOUMETTRE UNE PURGE ⚔️</h3>
+                <p style="margin-bottom:15px; color:#ff8888;">Votre clan a purgé un autre groupe ? Envoyez les preuves et gagnez des points !</p>
+                
+                <select id="clanSelect">
+                    <option value="">-- Choisissez votre clan --</option>
+                </select>
+                
+                <input type="text" id="groupLink" placeholder="Lien du groupe purgé (WhatsApp, Telegram, etc.)">
+                
+                <div style="margin:15px 0;">
+                    <label style="color:#FFD700;">📸 Captures d'écran (4 max) :</label>
+                    <div class="photo-inputs">
+                        <input type="file" id="photo1" accept="image/*">
+                        <input type="file" id="photo2" accept="image/*">
+                        <input type="file" id="photo3" accept="image/*">
+                        <input type="file" id="photo4" accept="image/*">
+                    </div>
+                    <p style="font-size:0.7em; color:#888; margin-top:5px;">📸 Les images sont automatiquement compressées pour économiser l'espace</p>
+                </div>
+                
+                <button id="submitPurgeBtn" class="btn-gold">📤 SOUMETTRE LA PURGE</button>
+                <div id="purgeMessage" style="margin-top:15px;"></div>
+            </div>
+            
+            <h3 style="color:#FFD700; margin:20px 0 10px;">📋 MES SOUMISSIONS</h3>
+            <div id="mySubmissionsList">⏳ Chargement...</div>
+        </div>
+
+        <!-- SECTION DEMANDE D'AJOUT DE CLAN -->
+        <div id="requestClan" class="section">
+            <div class="submit-form">
+                <h3 style="color:#FFD700; margin-bottom:15px;">📝 DEMANDE D'AJOUT DE CLAN</h3>
+                <p style="margin-bottom:15px; color:#ff8888;">Vous voulez ajouter votre clan ? Remplissez ce formulaire et un admin validera votre demande.</p>
+                
+                <input type="text" id="requestClanName" placeholder="Nom du clan" required>
+                <input type="text" id="requestClanLeader" placeholder="Nom du chef" required>
+                <input type="text" id="requestContact" placeholder="Votre contact (WhatsApp/Telegram)" required>
+                <textarea id="requestDescription" placeholder="Description du clan (optionnel)" rows="3"></textarea>
+                
+                <button id="submitClanRequestBtn" class="btn-gold">📤 ENVOYER LA DEMANDE</button>
+                <div id="clanRequestMessage" style="margin-top:15px;"></div>
+            </div>
+            
+            <h3 style="color:#FFD700; margin:20px 0 10px;">📋 MES DEMANDES</h3>
+            <div id="myClanRequestsList">⏳ Chargement...</div>
+        </div>
+
+        <!-- SECTION FORUM -->
+        <div id="forum" class="section">
+            <div class="forum-form">
+                <input type="text" id="forumPseudo" placeholder="Votre pseudo" required>
+                <textarea id="forumMessage" placeholder="Votre message" rows="3" required></textarea>
+                <button class="btn-gold" id="publishForumBtn">📢 PUBLIER</button>
+            </div>
+            <div id="forumMessages">⏳ Chargement...</div>
         </div>
     </div>
 
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+
+    <!-- Bibliothèque de compression d'images -->
+    <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
+
     <script>
-        // ========== DONNÉES DES JOUEURS ==========
-        let joueurs = [
-            { id: 1, pseudo: "JIN WOO", badge: "WORKER", points: 21, likes: 4, rank: 9 },
-            { id: 2, pseudo: "LORD IZANA", badge: "Solitaire", points: 216, likes: 0, rank: 10 },
-            { id: 3, pseudo: "JOYBOY", badge: "ADMIN", points: 1250, likes: 42, rank: 1 },
-            { id: 4, pseudo: "ZETSU", badge: "PURGEUR", points: 980, likes: 31, rank: 2 },
-            { id: 5, pseudo: "NEXTLIGH", badge: "OMBRE", points: 720, likes: 24, rank: 3 }
-        ];
-
-        // ========== MESSAGES DU FORUM ==========
-        let messages = [];
-
-        // Charger les messages sauvegardés
-        function chargerMessages() {
-            const saved = localStorage.getItem('purge_forum');
-            if(saved) {
-                messages = JSON.parse(saved);
-            } else {
-                messages = [
-                    { auteur: "JOYBOY ADMIN", contenu: "Bienvenue sur le forum PURGE 24. 'Le respect ne se demande pas, il s'impose'", date: new Date().toLocaleString() }
-                ];
+        // Configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyB3yYAuiGqbtrbZ1aSYxAjduZ65adNIpag",
+            authDomain: "purge-game-58718.firebaseapp.com",
+            databaseURL: "https://purge-game-58718-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "purge-game-58718",
+            storageBucket: "purge-game-58718.firebasestorage.app",
+            messagingSenderId: "554574972856",
+            appId: "1:554574972856:web:9de17e7f77eb7b5be4b14d"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const storage = firebase.storage();
+        
+        // Variables
+        let currentClans = [];
+        let currentPeriod = 'year';
+        let bgMusic = null;
+        let musicPlaying = false;
+        
+        // Likes stockés localement
+        let userLikedClans = JSON.parse(localStorage.getItem('userLikedClans') || '{}');
+        let userLikedMessages = JSON.parse(localStorage.getItem('userLikedMessages') || '{}');
+        
+        // Création des particules flottantes
+        function createParticles() {
+            const container = document.getElementById('floatingParticles');
+            for(let i = 0; i < 60; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                const size = Math.random() * 6 + 2;
+                const duration = Math.random() * 12 + 6;
+                const delay = Math.random() * 15;
+                const startX = Math.random() * 100;
+                const direction = Math.random() > 0.5 ? 1 : -1;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = startX + '%';
+                particle.style.animationDuration = duration + 's';
+                particle.style.animationDelay = delay + 's';
+                particle.style.setProperty('--direction', direction);
+                container.appendChild(particle);
             }
-            afficherMessages();
         }
-
-        function afficherMessages() {
-            const container = document.getElementById('forumMessages');
-            if(messages.length === 0) {
-                container.innerHTML = '<div class="message"><div class="message-author">⚔️ SYSTÈME</div><div class="message-content">Aucun message pour le moment</div><div class="message-date">-</div></div>';
+        
+        createParticles();
+        
+        function escapeHtml(str) {
+            if(!str) return '';
+            return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+        }
+        
+        function showToast(msg, isError = false) {
+            const toast = document.createElement('div');
+            toast.className = 'toast-message';
+            toast.style.background = isError ? '#8B0000' : '#FFD700';
+            toast.style.color = isError ? '#fff' : '#000';
+            toast.innerHTML = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+        
+        // ========== COMPRESSION D'IMAGES ==========
+        async function compressImage(file) {
+            const options = {
+                maxSizeMB: 0.2,        // 200KB maximum
+                maxWidthOrHeight: 1024, // 1024px maximum
+                useWebWorker: true,
+                fileType: 'image/jpeg'
+            };
+            
+            try {
+                if (file.size > 1024 * 1024) { // Si > 1MB, on compresse
+                    const compressedFile = await imageCompression(file, options);
+                    console.log(`✅ Image compressée: ${(file.size / 1024).toFixed(0)}KB → ${(compressedFile.size / 1024).toFixed(0)}KB`);
+                    return compressedFile;
+                }
+                return file;
+            } catch(error) {
+                console.error("Erreur compression:", error);
+                return file;
+            }
+        }
+        
+        // ========== MUSIQUE ==========
+        function initMusic() {
+            bgMusic = document.getElementById('bgMusic');
+            if(bgMusic) {
+                bgMusic.volume = 0.2;
+                bgMusic.loop = true;
+            }
+        }
+        
+        function toggleMusic() {
+            if(!bgMusic) initMusic();
+            if(musicPlaying) {
+                bgMusic.pause();
+                musicPlaying = false;
+                document.getElementById('musicBtn').innerHTML = '🎵';
+            } else {
+                bgMusic.play().catch(e => console.log("Auto-play bloqué"));
+                musicPlaying = true;
+                document.getElementById('musicBtn').innerHTML = '🎵🔊';
+            }
+        }
+        
+        document.body.addEventListener('click', () => {
+            if(!musicPlaying && bgMusic) {
+                bgMusic.play().catch(e => {});
+                musicPlaying = true;
+                document.getElementById('musicBtn').innerHTML = '🎵🔊';
+            }
+        }, { once: true });
+        
+        // ========== EMPEREUR ==========
+        function updateEmperor() {
+            const container = document.getElementById('emperorContent');
+            const emperor = currentClans.find(clan => (clan.score_year || 0) >= 2500);
+            
+            if (emperor) {
+                container.innerHTML = `
+                    <div class="emperor-card">
+                        <div class="emperor-crown">👑</div>
+                        <div class="emperor-info">
+                            <div class="emperor-leader">${escapeHtml(emperor.leader)}</div>
+                            <div class="emperor-clan">⚔️ ${escapeHtml(emperor.name)} ⚔️</div>
+                            <div class="emperor-points">🏆 ${emperor.score_year || 0} points à l'année 🏆</div>
+                        </div>
+                        <div class="emperor-crown">👑</div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `<div class="no-emperor">⚔️ Aucun clan n'a encore atteint 2500 points ⚔️<br><span style="font-size:0.8em;">Le prochain empereur sera affiché ici !</span></div>`;
+            }
+        }
+        
+        // ========== CHARGEMENT DES CLANS (SANS DOUBLONS) ==========
+        async function loadClans() {
+            try {
+                const snapshot = await database.ref('clans').once('value');
+                const clansMap = new Map();
+                snapshot.forEach(child => {
+                    const clan = child.val();
+                    if(!clansMap.has(clan.name)) {
+                        clan.id = child.key;
+                        clansMap.set(clan.name, clan);
+                    }
+                });
+                currentClans = Array.from(clansMap.values());
+                console.log("✅ " + currentClans.length + " clans chargés");
+                updateEmperor();
+                updateRanking();
+                loadClanSelect();
+            } catch(e) {
+                console.error(e);
+                document.getElementById('rankingList').innerHTML = '<div class="loading">❌ Erreur de chargement</div>';
+            }
+        }
+        
+        function loadClanSelect() {
+            const select = document.getElementById('clanSelect');
+            if(!select) return;
+            select.innerHTML = '<option value="">-- Choisissez votre clan --</option>';
+            currentClans.forEach(clan => {
+                select.innerHTML += `<option value="${clan.id}">${escapeHtml(clan.name)}</option>`;
+            });
+        }
+        
+        function updateRanking() {
+            let clans = [...currentClans];
+            if(currentPeriod === 'week') clans.sort((a,b) => (b.score_week || 0) - (a.score_week || 0));
+            else if(currentPeriod === 'month') clans.sort((a,b) => (b.score_month || 0) - (a.score_month || 0));
+            else clans.sort((a,b) => (b.score_year || 0) - (a.score_year || 0));
+            
+            const container = document.getElementById('rankingList');
+            if(clans.length === 0) {
+                container.innerHTML = '<div class="loading">🏆 Aucun clan enregistré</div>';
                 return;
             }
-            container.innerHTML = messages.slice(0, 30).map(msg => `
-                <div class="message">
-                    <div class="message-author">⚔️ ${msg.auteur}</div>
-                    <div class="message-content">${msg.contenu}</div>
-                    <div class="message-date">${msg.date}</div>
-                </div>
-            `).join('');
-        }
-
-        function posterMessage() {
-            const input = document.getElementById('messageInput');
-            const contenu = input.value.trim();
-            if(!contenu) return;
             
-            messages.unshift({
-                auteur: "PURGEUR",
-                contenu: contenu,
-                date: new Date().toLocaleString()
-            });
-            if(messages.length > 50) messages.pop();
-            localStorage.setItem('purge_forum', JSON.stringify(messages));
-            afficherMessages();
-            input.value = '';
-        }
-
-        // ========== AFFICHAGE DES JOUEURS ==========
-        function afficherJoueurs() {
-            const container = document.getElementById('playersGrid');
-            container.innerHTML = joueurs.map(j => `
-                <div class="player-card">
-                    <div class="player-info">
-                        <div class="rank ${getRankClass(j.rank)}">#${j.rank}</div>
-                        <div class="player-name">${j.pseudo}</div>
-                        <div class="player-badge">${j.badge}</div>
-                    </div>
-                    <div class="player-stats">
-                        <div class="points">${j.points} POINTS</div>
-                        <div class="likes">
-                            <span>❤️ ${j.likes}</span>
-                            <button class="like-btn" onclick="liker(${j.id})">+1</button>
+            const icons = ['⚔️', '🛡️', '👑', '🏰', '🐉', '⚡', '🔥', '💀', '🦅', '🐺', '🦁', '🗡️'];
+            
+            container.innerHTML = clans.map((clan, idx) => {
+                let score = currentPeriod === 'week' ? (clan.score_week || 0) : (currentPeriod === 'month' ? (clan.score_month || 0) : (clan.score_year || 0));
+                const hasLiked = userLikedClans[clan.id] === true;
+                
+                return `
+                    <div class="clan-card">
+                        <div class="clan-row">
+                            <div class="clan-info">
+                                <div class="clan-rank">#${idx+1}</div>
+                                <div class="clan-icon">${icons[idx % icons.length]}</div>
+                                <div class="clan-details">
+                                    <div class="clan-name">${escapeHtml(clan.name)}</div>
+                                    <div class="clan-leader">👑 ${escapeHtml(clan.leader)}</div>
+                                </div>
+                            </div>
+                            <div class="clan-stats">
+                                <span class="stat">📅 S: ${clan.score_week || 0}</span>
+                                <span class="stat">📆 M: ${clan.score_month || 0}</span>
+                                <span class="stat">🗓️ A: ${clan.score_year || 0}</span>
+                                <span class="stat">❤️ ${clan.likes || 0}</span>
+                            </div>
+                            <div class="clan-points">⭐ ${score} pts</div>
+                            <button class="like-btn ${hasLiked ? 'liked' : ''}" onclick="likeClan('${clan.id}')">
+                                ${hasLiked ? '❤️ LIKÉ' : '❤️ LIKER'}
+                            </button>
                         </div>
+                        ${clan.description ? `<div style="margin-top:12px; font-size:0.75em; color:#aaa;">📝 ${escapeHtml(clan.description)}</div>` : ''}
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
-
-        function getRankClass(rank) {
-            if(rank === 1) return 'rank-1';
-            if(rank === 2) return 'rank-2';
-            if(rank === 3) return 'rank-3';
-            return '';
+        
+        async function likeClan(id) {
+            if(userLikedClans[id]) { showToast("❌ Vous avez déjà liké ce clan !", true); return; }
+            try {
+                const clanRef = database.ref(`clans/${id}`);
+                const snapshot = await clanRef.once('value');
+                const clan = snapshot.val();
+                if(clan) {
+                    await clanRef.update({ likes: (clan.likes || 0) + 1 });
+                    userLikedClans[id] = true;
+                    localStorage.setItem('userLikedClans', JSON.stringify(userLikedClans));
+                    showToast("❤️ Like enregistré !");
+                    loadClans();
+                }
+            } catch(e) { showToast("❌ Erreur", true); }
         }
-
-        function liker(id) {
-            const joueur = joueurs.find(j => j.id === id);
-            if(joueur) {
-                joueur.likes++;
-                joueur.points += 5;
-                afficherJoueurs();
-                // Ajouter un message dans le forum
-                messages.unshift({
-                    auteur: "SYSTÈME",
-                    contenu: `❤️ ${joueur.pseudo} a reçu un like ! +5 points`,
-                    date: new Date().toLocaleString()
-                });
-                if(messages.length > 50) messages.pop();
-                localStorage.setItem('purge_forum', JSON.stringify(messages));
-                afficherMessages();
+        
+        // ========== DERNIERS MESSAGES ==========
+        async function loadLatestMessages() {
+            try {
+                const snapshot = await database.ref('forum').once('value');
+                const messages = [];
+                snapshot.forEach(child => messages.push({ id: child.key, ...child.val() }));
+                messages.reverse();
+                
+                const latestMessages = messages.slice(0, 5);
+                const container = document.getElementById('latestMessagesList');
+                
+                if(latestMessages.length === 0) {
+                    container.innerHTML = '<div class="loading" style="padding:20px;">💬 Aucun message pour le moment</div>';
+                    return;
+                }
+                
+                container.innerHTML = latestMessages.map(msg => `
+                    <div class="message-item">
+                        <div class="message-author">
+                            🔥 <strong>${escapeHtml(msg.author)}</strong>
+                            <span class="message-time">${msg.date || ''}</span>
+                        </div>
+                        <div class="message-text">${escapeHtml(msg.message.length > 100 ? msg.message.substring(0, 100) + '...' : msg.message)}</div>
+                    </div>
+                `).join('');
+            } catch(e) {
+                console.error(e);
             }
         }
-
+        
+        // ========== SOUMISSION DE PURGE ==========
+        async function submitPurge() {
+            const clanId = document.getElementById('clanSelect').value;
+            const groupLink = document.getElementById('groupLink').value.trim();
+            const messageDiv = document.getElementById('purgeMessage');
+            
+            if(!clanId) {
+                messageDiv.innerHTML = '<span style="color:#ff8888;">❌ Choisissez votre clan</span>';
+                return;
+            }
+            if(!groupLink) {
+                messageDiv.innerHTML = '<span style="color:#ff8888;">❌ Entrez le lien du groupe purgé</span>';
+                return;
+            }
+            
+            const existingSnapshot = await database.ref('submissions').orderByChild('link').equalTo(groupLink).once('value');
+            if(existingSnapshot.exists()) {
+                messageDiv.innerHTML = '<span style="color:#ff8888;">❌ Ce lien a déjà été soumis !</span>';
+                return;
+            }
+            
+            const photoFiles = [];
+            for(let i = 1; i <= 4; i++) {
+                const input = document.getElementById(`photo${i}`);
+                if(input.files.length > 0) {
+                    photoFiles.push(input.files[0]);
+                }
+            }
+            
+            if(photoFiles.length === 0) {
+                messageDiv.innerHTML = '<span style="color:#ff8888;">❌ Ajoutez au moins une capture d\'écran</span>';
+                return;
+            }
+            
+            messageDiv.innerHTML = '<span style="color:#FFD700;">⏳ Compression et envoi en cours...</span>';
+            
+            try {
+                const photoUrls = [];
+                for(let i = 0; i < photoFiles.length; i++) {
+                    const originalFile = photoFiles[i];
+                    // Compression de l'image
+                    const compressedFile = await compressImage(originalFile);
+                    const storageRef = storage.ref(`purges/${Date.now()}_${i}_${originalFile.name}`);
+                    const snapshot = await storageRef.put(compressedFile);
+                    const url = await snapshot.ref.getDownloadURL();
+                    photoUrls.push(url);
+                }
+                
+                const submission = {
+                    clanId: clanId,
+                    clanName: currentClans.find(c => c.id === clanId)?.name || "Inconnu",
+                    link: groupLink,
+                    photos: photoUrls,
+                    status: 'pending',
+                    points: 0,
+                    submittedAt: Date.now()
+                };
+                
+                await database.ref('submissions').push(submission);
+                
+                messageDiv.innerHTML = '<span style="color:#2ecc71;">✅ Purge soumise ! En attente de validation.</span>';
+                
+                document.getElementById('groupLink').value = '';
+                for(let i = 1; i <= 4; i++) {
+                    document.getElementById(`photo${i}`).value = '';
+                }
+                
+                loadMySubmissions();
+                
+            } catch(e) {
+                messageDiv.innerHTML = `<span style="color:#ff8888;">❌ Erreur: ${e.message}</span>`;
+            }
+        }
+        
+        async function loadMySubmissions() {
+            const snapshot = await database.ref('submissions').once('value');
+            const submissions = [];
+            snapshot.forEach(child => submissions.push({ id: child.key, ...child.val() }));
+            submissions.reverse();
+            
+            const container = document.getElementById('mySubmissionsList');
+            if(submissions.length === 0) {
+                container.innerHTML = '<div class="loading">📭 Aucune soumission</div>';
+                return;
+            }
+            
+            container.innerHTML = submissions.map(sub => `
+                <div class="submission-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+                        <span class="clan-name">⚔️ ${escapeHtml(sub.clanName)}</span>
+                        <span class="status-badge ${sub.status}">${getStatusText(sub.status)}</span>
+                    </div>
+                    <div style="margin:10px 0;"><strong>🔗 Lien:</strong> <a href="${escapeHtml(sub.link)}" target="_blank" style="color:#FFD700;">${escapeHtml(sub.link)}</a></div>
+                    <div class="submission-photos">
+                        ${sub.photos ? sub.photos.map(photo => `<img src="${photo}" onclick="window.open('${photo}')">`).join('') : ''}
+                    </div>
+                    <div style="font-size:0.7em; color:#888;">Soumis le ${new Date(sub.submittedAt).toLocaleString()}</div>
+                    ${sub.status === 'approved' ? `<div style="margin-top:10px; color:#2ecc71;">🏆 Points attribués: +${sub.points}</div>` : ''}
+                    ${sub.status === 'rejected' ? `<div style="margin-top:10px; color:#ff8888;">❌ Rejeté</div>` : ''}
+                </div>
+            `).join('');
+        }
+        
+        function getStatusText(status) {
+            switch(status) {
+                case 'pending': return '⏳ En attente';
+                case 'approved': return '✅ Approuvé';
+                case 'rejected': return '❌ Rejeté';
+                default: return '❓ Inconnu';
+            }
+        }
+        
+        // ========== DEMANDE D'AJOUT DE CLAN ==========
+        async function submitClanRequest() {
+            const clanName = document.getElementById('requestClanName').value.trim();
+            const clanLeader = document.getElementById('requestClanLeader').value.trim();
+            const contact = document.getElementById('requestContact').value.trim();
+            const description = document.getElementById('requestDescription').value.trim();
+            const messageDiv = document.getElementById('clanRequestMessage');
+            
+            if(!clanName || !clanLeader || !contact) {
+                messageDiv.innerHTML = '<span style="color:#ff8888;">❌ Veuillez remplir tous les champs obligatoires</span>';
+                return;
+            }
+            
+            const existingClan = currentClans.find(c => c.name.toLowerCase() === clanName.toLowerCase());
+            if(existingClan) {
+                messageDiv.innerHTML = '<span style="color:#ff8888;">❌ Ce clan existe déjà !</span>';
+                return;
+            }
+            
+            messageDiv.innerHTML = '<span style="color:#FFD700;">⏳ Envoi en cours...</span>';
+            
+            try {
+                const request = {
+                    clanName: clanName,
+                    clanLeader: clanLeader,
+                    contact: contact,
+                    description: description || "",
+                    status: 'pending',
+                    submittedAt: Date.now()
+                };
+                
+                await database.ref('clan_requests').push(request);
+                
+                messageDiv.innerHTML = '<span style="color:#2ecc71;">✅ Demande envoyée ! Un admin va la valider.</span>';
+                
+                document.getElementById('requestClanName').value = '';
+                document.getElementById('requestClanLeader').value = '';
+                document.getElementById('requestContact').value = '';
+                document.getElementById('requestDescription').value = '';
+                
+                loadMyClanRequests();
+                
+            } catch(e) {
+                messageDiv.innerHTML = `<span style="color:#ff8888;">❌ Erreur: ${e.message}</span>`;
+            }
+        }
+        
+        async function loadMyClanRequests() {
+            const snapshot = await database.ref('clan_requests').once('value');
+            const requests = [];
+            snapshot.forEach(child => requests.push({ id: child.key, ...child.val() }));
+            requests.reverse();
+            
+            const container = document.getElementById('myClanRequestsList');
+            if(!container) return;
+            
+            if(requests.length === 0) {
+                container.innerHTML = '<div class="loading">📭 Aucune demande</div>';
+                return;
+            }
+            
+            container.innerHTML = requests.map(req => `
+                <div class="submission-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+                        <span class="clan-name">⚔️ ${escapeHtml(req.clanName)}</span>
+                        <span class="status-badge ${req.status}">${getRequestStatusText(req.status)}</span>
+                    </div>
+                    <div><strong>👑 Chef:</strong> ${escapeHtml(req.clanLeader)}</div>
+                    <div><strong>📞 Contact:</strong> ${escapeHtml(req.contact)}</div>
+                    ${req.description ? `<div><strong>📝 Description:</strong> ${escapeHtml(req.description)}</div>` : ''}
+                    <div style="font-size:0.7em; color:#888; margin-top:10px;">Soumis le ${new Date(req.submittedAt).toLocaleString()}</div>
+                </div>
+            `).join('');
+        }
+        
+        function getRequestStatusText(status) {
+            switch(status) {
+                case 'pending': return '⏳ En attente';
+                case 'approved': return '✅ Approuvé';
+                case 'rejected': return '❌ Rejeté';
+                default: return '❓ Inconnu';
+            }
+        }
+        
+        // ========== FORUM ==========
+        async function loadForum() {
+            try {
+                const snapshot = await database.ref('forum').once('value');
+                const messages = [];
+                snapshot.forEach(child => messages.push({ id: child.key, ...child.val() }));
+                messages.reverse();
+                
+                const container = document.getElementById('forumMessages');
+                if(messages.length === 0) {
+                    container.innerHTML = '<div class="loading">💬 Aucun message, soyez le premier !</div>';
+                    return;
+                }
+                
+                container.innerHTML = messages.map(msg => {
+                    const hasLiked = userLikedMessages[msg.id] === true;
+                    return `
+                        <div class="forum-message">
+                            <div class="forum-author">
+                                🔥 <strong>${escapeHtml(msg.author)}</strong>
+                                <span class="forum-date">${msg.date || ''}</span>
+                            </div>
+                            <div class="forum-content">${escapeHtml(msg.message)}</div>
+                            <button class="forum-like ${hasLiked ? 'liked' : ''}" onclick="likeMessage('${msg.id}')">
+                                ${hasLiked ? '❤️ LIKÉ' : `❤️ ${msg.likes || 0} likes`}
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+            } catch(e) { console.error(e); }
+        }
+        
+        async function likeMessage(id) {
+            if(userLikedMessages[id]) { showToast("❌ Vous avez déjà liké ce message !", true); return; }
+            try {
+                const msgRef = database.ref(`forum/${id}`);
+                const snapshot = await msgRef.once('value');
+                const msg = snapshot.val();
+                if(msg) {
+                    await msgRef.update({ likes: (msg.likes || 0) + 1 });
+                    userLikedMessages[id] = true;
+                    localStorage.setItem('userLikedMessages', JSON.stringify(userLikedMessages));
+                    showToast("💬 Like enregistré !");
+                    loadForum();
+                    loadLatestMessages();
+                }
+            } catch(e) { showToast("❌ Erreur", true); }
+        }
+        
+        async function publishForumMessage() {
+            const author = document.getElementById('forumPseudo').value.trim();
+            const message = document.getElementById('forumMessage').value.trim();
+            if(!author || !message) {
+                showToast("❌ Pseudo et message requis", true);
+                return;
+            }
+            try {
+                await database.ref('forum').push({ 
+                    author: author, 
+                    message: message, 
+                    likes: 0, 
+                    date: new Date().toLocaleString() 
+                });
+                showToast("✅ Message publié !");
+                document.getElementById('forumPseudo').value = '';
+                document.getElementById('forumMessage').value = '';
+                loadForum();
+                loadLatestMessages();
+            } catch(e) { showToast("❌ Erreur", true); }
+        }
+        
+        // ========== NAVIGATION ==========
+        function showSection(section) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(section).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            if(section === 'ranking') loadClans();
+            if(section === 'submit') { loadClanSelect(); loadMySubmissions(); }
+            if(section === 'requestClan') { loadMyClanRequests(); }
+            if(section === 'forum') loadForum();
+        }
+        
+        function showRankingPeriod(period, btn) {
+            currentPeriod = period;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateRanking();
+        }
+        
         // Initialisation
-        chargerMessages();
-        afficherJoueurs();
+        initMusic();
+        loadClans();
+        loadForum();
+        loadLatestMessages();
+        loadMySubmissions();
+        loadMyClanRequests();
+        
+        document.getElementById('publishForumBtn').onclick = publishForumMessage;
+        document.getElementById('submitPurgeBtn').onclick = submitPurge;
+        document.getElementById('submitClanRequestBtn').onclick = submitClanRequest;
+        
+        setInterval(() => {
+            if(document.getElementById('ranking').classList.contains('active')) loadClans();
+            if(document.getElementById('submit').classList.contains('active')) { loadMySubmissions(); loadClanSelect(); }
+            if(document.getElementById('requestClan').classList.contains('active')) loadMyClanRequests();
+            if(document.getElementById('forum').classList.contains('active')) loadForum();
+            loadLatestMessages();
+        }, 20000);
     </script>
 </body>
 </html>
