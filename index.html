@@ -4,72 +4,33 @@ JOY INFO PURGE 24 PRODUCTION
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INFO PURGE 24 - Soumissions</title>
+    <title>INFO PURGE 24 - Suprématie 44</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: radial-gradient(circle at 20% 50%, #0a0000 0%, #000000 100%);
             color: #ff0000;
             font-family: 'Courier New', monospace;
             padding: 20px;
         }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        /* En-tête */
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        h1 {
-            font-size: 36px;
-            letter-spacing: 4px;
-            text-shadow: 0 0 15px #ff0000;
-        }
-
-        .citation {
-            color: #ff4444;
-            font-size: 12px;
-            margin-top: 10px;
-        }
-
-        /* L'empereur (section principale) */
+        .container { max-width: 1000px; margin: 0 auto; }
+        
+        /* HEADER */
+        .header { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 48px; letter-spacing: 4px; text-shadow: 0 0 15px #ff0000; }
+        .citation { color: #ff4444; font-size: 12px; margin-top: 10px; }
+        
+        /* EMPEREUR (section soumission) */
         .empereur {
-            background: rgba(20, 0, 0, 0.7);
+            background: rgba(20, 0, 0, 0.8);
             border: 2px solid #ff0000;
             border-radius: 20px;
             padding: 25px;
             margin-bottom: 30px;
-            text-align: center;
         }
-
-        .empereur h2 {
-            font-size: 24px;
-            margin-bottom: 15px;
-            text-shadow: 0 0 10px #ff0000;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 12px;
-            color: #ff8888;
-        }
-
+        .empereur h2 { text-align: center; margin-bottom: 20px; text-shadow: 0 0 10px #ff0000; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-size: 12px; color: #ff8888; }
         input, textarea {
             width: 100%;
             padding: 12px;
@@ -77,58 +38,68 @@ JOY INFO PURGE 24 PRODUCTION
             border: 1px solid #ff0000;
             color: white;
             border-radius: 8px;
-            font-family: 'Courier New', monospace;
+            font-family: monospace;
         }
-
-        .file-input {
-            padding: 10px;
-            background: #1a1a1a;
-            border: 1px solid #ff0000;
-            border-radius: 8px;
-            color: white;
-        }
-
+        .file-input { padding: 10px; }
         button {
             background: #ff0000;
             color: black;
             border: none;
-            padding: 14px 24px;
+            padding: 12px 24px;
             font-weight: bold;
             cursor: pointer;
             border-radius: 8px;
-            font-size: 16px;
             margin-top: 10px;
         }
-
-        button:hover {
-            background: #cc0000;
+        button:hover { background: #cc0000; }
+        .status { margin-top: 15px; padding: 10px; background: #0a0a0a; border-radius: 8px; font-size: 12px; color: #00ff00; text-align: center; }
+        
+        /* SECTION CLANS */
+        .clans-section { margin-bottom: 40px; }
+        .section-title { font-size: 24px; margin-bottom: 20px; border-left: 4px solid #ff0000; padding-left: 15px; }
+        .clans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
         }
-
-        .status {
-            margin-top: 15px;
-            padding: 10px;
-            background: #0a0a0a;
-            border-radius: 8px;
-            font-size: 12px;
-            color: #00ff00;
+        .clan-card {
+            background: rgba(20, 0, 0, 0.7);
+            border: 1px solid #ff0000;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
         }
-
-        /* Forum (messages en bas) */
+        .clan-name { font-size: 22px; font-weight: bold; margin-bottom: 10px; }
+        .clan-stats { display: flex; justify-content: space-around; margin: 15px 0; font-size: 12px; }
+        .clan-score { font-size: 28px; font-weight: bold; color: #ff4444; }
+        .like-btn {
+            background: transparent;
+            border: 1px solid #ff0000;
+            color: #ff0000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .like-btn:hover { background: #ff0000; color: black; }
+        
+        /* CLASSEMENT TABLEAU */
+        .ranking-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .ranking-table th, .ranking-table td { padding: 12px; text-align: center; border-bottom: 1px solid rgba(255,0,0,0.3); }
+        .ranking-table th { background: rgba(255,0,0,0.1); color: #ff4444; }
+        .rank-1 { color: #FFD700; font-weight: bold; }
+        .rank-2 { color: #C0C0C0; }
+        .rank-3 { color: #CD7F32; }
+        
+        /* FORUM */
         .forum {
             background: rgba(0, 0, 0, 0.7);
             border: 1px solid #ff0000;
             border-radius: 15px;
             padding: 20px;
-            margin-top: 30px;
+            margin-top: 40px;
         }
-
-        .forum h3 {
-            color: #ff4444;
-            margin-bottom: 15px;
-            border-left: 3px solid #ff0000;
-            padding-left: 10px;
-        }
-
+        .forum h3 { color: #ff4444; margin-bottom: 15px; border-left: 3px solid #ff0000; padding-left: 10px; }
         .message {
             background: #0a0a0a;
             border-radius: 10px;
@@ -136,43 +107,15 @@ JOY INFO PURGE 24 PRODUCTION
             margin-bottom: 12px;
             border-left: 3px solid #ff0000;
         }
-
-        .message-author {
-            color: #ff8888;
-            font-size: 11px;
-            margin-bottom: 5px;
-        }
-
-        .message-content {
-            color: #cccccc;
-            font-size: 13px;
-        }
-
-        .message-date {
-            color: #660000;
-            font-size: 9px;
-            text-align: right;
-            margin-top: 5px;
-        }
-
-        .form-message {
-            margin-top: 15px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .form-message input {
-            flex: 3;
-            margin: 0;
-        }
-
-        .form-message button {
-            flex: 1;
-            margin: 0;
-        }
+        .message-author { color: #ff8888; font-size: 11px; }
+        .message-content { color: #ccc; font-size: 13px; }
+        .message-date { color: #660000; font-size: 9px; text-align: right; margin-top: 5px; }
+        .form-message { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+        .form-message input { flex: 3; margin: 0; }
+        .form-message button { flex: 1; margin: 0; }
+        
+        .footer { text-align: center; font-size: 10px; color: #440000; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ff0000; }
     </style>
-    <!-- Librairie de compression d'images -->
     <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
 </head>
 <body>
@@ -184,164 +127,208 @@ JOY INFO PURGE 24 PRODUCTION
 
         <!-- SECTION EMPEREUR (soumission avec compression) -->
         <div class="empereur">
-            <h2>👑 SOUMETTRE UNE PURGE 👑</h2>
-            
+            <h2>👑 L'EMPEREUR - SOUMETTRE UNE PURGE 👑</h2>
             <div class="form-group">
-                <label>📝 PSEUDO</label>
-                <input type="text" id="pseudo" placeholder="JOYBOY">
+                <label>📝 PSEUDO / CLAN</label>
+                <input type="text" id="pseudo" placeholder="JOYBOY - SUPRÉMATIE 44">
             </div>
-
             <div class="form-group">
-                <label>📋 MESSAGE / DESCRIPTION</label>
-                <textarea id="message" rows="3" placeholder="Décris la purge..."></textarea>
+                <label>📋 DESCRIPTION DE LA PURGE</label>
+                <textarea id="message" rows="3" placeholder="Qui a été purgé ? Pourquoi ?"></textarea>
             </div>
-
             <div class="form-group">
-                <label>📸 CAPTURES D'ÉCRAN (max 4, compression auto)</label>
+                <label>📸 CAPTURES (max 4, compression auto)</label>
                 <input type="file" id="fichiers" class="file-input" multiple accept="image/*">
             </div>
-
             <button onclick="soumettrePurge()">🔥 SOUMETTRE LA PURGE 🔥</button>
             <div id="status" class="status">⚡ PRÊT ⚡</div>
         </div>
 
-        <!-- SECTION FORUM (messages en bas) -->
+        <!-- SECTION CLANS -->
+        <div class="clans-section">
+            <div class="section-title">🏆 CLASSEMENT DES CLANS 🏆</div>
+            <div class="clans-grid" id="clansGrid"></div>
+        </div>
+
+        <!-- SECTION CLASSEMENT JOUEURS -->
+        <div class="section-title">👑 CLASSEMENT DES PURGEURS 👑</div>
+        <table class="ranking-table" id="rankingTable">
+            <thead><tr><th>RANG</th><th>PSEUDO</th><th>CLAN</th><th>PURGES</th><th>SCORE</th><th>❤️</th></tr></thead>
+            <tbody id="rankingBody"></tbody>
+        </table>
+
+        <!-- SECTION FORUM -->
         <div class="forum">
             <h3>📢 FORUM PURGE 24 - DERNIERS MESSAGES</h3>
-            <div id="messagesList">
-                <div class="message">
-                    <div class="message-author">⚔️ JOYBOY ADMIN</div>
-                    <div class="message-content">Bienvenue sur le forum PURGE 24. "Le respect ne se demande pas"</div>
-                    <div class="message-date">18/04/2026</div>
-                </div>
-            </div>
-            
+            <div id="messagesList"></div>
             <div class="form-message">
                 <input type="text" id="messageForum" placeholder="Écris un message...">
                 <button onclick="posterMessage()">📢 POSTER</button>
             </div>
         </div>
+
+        <div class="footer">INFO PURGE 24 - SUPRÉMATIE 44 - "Le respect ne se demande pas"</div>
     </div>
 
     <script>
-        // CHARGER LES MESSAGES SAUVEGARDÉS
+        // ========== DONNÉES ==========
+        let clans = [
+            { nom: "SUPRÉMATIE 44", score: 1250, purges: 42, couleur: "#ff0000" },
+            { nom: "ZETSU", score: 980, purges: 31, couleur: "#ff4444" },
+            { nom: "NEXTLIGH", score: 720, purges: 24, couleur: "#ff6666" },
+            { nom: "JOYBOY", score: 540, purges: 18, couleur: "#ff8888" }
+        ];
+        
+        let joueurs = [
+            { pseudo: "JOYBOY", clan: "SUPRÉMATIE 44", purges: 42, score: 1250 },
+            { pseudo: "ZETSU", clan: "ZETSU", purges: 31, score: 980 },
+            { pseudo: "NEXTLIGH", clan: "NEXTLIGH", purges: 24, score: 720 },
+            { pseudo: "EMPEREUR", clan: "SUPRÉMATIE 44", purges: 18, score: 540 }
+        ];
+        
         let messages = [];
 
-        function chargerMessages() {
-            const saved = localStorage.getItem('forum_messages');
-            if(saved) {
-                messages = JSON.parse(saved);
-                afficherMessages();
+        // ========== AFFICHAGE CLANS ==========
+        function afficherClans() {
+            const grid = document.getElementById('clansGrid');
+            grid.innerHTML = clans.map(clan => `
+                <div class="clan-card">
+                    <div class="clan-name" style="text-shadow: 0 0 5px ${clan.couleur};">${clan.nom}</div>
+                    <div class="clan-stats">
+                        <span>⚔️ PURGES: ${clan.purges}</span>
+                        <span>🏆 SCORE: ${clan.score}</span>
+                    </div>
+                    <div class="clan-score">${clan.score} pts</div>
+                    <button class="like-btn" onclick="likerClan('${clan.nom}')">❤️ SUPPORTER</button>
+                </div>
+            `).join('');
+        }
+
+        // ========== AFFICHAGE CLASSEMENT ==========
+        function afficherClassement() {
+            const trie = [...joueurs].sort((a,b) => b.score - a.score);
+            const tbody = document.getElementById('rankingBody');
+            tbody.innerHTML = trie.map((j, idx) => `
+                <tr>
+                    <td class="${idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : ''}">${idx+1}</td>
+                    <td>${j.pseudo}</td>
+                    <td>${j.clan}</td>
+                    <td>${j.purges}</td>
+                    <td>${j.score}</td>
+                    <td><button class="like-btn" style="padding:2px 10px;" onclick="likerJoueur('${j.pseudo}')">❤️</button></td>
+                </tr>
+            `).join('');
+        }
+
+        // ========== LIKES ==========
+        function likerClan(nom) {
+            const clan = clans.find(c => c.nom === nom);
+            if(clan) {
+                clan.score += 5;
+                clan.purges++;
+                afficherClans();
+                // Ajouter au forum
+                ajouterMessageForum("SYSTÈME", `❤️ +5 points pour le clan ${nom} !`);
             }
         }
 
+        function likerJoueur(pseudo) {
+            const joueur = joueurs.find(j => j.pseudo === pseudo);
+            if(joueur) {
+                joueur.score += 1;
+                joueur.purges++;
+                afficherClassement();
+                ajouterMessageForum("SYSTÈME", `❤️ +1 point pour ${pseudo} !`);
+            }
+        }
+
+        // ========== FORUM ==========
         function afficherMessages() {
             const container = document.getElementById('messagesList');
             if(messages.length === 0) {
-                container.innerHTML = '<div class="message"><div class="message-author">⚔️ JOYBOY ADMIN</div><div class="message-content">"Le respect ne se demande pas"</div><div class="message-date">18/04/2026</div></div>';
+                container.innerHTML = '<div class="message"><div class="message-author">⚔️ JOYBOY ADMIN</div><div class="message-content">"Le respect ne se demande pas" - Bienvenue sur le forum PURGE 24</div><div class="message-date">18/04/2026</div></div>';
                 return;
             }
-            
-            container.innerHTML = messages.map(msg => `
+            container.innerHTML = messages.slice(0,20).map(msg => `
                 <div class="message">
-                    <div class="message-author">⚔️ ${msg.pseudo || "PURGEUR"}</div>
+                    <div class="message-author">⚔️ ${msg.pseudo}</div>
                     <div class="message-content">${msg.contenu}</div>
                     <div class="message-date">${msg.date}</div>
                 </div>
             `).join('');
         }
 
-        function posterMessage() {
-            const contenu = document.getElementById('messageForum').value.trim();
-            if(!contenu) {
-                alert("Écris un message !");
-                return;
-            }
-            
-            const nouveauMessage = {
-                pseudo: "PURGEUR",
+        function ajouterMessageForum(pseudo, contenu) {
+            messages.unshift({
+                pseudo: pseudo,
                 contenu: contenu,
                 date: new Date().toLocaleString()
-            };
-            
-            messages.unshift(nouveauMessage);
-            if(messages.length > 20) messages.pop();
+            });
+            if(messages.length > 50) messages.pop();
             localStorage.setItem('forum_messages', JSON.stringify(messages));
             afficherMessages();
+        }
+
+        function posterMessage() {
+            const contenu = document.getElementById('messageForum').value.trim();
+            if(!contenu) return;
+            ajouterMessageForum("PURGEUR", contenu);
             document.getElementById('messageForum').value = '';
         }
 
-        // COMPRESSION D'IMAGES
+        // ========== COMPRESSION IMAGES ==========
         async function compressImage(file) {
-            const options = {
-                maxSizeMB: 0.5,
-                maxWidthOrHeight: 1024,
-                useWebWorker: true,
-                fileType: 'image/jpeg'
-            };
-            
+            const options = { maxSizeMB: 0.5, maxWidthOrHeight: 1024, useWebWorker: true, fileType: 'image/jpeg' };
             try {
-                const compressedFile = await imageCompression(file, options);
-                return compressedFile;
-            } catch (error) {
-                console.error("Erreur compression:", error);
-                return file;
-            }
+                return await imageCompression(file, options);
+            } catch(e) { return file; }
         }
 
-        // SOUMISSION AVEC COMPRESSION
+        // ========== SOUMISSION PURGE ==========
         async function soumettrePurge() {
             const pseudo = document.getElementById('pseudo').value.trim() || "ANONYME";
-            const message = document.getElementById('message').value.trim();
+            const description = document.getElementById('message').value.trim();
             const fichiers = document.getElementById('fichiers').files;
             
-            if(!message) {
+            if(!description) {
                 alert("❌ Écris une description !");
                 return;
             }
             
             const statusDiv = document.getElementById('status');
-            statusDiv.innerHTML = "📤 Compression des images en cours...";
-            statusDiv.style.color = "#ffaa00";
+            statusDiv.innerHTML = "📤 Compression des images...";
             
-            // Compresser les images
-            const fichiersCompresses = [];
             for(let i = 0; i < fichiers.length && i < 4; i++) {
-                const compressed = await compressImage(fichiers[i]);
-                fichiersCompresses.push(compressed);
+                await compressImage(fichiers[i]);
                 statusDiv.innerHTML = `📤 Compression ${i+1}/${Math.min(fichiers.length,4)}...`;
             }
             
-            statusDiv.innerHTML = "✅ Images compressées ! Envoi en cours...";
+            // Ajouter la purge au forum
+            ajouterMessageForum(pseudo, `🔴 PURGE: ${description} (${Math.min(fichiers.length,4)} image(s))`);
             
-            // Simulation d'envoi (remplace par ton vrai backend)
-            setTimeout(() => {
-                // Ajouter au forum
-                const nouveauMessage = {
-                    pseudo: pseudo,
-                    contenu: `🔴 PURGE: ${message} (${fichiersCompresses.length} image(s))`,
-                    date: new Date().toLocaleString()
-                };
-                messages.unshift(nouveauMessage);
-                if(messages.length > 20) messages.pop();
-                localStorage.setItem('forum_messages', JSON.stringify(messages));
-                afficherMessages();
-                
-                statusDiv.innerHTML = "✅ SOUMISSION ENVOYÉE ! ✅";
-                statusDiv.style.color = "#00ff00";
-                
-                // Réinitialiser
-                document.getElementById('message').value = '';
-                document.getElementById('fichiers').value = '';
-                
-                setTimeout(() => {
-                    statusDiv.innerHTML = "⚡ PRÊT ⚡";
-                }, 3000);
-            }, 2000);
+            // Ajouter des points au clan du joueur
+            let clanTrouve = clans.find(c => pseudo.toUpperCase().includes(c.nom.toUpperCase()) || c.nom.toUpperCase().includes(pseudo.toUpperCase()));
+            if(clanTrouve) {
+                clanTrouve.score += 10;
+                clanTrouve.purges++;
+                afficherClans();
+            }
+            
+            statusDiv.innerHTML = "✅ PURGE SOUMISE ! +10 points pour le clan ✅";
+            statusDiv.style.color = "#00ff00";
+            document.getElementById('message').value = '';
+            document.getElementById('fichiers').value = '';
+            
+            setTimeout(() => { statusDiv.innerHTML = "⚡ PRÊT ⚡"; }, 3000);
         }
 
-        // INITIALISATION
-        chargerMessages();
+        // ========== CHARGEMENT DONNÉES ==========
+        const savedMessages = localStorage.getItem('forum_messages');
+        if(savedMessages) messages = JSON.parse(savedMessages);
+        
+        afficherClans();
+        afficherClassement();
+        afficherMessages();
     </script>
 </body>
 </html>
