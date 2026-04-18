@@ -490,6 +490,30 @@ JOY INFO PURGE 24 PRODUCTION
             font-size: 0.8em;
         }
         
+        /* BARRE DE PROGRESSION */
+        .progress-container {
+            display: none;
+            margin: 15px 0;
+            background: #2a2a2a;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        .progress-bar {
+            width: 0%;
+            height: 30px;
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            border-radius: 25px;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        
         .status-badge {
             display: inline-block;
             padding: 4px 12px;
@@ -722,7 +746,7 @@ JOY INFO PURGE 24 PRODUCTION
     <div class="container">
         <a href="admin.html" class="admin-link">👑 JOYBOY ADMIN</a>
         <div class="music-control" onclick="toggleMusic()" id="musicBtn">🎵</div>
-        <div class="compression-badge">📸 Compression auto active</div>
+        <div class="compression-badge">⚡ Upload accéléré</div>
         
         <!-- EMPEREUR -->
         <div class="emperor-section" id="emperorSection">
@@ -780,7 +804,12 @@ JOY INFO PURGE 24 PRODUCTION
                         <input type="file" id="photo3" accept="image/*">
                         <input type="file" id="photo4" accept="image/*">
                     </div>
-                    <p style="font-size:0.7em; color:#888; margin-top:5px;">📸 Les images sont automatiquement compressées pour économiser l'espace</p>
+                    <p style="font-size:0.7em; color:#888; margin-top:5px;">⚡ Upload en parallèle - Compression automatique</p>
+                </div>
+                
+                <!-- BARRE DE PROGRESSION -->
+                <div id="progressContainer" class="progress-container">
+                    <div id="progressBar" class="progress-bar">0%</div>
                 </div>
                 
                 <button id="submitPurgeBtn" class="btn-gold">📤 SOUMETTRE LA PURGE</button>
@@ -893,24 +922,37 @@ JOY INFO PURGE 24 PRODUCTION
             setTimeout(() => toast.remove(), 2000);
         }
         
-        // ========== COMPRESSION D'IMAGES ==========
-        async function compressImage(file) {
+        function updateProgress(percent, text) {
+            const progressBar = document.getElementById('progressBar');
+            const progressContainer = document.getElementById('progressContainer');
+            if(progressBar) {
+                progressBar.style.width = percent + '%';
+                progressBar.innerHTML = text || Math.floor(percent) + '%';
+                if(percent >= 100) {
+                    setTimeout(() => {
+                        progressContainer.style.display = 'none';
+                        progressBar.style.width = '0%';
+                    }, 1000);
+                }
+            }
+        }
+        
+        // ========== COMPRESSION RAPIDE ==========
+        async function compressImageFast(file) {
+            // Si l'image est déjà petite (< 500KB), on ne compresse pas
+            if(file.size < 500 * 1024) return file;
+            
             const options = {
-                maxSizeMB: 0.2,        // 200KB maximum
-                maxWidthOrHeight: 1024, // 1024px maximum
+                maxSizeMB: 0.5,        // 500KB max
+                maxWidthOrHeight: 1280, // 1280px max
                 useWebWorker: true,
-                fileType: 'image/jpeg'
+                initialQuality: 0.85
             };
             
             try {
-                if (file.size > 1024 * 1024) { // Si > 1MB, on compresse
-                    const compressedFile = await imageCompression(file, options);
-                    console.log(`✅ Image compressée: ${(file.size / 1024).toFixed(0)}KB → ${(compressedFile.size / 1024).toFixed(0)}KB`);
-                    return compressedFile;
-                }
-                return file;
-            } catch(error) {
-                console.error("Erreur compression:", error);
+                return await imageCompression(file, options);
+            } catch(e) {
+                console.log("Erreur compression, envoi original:", e);
                 return file;
             }
         }
@@ -1091,11 +1133,12 @@ JOY INFO PURGE 24 PRODUCTION
             }
         }
         
-        // ========== SOUMISSION DE PURGE ==========
+        // ========== SOUMISSION DE PURGE OPTIMISÉE ==========
         async function submitPurge() {
             const clanId = document.getElementById('clanSelect').value;
             const groupLink = document.getElementById('groupLink').value.trim();
             const messageDiv = document.getElementById('purgeMessage');
+            const progressContainer = document.getElementById('progressContainer');
             
             if(!clanId) {
                 messageDiv.innerHTML = '<span style="color:#ff8888;">❌ Choisissez votre clan</span>';
@@ -1106,12 +1149,14 @@ JOY INFO PURGE 24 PRODUCTION
                 return;
             }
             
+            // Vérifier si le lien a déjà été utilisé
             const existingSnapshot = await database.ref('submissions').orderByChild('link').equalTo(groupLink).once('value');
             if(existingSnapshot.exists()) {
                 messageDiv.innerHTML = '<span style="color:#ff8888;">❌ Ce lien a déjà été soumis !</span>';
                 return;
             }
             
+            // Récupérer les photos
             const photoFiles = [];
             for(let i = 1; i <= 4; i++) {
                 const input = document.getElementById(`photo${i}`);
@@ -1125,20 +1170,37 @@ JOY INFO PURGE 24 PRODUCTION
                 return;
             }
             
-            messageDiv.innerHTML = '<span style="color:#FFD700;">⏳ Compression et envoi en cours...</span>';
+            // Afficher la barre de progression
+            progressContainer.style.display = 'block';
+            updateProgress(0, 'Préparation...');
+            messageDiv.innerHTML = '<span style="color:#FFD700;">⚡ Compression et envoi en parallèle...</span>';
             
             try {
-                const photoUrls = [];
-                for(let i = 0; i < photoFiles.length; i++) {
-                    const originalFile = photoFiles[i];
-                    // Compression de l'image
-                    const compressedFile = await compressImage(originalFile);
-                    const storageRef = storage.ref(`purges/${Date.now()}_${i}_${originalFile.name}`);
-                    const snapshot = await storageRef.put(compressedFile);
-                    const url = await snapshot.ref.getDownloadURL();
-                    photoUrls.push(url);
-                }
+                // Étape 1: Compression parallèle des photos
+                updateProgress(10, 'Compression...');
+                const compressPromises = photoFiles.map(file => compressImageFast(file));
+                const compressedFiles = await Promise.all(compressPromises);
                 
+                // Étape 2: Upload parallèle vers Firebase
+                updateProgress(30, 'Upload des photos...');
+                const uploadPromises = compressedFiles.map((file, index) => {
+                    const storageRef = storage.ref(`purges/${Date.now()}_${index}_${file.name}`);
+                    const uploadTask = storageRef.put(file);
+                    
+                    // Suivi de progression individuel
+                    uploadTask.on('state_changed', (snapshot) => {
+                        const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        const totalProgress = 30 + (percent * 0.5); // 30% à 80%
+                        updateProgress(totalProgress, `Upload ${index+1}/${compressedFiles.length}`);
+                    });
+                    
+                    return uploadTask.then(snapshot => snapshot.ref.getDownloadURL());
+                });
+                
+                const photoUrls = await Promise.all(uploadPromises);
+                updateProgress(80, 'Finalisation...');
+                
+                // Étape 3: Sauvegarde
                 const submission = {
                     clanId: clanId,
                     clanName: currentClans.find(c => c.id === clanId)?.name || "Inconnu",
@@ -1151,16 +1213,18 @@ JOY INFO PURGE 24 PRODUCTION
                 
                 await database.ref('submissions').push(submission);
                 
-                messageDiv.innerHTML = '<span style="color:#2ecc71;">✅ Purge soumise ! En attente de validation.</span>';
+                updateProgress(100, 'Terminé !');
+                messageDiv.innerHTML = '<span style="color:#2ecc71;">✅ Purge soumise avec succès !</span>';
                 
+                // Réinitialiser le formulaire
                 document.getElementById('groupLink').value = '';
                 for(let i = 1; i <= 4; i++) {
                     document.getElementById(`photo${i}`).value = '';
                 }
-                
                 loadMySubmissions();
                 
             } catch(e) {
+                progressContainer.style.display = 'none';
                 messageDiv.innerHTML = `<span style="color:#ff8888;">❌ Erreur: ${e.message}</span>`;
             }
         }
